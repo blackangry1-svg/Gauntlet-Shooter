@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚔️ Gauntlet Legends Shooter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== MAIN MENU ===== -->
+<div id="main-menu">
+  <div id="menu-bg"></div>
+  <div id="menu-content">
+    <div id="menu-title">
+      <div class="title-rune">⚔</div>
+      <h1>GAUNTLET<br><span>LEGENDS</span></h1>
+      <div class="title-sub">SHOOTER</div>
+    </div>
+
+    <div id="char-select">
+      <h2>CHOOSE YOUR WARRIOR</h2>
+      <div id="char-grid">
+        <div class="char-card" data-char="warrior">
+          <div class="char-icon">🛡️</div>
+          <div class="char-name">WARRIOR</div>
+          <div class="char-desc">Sword &amp; Shield<br>High HP · Melee</div>
+          <div class="char-stats">
+            <div class="stat"><span>HP</span><div class="bar"><div style="width:100%;background:#e55"></div></div></div>
+            <div class="stat"><span>SPD</span><div class="bar"><div style="width:55%;background:#5ae"></div></div></div>
+            <div class="stat"><span>PWR</span><div class="bar"><div style="width:75%;background:#fa0"></div></div></div>
+          </div>
+        </div>
+        <div class="char-card" data-char="elf">
+          <div class="char-icon">🏹</div>
+          <div class="char-name">ELF</div>
+          <div class="char-desc">Magic Bow<br>Fast · Ranged</div>
+          <div class="char-stats">
+            <div class="stat"><span>HP</span><div class="bar"><div style="width:55%;background:#e55"></div></div></div>
+            <div class="stat"><span>SPD</span><div class="bar"><div style="width:100%;background:#5ae"></div></div></div>
+            <div class="stat"><span>PWR</span><div class="bar"><div style="width:60%;background:#fa0"></div></div></div>
+          </div>
+        </div>
+        <div class="char-card" data-char="wizard">
+          <div class="char-icon">🔮</div>
+          <div class="char-name">WIZARD</div>
+          <div class="char-desc">Fire Staff<br>Magic · AoE</div>
+          <div class="char-stats">
+            <div class="stat"><span>HP</span><div class="bar"><div style="width:45%;background:#e55"></div></div></div>
+            <div class="stat"><span>SPD</span><div class="bar"><div style="width:65%;background:#5ae"></div></div></div>
+            <div class="stat"><span>PWR</span><div class="bar"><div style="width:100%;background:#fa0"></div></div></div>
+          </div>
+        </div>
+        <div class="char-card" data-char="valkyrie">
+          <div class="char-icon">⚡</div>
+          <div class="char-name">VALKYRIE</div>
+          <div class="char-desc">Holy Spear<br>Balanced · Parry</div>
+          <div class="char-stats">
+            <div class="stat"><span>HP</span><div class="bar"><div style="width:75%;background:#e55"></div></div></div>
+            <div class="stat"><span>SPD</span><div class="bar"><div style="width:80%;background:#5ae"></div></div></div>
+            <div class="stat"><span>PWR</span><div class="bar"><div style="width:70%;background:#fa0"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="menu-buttons">
+      <button id="btn-new-game" class="menu-btn primary" disabled>⚔ NEW GAME</button>
+      <button id="btn-continue" class="menu-btn">📜 CONTINUE</button>
+      <button id="btn-controls" class="menu-btn">🎮 CONTROLS</button>
+    </div>
+
+    <div id="controls-panel" class="hidden">
+      <h3>CONTROLS</h3>
+      <div class="control-grid">
+        <span>WASD / Arrow Keys</span><span>Move</span>
+        <span>Mouse</span><span>Look</span>
+        <span>Left Click</span><span>Attack / Shoot</span>
+        <span>Right Click</span><span>Block / Aim</span>
+        <span>R</span><span>Reload / Special</span>
+        <span>1-4</span><span>Switch Weapon</span>
+        <span>ESC</span><span>Pause</span>
+        <span>F</span><span>Interact</span>
+      </div>
+      <button class="menu-btn" onclick="document.getElementById('controls-panel').classList.add('hidden')">CLOSE</button>
+    </div>
+
+    <div id="menu-footer">
+      <span>v1.0 · Gauntlet Legends Shooter · Intel UHD Optimized</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GAME CONTAINER ===== -->
+<div id="game-container" class="hidden">
+  <canvas id="game-canvas"></canvas>
+
+  <!-- HUD -->
+  <div id="hud">
+    <!-- Top left: health + mana -->
+    <div id="hud-left">
+      <div id="hud-portrait">
+        <div id="portrait-icon">🛡️</div>
+        <div id="portrait-level">Lv.1</div>
+      </div>
+      <div id="hud-bars">
+        <div class="hud-bar-row">
+          <span class="bar-icon">❤️</span>
+          <div class="bar-track">
+            <div id="health-bar" class="bar-fill red"></div>
+          </div>
+          <span id="health-text" class="bar-text">100</span>
+        </div>
+        <div class="hud-bar-row">
+          <span class="bar-icon">🔮</span>
+          <div class="bar-track">
+            <div id="mana-bar" class="bar-fill blue"></div>
+          </div>
+          <span id="mana-text" class="bar-text">80</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top center: room info -->
+    <div id="hud-center">
+      <div id="room-info">DUNGEON · ROOM <span id="room-num">1</span>/8</div>
+      <div id="wave-info">ENEMIES: <span id="enemy-count">0</span></div>
+    </div>
+
+    <!-- Top right: score + minimap -->
+    <div id="hud-right">
+      <div id="score-display">
+        <div class="score-label">SCORE</div>
+        <div id="score-value">000000</div>
+      </div>
+      <canvas id="minimap" width="120" height="120"></canvas>
+    </div>
+
+    <!-- Bottom center: weapon -->
+    <div id="hud-bottom">
+      <div id="weapon-slots">
+        <div class="weapon-slot active" id="slot-1">
+          <span class="slot-key">1</span>
+          <span class="slot-icon">⚔️</span>
+          <span class="slot-name">SWORD</span>
+        </div>
+        <div class="weapon-slot" id="slot-2">
+          <span class="slot-key">2</span>
+          <span class="slot-icon">🏹</span>
+          <span class="slot-name">BOW</span>
+          <span class="slot-ammo" id="ammo-bow">∞</span>
+        </div>
+        <div class="weapon-slot" id="slot-3">
+          <span class="slot-key">3</span>
+          <span class="slot-icon">🔮</span>
+          <span class="slot-name">STAFF</span>
+          <span class="slot-ammo" id="ammo-staff">10</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crosshair -->
+    <div id="crosshair">
+      <div class="ch-h"></div>
+      <div class="ch-v"></div>
+    </div>
+
+    <!-- Hit flash -->
+    <div id="hit-flash"></div>
+    <div id="damage-vignette"></div>
+  </div>
+
+  <!-- Floating damage numbers container -->
+  <div id="damage-numbers"></div>
+
+  <!-- Room clear banner -->
+  <div id="room-clear" class="hidden">
+    <div class="banner-text">ROOM CLEARED!</div>
+    <div class="banner-sub">Advancing to next chamber...</div>
+  </div>
+
+  <!-- Boss health bar -->
+  <div id="boss-bar" class="hidden">
+    <div class="boss-name">⚡ DEATH KNIGHT ⚡</div>
+    <div class="boss-track">
+      <div id="boss-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAUSE MENU ===== -->
+<div id="pause-menu" class="hidden">
+  <div id="pause-content">
+    <h2>⏸ PAUSED</h2>
+    <button class="menu-btn primary" id="btn-resume">▶ RESUME</button>
+    <button class="menu-btn" id="btn-save">💾 SAVE GAME</button>
+    <button class="menu-btn danger" id="btn-quit">🚪 QUIT TO MENU</button>
+    <div id="save-status"></div>
+  </div>
+</div>
+
+<!-- ===== GAME OVER ===== -->
+<div id="game-over" class="hidden">
+  <div id="game-over-content">
+    <div id="go-result">YOU HAVE FALLEN</div>
+    <div id="go-score">Score: <span id="go-score-val">0</span></div>
+    <div id="go-room">Reached Room: <span id="go-room-val">1</span></div>
+    <button class="menu-btn primary" id="btn-retry">⚔ TRY AGAIN</button>
+    <button class="menu-btn" id="btn-menu">🏠 MAIN MENU</button>
+  </div>
+</div>
+
+<!-- ===== VICTORY ===== -->
+<div id="victory-screen" class="hidden">
+  <div id="victory-content">
+    <div class="victory-stars">⭐⭐⭐</div>
+    <div id="vic-title">VICTORY!</div>
+    <div id="vic-sub">The Death Knight has been vanquished!</div>
+    <div id="vic-score">Final Score: <span id="vic-score-val">0</span></div>
+    <button class="menu-btn primary" id="btn-play-again">🔄 PLAY AGAIN</button>
+    <button class="menu-btn" id="btn-menu2">🏠 MAIN MENU</button>
+  </div>
+</div>
+
+<!-- ===== CLICK TO PLAY OVERLAY ===== -->
+<div id="click-to-play" class="hidden">
+  <div class="ctp-content">
+    <div class="ctp-icon">🖱️</div>
+    <div>CLICK TO CAPTURE MOUSE</div>
+    <div class="ctp-hint">ESC to release · ESC again to pause</div>
+  </div>
+</div>
+
+<!-- Three.js from CDN (no install needed, works offline-ish) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

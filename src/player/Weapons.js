@@ -40,36 +40,83 @@ export class Weapons {
     this._weaponMesh = this._buildWeaponMesh(this.currentName);
     camera.add(this._weaponMesh);
 
-    window.addEventListener('keydown', e => {
+    this._onKeyDown = (e) => {
       if (e.code === 'Digit1') this._switchTo(0);
       if (e.code === 'Digit2') this._switchTo(1);
       if (e.code === 'Digit3') this._switchTo(2);
-    });
+    };
+    window.addEventListener('keydown', this._onKeyDown);
+    this._updateHudSlots();
   }
 
   get current()     { return WEAPON_DEFS[this.available[this.currentIdx]]; }
   get currentName() { return this.available[this.currentIdx]; }
 
+  _updateHudSlots() {
+    const container = document.getElementById('weapon-slots');
+    if (!container) return;
+    const icons = {
+      sword: '⚔️',
+      shield: '🛡️',
+      bow: '🏹',
+      staff: '🔮',
+      spear: '🔱',
+    };
+    container.innerHTML = this.available.map((wName, idx) => `
+      <div class="weapon-slot ${idx === this.currentIdx ? 'active' : ''}" id="slot-${idx + 1}">
+        <span class="slot-key">${idx + 1}</span>
+        <span class="slot-icon">${icons[wName] || '⚔️'}</span>
+        <span class="slot-name">${wName.toUpperCase()}</span>
+      </div>
+    `).join('');
+  }
+
+  _getDefaultMeshPos(name = this.currentName) {
+    if (name === 'shield') {
+      return new THREE.Vector3(0.18, -0.22, -0.4);
+    }
+    return new THREE.Vector3(0.24, -0.26, -0.45);
+  }
+
+  _disposeMesh(mesh) {
+    if (!mesh) return;
+    mesh.traverse(child => {
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (Array.isArray(child.material)) child.material.forEach(m => m.dispose());
+        else child.material.dispose();
+      }
+    });
+  }
+
   _switchTo(idx) {
     if (idx >= this.available.length || idx === this.currentIdx) return;
     this.currentIdx = idx;
-    this.camera.remove(this._weaponMesh);
+
+    // Cleanly cancel any in-flight swing animation
+    this._swinging = false;
+    this._swingT = 0;
+    this._hitEnemiesThisSwing.clear();
+
+    if (this._weaponMesh) {
+      this.camera.remove(this._weaponMesh);
+      this._disposeMesh(this._weaponMesh);
+      this._weaponMesh = null;
+    }
+
     this._weaponMesh = this._buildWeaponMesh(this.available[idx]);
     this.camera.add(this._weaponMesh);
 
-    document.querySelectorAll('.weapon-slot').forEach((el, i) => {
-      el.classList.toggle('active', i === idx);
-    });
+    this._updateHudSlots();
     this.audio.playSFX('uiClick', 0.5);
   }
 
   _buildWeaponMesh(name) {
     const group = new THREE.Group();
-    group.position.set(0.24, -0.26, -0.45);
+    group.position.copy(this._getDefaultMeshPos(name));
 
     switch (name) {
-      case 'sword':
-      case 'spear': {
+      case 'sword': {
         // Blade
         const bladeGeo = new THREE.BoxGeometry(0.04, 0.52, 0.02);
         const bladeMat = new THREE.MeshStandardMaterial({ color: 0xddeeff, metalness: 0.9, roughness: 0.15 });
@@ -88,6 +135,45 @@ export class Weapons {
         const grip = new THREE.Mesh(gripGeo, gripMat);
         grip.position.y = -0.21;
         group.add(grip);
+        break;
+      }
+      case 'spear': {
+        // Long spear shaft
+        const shaftGeo = new THREE.CylinderGeometry(0.016, 0.016, 0.75, 6);
+        const shaftMat = new THREE.MeshStandardMaterial({ color: 0x5a3d28, roughness: 0.7 });
+        const shaft = new THREE.Mesh(shaftGeo, shaftMat);
+        shaft.position.y = -0.05;
+        group.add(shaft);
+
+        // Golden collar
+        const collarGeo = new THREE.CylinderGeometry(0.024, 0.02, 0.04, 6);
+        const collarMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.8, roughness: 0.2 });
+        const collar = new THREE.Mesh(collarGeo, collarMat);
+        collar.position.y = 0.32;
+        group.add(collar);
+
+        // Steel spearhead
+        const headGeo = new THREE.ConeGeometry(0.045, 0.25, 4);
+        const headMat = new THREE.MeshStandardMaterial({ color: 0xe0e8f0, metalness: 0.92, roughness: 0.15 });
+        const head = new THREE.Mesh(headGeo, headMat);
+        head.position.y = 0.45;
+        group.add(head);
+        break;
+      }
+      case 'shield': {
+        // Kite shield plate
+        const plateGeo = new THREE.BoxGeometry(0.28, 0.38, 0.03);
+        const plateMat = new THREE.MeshStandardMaterial({ color: 0x2b3a4a, metalness: 0.5, roughness: 0.4 });
+        const plate = new THREE.Mesh(plateGeo, plateMat);
+        group.add(plate);
+
+        // Golden rim/boss
+        const bossGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.04, 8);
+        const bossMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.85, roughness: 0.2 });
+        const boss = new THREE.Mesh(bossGeo, bossMat);
+        boss.rotation.x = Math.PI / 2;
+        group.add(boss);
+        group.position.set(0.18, -0.22, -0.4);
         break;
       }
       case 'bow': {
@@ -143,7 +229,7 @@ export class Weapons {
         this._swinging = false;
         this._weaponMesh.rotation.x = 0;
         this._weaponMesh.rotation.y = 0;
-        this._weaponMesh.position.set(0.24, -0.26, -0.45);
+        this._weaponMesh.position.copy(this._getDefaultMeshPos());
       } else {
         const t = this._swingT;
         // Phase 1: Wind-up (0.0 - 0.3)
@@ -168,6 +254,23 @@ export class Weapons {
           this._weaponMesh.rotation.y = -0.5 + recover * 0.5;
           this._weaponMesh.position.z = -0.52 + recover * 0.07;
         }
+      }
+    }
+
+    // Idle or Blocking stance visual
+    if (!this._swinging && this._weaponMesh) {
+      if (this.player && this.player.isBlocking) {
+        if (this.currentName === 'shield') {
+          this._weaponMesh.position.set(-0.02, -0.10, -0.32);
+          this._weaponMesh.rotation.set(0.1, -0.15, 0.05);
+        } else {
+          this._weaponMesh.position.set(0.08, -0.14, -0.36);
+          this._weaponMesh.rotation.set(0.35, 0.2, 0.5);
+        }
+      } else {
+        const defPos = this._getDefaultMeshPos();
+        this._weaponMesh.position.copy(defPos);
+        this._weaponMesh.rotation.set(0, 0, 0);
       }
     }
 
@@ -204,13 +307,18 @@ export class Weapons {
     const stamCost = this._isHeavy ? Math.round(weapon.staminaCost * 1.7) : weapon.staminaCost;
     const manaCost = weapon.manaCost || 0;
 
-    // Check player stamina
-    if (this.player && !this.player.consumeStamina(stamCost)) {
-      return; // Not enough stamina
-    }
-    // Check player mana for magic attacks
-    if (manaCost > 0 && this.player && !this.player.consumeMana(manaCost)) {
-      return; // Not enough mana
+    // Check player stamina and mana before consuming either
+    if (this.player) {
+      if (this.player.stamina < stamCost) {
+        return; // Not enough stamina
+      }
+      if (manaCost > 0 && this.player.mana < manaCost) {
+        return; // Not enough mana
+      }
+      this.player.consumeStamina(stamCost);
+      if (manaCost > 0) {
+        this.player.consumeMana(manaCost);
+      }
     }
 
     this._cooldown = this._isHeavy ? weapon.cooldown * 1.35 : weapon.cooldown;
@@ -272,6 +380,22 @@ export class Weapons {
       this.enemies, this.particles, this.audio, this.walls
     );
     this.projectiles.push(proj);
+  }
+
+  destroy() {
+    if (this._onKeyDown) {
+      window.removeEventListener('keydown', this._onKeyDown);
+      this._onKeyDown = null;
+    }
+    if (this._weaponMesh) {
+      this.camera.remove(this._weaponMesh);
+      this._disposeMesh(this._weaponMesh);
+      this._weaponMesh = null;
+    }
+    for (const p of this.projectiles) {
+      p.removeFromScene();
+    }
+    this.projectiles = [];
   }
 }
 

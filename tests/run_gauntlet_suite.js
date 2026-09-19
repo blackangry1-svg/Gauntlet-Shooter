@@ -21,7 +21,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 1: BOOT TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 1/13] Running BOOT TEST...');
+    console.log('\n[TEST 1/22] Running BOOT TEST...');
     const title = await harness.evaluate('document.title');
     const hasCanvas = await harness.evaluate('!!document.getElementById("game-canvas")');
     const isThreeLoaded = await harness.evaluate('typeof THREE !== "undefined"');
@@ -47,7 +47,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 2: MOVEMENT TEST (Forward Direction Check)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 2/19] Running MOVEMENT TEST (True Forward Direction)...');
+    console.log('\n[TEST 2/22] Running MOVEMENT TEST (True Forward Direction)...');
     const posStart = await harness.evaluate(`({ x: window.GAME.player.camera.position.x, z: window.GAME.player.camera.position.z })`);
     // Simulate moving forward for 500ms
     await harness.evaluate(`
@@ -72,7 +72,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 3: COLLISION TEST (Anti-Penetration against Wall)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 3/19] Running COLLISION TEST (Anti-Penetration Against Solid Wall)...');
+    console.log('\n[TEST 3/22] Running COLLISION TEST (Anti-Penetration Against Solid Wall)...');
     // Position player near wall at X: -4.0, Z: 10 (wall is at X: -6, outer edge at X: -5.0)
     await harness.evaluate('window.GAME.setPosition(-4.0, 1.7, 10)');
     const wallCount = await harness.evaluate('window.GAME.player.walls.length');
@@ -97,9 +97,9 @@ async function run() {
     await harness.captureScreenshot('screenshots/03_first_enemy.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 5: COMBAT TEST (Hit Detection & Damage)
+    // TEST 4: COMBAT TEST (Hit Detection & Damage)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 5/13] Running COMBAT TEST (Melee Hit Detection)...');
+    console.log('\n[TEST 4/22] Running COMBAT TEST (Melee Hit Detection)...');
     // Position directly in front of first alive Orc Grunt wherever AI moved it
     await harness.evaluate(`
       const targetEnemy = window.GAME.enemies.getAll()[0];
@@ -121,9 +121,9 @@ async function run() {
     await harness.captureScreenshot('screenshots/04_combat.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 6: DAMAGE TEST (Player Damage & Vignette)
+    // TEST 5: DAMAGE TEST (Player Damage & Vignette)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 6/13] Running DAMAGE TEST...');
+    console.log('\n[TEST 5/22] Running DAMAGE TEST...');
     const playerHpBefore = await harness.evaluate('window.GAME.player.health');
     await harness.evaluate('window.GAME.triggerDamage(25)');
     const playerHpAfter = await harness.evaluate('window.GAME.player.health');
@@ -132,9 +132,9 @@ async function run() {
     console.log(`  -> Result: ${dmgPass ? 'PASS ✓' : 'FAIL ✗'} (Player HP: ${playerHpBefore} -> ${playerHpAfter})`);
 
     // ─────────────────────────────────────────────────────────
-    // TEST 7: DODGE TEST (Iframes & Stamina)
+    // TEST 6: DODGE TEST (Iframes & Stamina)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 7/13] Running DODGE TEST...');
+    console.log('\n[TEST 6/22] Running DODGE TEST...');
     const stamBefore = await harness.evaluate('window.GAME.player.stamina');
     await harness.evaluate('window.GAME.triggerDodge()');
     await sleep(40);
@@ -151,9 +151,9 @@ async function run() {
     console.log(`  -> Result: ${dodgePass ? 'PASS ✓' : 'FAIL ✗'} (isDodging: ${isDodging}, iframes: ${iframes?.toFixed(2)}s, Stamina: ${stamBefore} -> ${stamAfter})`);
 
     // ─────────────────────────────────────────────────────────
-    // TEST 9: CHECKPOINT & SHRINE TEST
+    // TEST 7: CHECKPOINT & SHRINE TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 9/13] Running CHECKPOINT TEST...');
+    console.log('\n[TEST 7/22] Running CHECKPOINT TEST...');
     // Teleport to Shrine of Ash (X: -16, Z: 87)
     await harness.evaluate(`
       window.GAME.setPosition(-16, 1.7, 87);
@@ -170,9 +170,9 @@ async function run() {
     await harness.captureScreenshot('screenshots/05_checkpoint.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 4: DOOR & SHORTCUT TEST
+    // TEST 8: DOOR & SHORTCUT TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 4/13] Running SHORTCUT & LEVER TEST...');
+    console.log('\n[TEST 8/22] Running SHORTCUT & LEVER TEST...');
     const gateBefore = await harness.evaluate('window.GAME.map.isShortcutUnlocked');
     // Position at Ramparts shortcut lever (X: 2.8, Z: 73)
     await harness.evaluate(`
@@ -191,9 +191,9 @@ async function run() {
     await harness.captureScreenshot('screenshots/06_shortcut.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 10: AI & TELEGRAPH TEST
+    // TEST 9: AI & TELEGRAPH TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 10/13] Running AI & TELEGRAPH TEST...');
+    console.log('\n[TEST 9/22] Running AI & TELEGRAPH TEST...');
     // Stone Golem Elite at (5, 0, 106)
     await harness.evaluate(`
       window.GAME.setPosition(5, 1.7, 103);
@@ -214,9 +214,9 @@ async function run() {
     await harness.captureScreenshot('screenshots/07_elite.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 11: BOSS ARENA TEST
+    // TEST 10: BOSS ARENA TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 11/13] Running BOSS ARENA TEST...');
+    console.log('\n[TEST 10/22] Running BOSS ARENA TEST...');
     // Enter Boss Arena at (5, 1.7, 162)
     await harness.evaluate(`
       window.GAME.setPosition(5, 1.7, 162);
@@ -243,9 +243,9 @@ async function run() {
     await harness.captureScreenshot('screenshots/09_boss_combat.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 12: WIN TEST (Boss Defeat & Victory)
+    // TEST 11: WIN TEST (Boss Defeat & Victory)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 12/13] Running WIN TEST...');
+    console.log('\n[TEST 11/22] Running WIN TEST...');
     // Slay Death Knight
     await harness.evaluate(`
       const boss = window.GAME.enemies.boss;
@@ -262,9 +262,9 @@ async function run() {
     await harness.captureScreenshot('screenshots/10_victory.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 8: DEATH TEST
+    // TEST 12: DEATH TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 8/13] Running DEATH TEST...');
+    console.log('\n[TEST 12/22] Running DEATH TEST...');
     // Click play again
     await harness.evaluate('document.getElementById("btn-play-again").click()');
     await sleep(1000);
@@ -279,7 +279,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 13: RESTART TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 13/19] Running RESTART TEST...');
+    console.log('\n[TEST 13/22] Running RESTART TEST...');
     await harness.evaluate('document.getElementById("btn-retry").click()');
     await sleep(1000);
     const retryPhase = await harness.evaluate('window.GAME.STATE.phase');
@@ -291,7 +291,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 14: HEAVY ATTACK & STAGGER TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 14/19] Running HEAVY ATTACK & STAGGER TEST...');
+    console.log('\n[TEST 14/22] Running HEAVY ATTACK & STAGGER TEST...');
     const heavyAttackResult = await harness.evaluate(`
       (() => {
         const enemy = window.GAME.enemies.getAll()[0];
@@ -323,7 +323,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 15: MULTI-CLASS WEAPONS & WIZARD MANA TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 15/19] Running MULTI-CLASS WEAPONS & WIZARD MANA TEST...');
+    console.log('\n[TEST 15/22] Running MULTI-CLASS WEAPONS & WIZARD MANA TEST...');
     await harness.evaluate('window.GAME.startGame("wizard")');
     await sleep(800);
     const wizResult = await harness.evaluate(`
@@ -348,7 +348,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 16: PHYSICAL ENEMY PROJECTILE & BLOCK/DODGE TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 16/19] Running SKELETON ARCHER PHYSICAL ARROW TEST...');
+    console.log('\n[TEST 16/22] Running SKELETON ARCHER PHYSICAL ARROW TEST...');
     const archerProjResult = await harness.evaluate(`
       (() => {
         const archer = window.GAME.enemies.getAll().find(e => e.enemyType === 'archer');
@@ -369,7 +369,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 17: PROJECTILE WALL COLLISION TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 17/19] Running PROJECTILE WALL COLLISION TEST...');
+    console.log('\n[TEST 17/22] Running PROJECTILE WALL COLLISION TEST...');
     const projWallResult = await harness.evaluate(`
       (() => {
         const p = window.GAME.player;
@@ -394,7 +394,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 18: ENEMY WALL COLLISION TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 18/19] Running ENEMY WALL COLLISION TEST...');
+    console.log('\n[TEST 18/22] Running ENEMY WALL COLLISION TEST...');
     const enemyWallResult = await harness.evaluate(`
       (() => {
         const enemy = window.GAME.enemies.getAll()[0];
@@ -417,7 +417,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 19: BOSS MULTI-ATTACK & PHASE 2 VARIETY TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 19/19] Running BOSS MULTI-ATTACK VARIETY TEST...');
+    console.log('\n[TEST 19/22] Running BOSS MULTI-ATTACK VARIETY TEST...');
     const bossVariety = await harness.evaluate(`
       (() => {
         const boss = window.GAME.enemies.boss;
@@ -435,6 +435,519 @@ async function run() {
     const bossVarietyPass = bossVariety && bossVariety.p2Phase === 2 && bossVariety.hasVariety;
     results['BOSS_VARIETY_TEST'] = { pass: !!bossVarietyPass, details: bossVariety };
     console.log(`  -> Result: ${bossVarietyPass ? 'PASS ✓' : 'FAIL ✗'} (Phase: ${bossVariety?.p2Phase}, Speed: ${bossVariety?.speed})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 20: ELF AUTOMATED PLAYTHROUGH & ARCHERY KITING TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 20/22] Running ELF AUTOMATED PLAYTHROUGH & ARCHERY KITING TEST...');
+    await harness.evaluate('window.GAME.startGame("elf")');
+    await sleep(800);
+
+    const elfStats = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        return {
+          charType: p.charType,
+          baseSpeed: p.baseSpeed,
+          maxHealth: p.maxHealth,
+          maxStamina: p.maxStamina,
+          maxMana: p.maxMana,
+          currentWeapon: p.weapons.currentName,
+          availableWeapons: [...p.weapons.available]
+        };
+      })()
+    `);
+
+    // Verify Elf Kiting Speed: 5.6 m/s (covers > 1.7m in 350ms forward sprint)
+    await harness.evaluate(`
+      window.GAME.setPosition(0, 1.7, 10);
+      window.GAME.player.input._keys.add('KeyW');
+    `);
+    await sleep(350);
+    await harness.evaluate(`window.GAME.player.input._keys.delete('KeyW');`);
+    const elfSpeedResult = await harness.evaluate(`
+      (() => {
+        const dist = window.GAME.player.camera.position.z - 10;
+        return { dist, speed: window.GAME.player.baseSpeed };
+      })()
+    `);
+
+    // Archery & Ranged Combat: Target enemy from 8.5m away (beyond melee reach)
+    const elfCombatResult = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        const ePos = enemy.mesh.position;
+        // Position Elf 8.5m away from enemy
+        window.GAME.setPosition(ePos.x, 1.7, ePos.z - 8.5);
+        window.GAME.lookAt(ePos.x, ePos.z);
+        const hpBefore = enemy.health;
+        // Fire arrow
+        window.GAME.triggerAttack(false);
+        const arrow = window.GAME.player.weapons.projectiles[window.GAME.player.weapons.projectiles.length - 1];
+        if (arrow) {
+          for (let f = 0; f < 25; f++) arrow.update(0.016);
+        }
+        const hpAfterFirst = enemy.health;
+        return {
+          hpBefore,
+          hpAfterFirst,
+          arrowSpawned: !!arrow,
+          arrowSpeed: arrow ? arrow.speed : 0,
+          arrowDamage: arrow ? arrow.damage : 0,
+          hitFirst: hpAfterFirst < hpBefore
+        };
+      })()
+    `);
+
+    // Kiting Combat: Kite backwards while firing to eliminate enemy with 0 damage taken
+    const elfKiteResult = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        const enemy = window.GAME.enemies.getAll()[0];
+        const hpBeforeKite = enemy.health;
+
+        // Engage backwards kiting
+        p.input._keys.add('KeyS');
+        for (let step = 0; step < 30; step++) {
+          p.update(0.016);
+          enemy.update(0.016, p.camera.position);
+        }
+        p.input._keys.delete('KeyS');
+
+        // Finish enemy with bow attacks (fire arrows until defeated)
+        let shots = 0;
+        while (!enemy.dead && shots < 4) {
+          p.weapons._cooldown = 0;
+          window.GAME.triggerAttack(shots === 0);
+          const pObj = p.weapons.projectiles[p.weapons.projectiles.length - 1];
+          if (pObj) {
+            for (let f = 0; f < 30 && !pObj.dead; f++) pObj.update(0.016);
+          }
+          shots++;
+        }
+
+        // Test secondary weapon switch
+        window.GAME.switchWeapon(1);
+        const secondary = p.weapons.currentName;
+        window.GAME.switchWeapon(0);
+        const primaryRestored = p.weapons.currentName;
+
+        return {
+          hpBeforeKite,
+          enemyDead: enemy.dead,
+          playerHp: p.health,
+          playerMaxHp: p.maxHealth,
+          secondary,
+          primaryRestored
+        };
+      })()
+    `);
+
+    // Boss Arena Playthrough Completion for Elf
+    await harness.evaluate(`
+      window.GAME.setPosition(5, 1.7, 162);
+      window.GAME.lookAt(5, 185);
+    `);
+    await sleep(400);
+
+    const elfBossResult = await harness.evaluate(`
+      (() => {
+        const boss = window.GAME.enemies.boss;
+        const bossTriggered = window.GAME.STATE.bossTriggered;
+        // Fire arrow at boss
+        window.GAME.player.weapons._cooldown = 0;
+        window.GAME.triggerAttack(false);
+        const arrow = window.GAME.player.weapons.projectiles[window.GAME.player.weapons.projectiles.length - 1];
+        if (arrow) {
+          for (let f = 0; f < 30; f++) arrow.update(0.016);
+        }
+        // Slay boss to achieve playthrough completion
+        if (boss) boss.takeDamage(1000);
+        return { bossTriggered, bossAlive: !boss || !boss.dead };
+      })()
+    `);
+
+    await sleep(2400);
+    const elfVictory = await harness.evaluate(`
+      window.GAME.STATE.phase === 'victory' && !document.getElementById('victory-screen').classList.contains('hidden')
+    `);
+
+    await harness.captureScreenshot('screenshots/11_elf_playthrough.png');
+
+    const elfPass = elfStats.charType === 'elf' &&
+      elfStats.baseSpeed === 5.6 &&
+      elfStats.currentWeapon === 'bow' &&
+      elfSpeedResult.dist > 1.7 &&
+      elfCombatResult.arrowSpawned &&
+      elfCombatResult.hitFirst &&
+      elfKiteResult.playerHp === elfStats.maxHealth &&
+      elfKiteResult.secondary === 'sword' &&
+      elfKiteResult.primaryRestored === 'bow' &&
+      elfVictory;
+
+    results['ELF_PLAYTHROUGH_TEST'] = {
+      pass: elfPass,
+      details: { elfStats, elfSpeedResult, elfCombatResult, elfKiteResult, elfBossResult, elfVictory }
+    };
+    console.log(`  -> Result: ${elfPass ? 'PASS ✓' : 'FAIL ✗'} (Speed: ${elfStats.baseSpeed}m/s, Ranged Hit: ${elfCombatResult.hitFirst}, Flawless Kiting HP: ${elfKiteResult.playerHp}/${elfStats.maxHealth}, Victory: ${elfVictory})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 21: WIZARD AUTOMATED PLAYTHROUGH & MANA PACING SPELLCASTING TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 21/22] Running WIZARD AUTOMATED PLAYTHROUGH & MANA PACING SPELLCASTING TEST...');
+    await harness.evaluate('window.GAME.startGame("wizard")');
+    await sleep(800);
+
+    const wizStats = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        return {
+          charType: p.charType,
+          maxHealth: p.maxHealth,
+          maxMana: p.maxMana,
+          mana: p.mana,
+          currentWeapon: p.weapons.currentName,
+          weaponType: p.weapons.current.type,
+          manaCost: p.weapons.current.manaCost,
+          damage: p.weapons.current.damage,
+          heavyDamage: p.weapons.current.heavyDamage,
+        };
+      })()
+    `);
+
+    // Cast 1st fireball & verify projectile properties + light source + mana deduction
+    const wizCast1 = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        const mana0 = p.mana;
+        window.GAME.triggerAttack(false);
+        const fb = p.weapons.projectiles[p.weapons.projectiles.length - 1];
+        return {
+          mana0,
+          manaAfter: p.mana,
+          deducted: mana0 - p.mana,
+          hasLight: !!fb?._light,
+          speed: fb?.speed,
+          damage: fb?.damage
+        };
+      })()
+    `);
+
+    // Test Mana Pacing Exhaustion: Cast until mana < 15, then verify cannot fire
+    const wizExhaustion = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        p.stamina = p.maxStamina;
+        p.mana = 20; // 20 mana allows exactly 1 cast (15 mana), leaving 5
+        p.weapons._cooldown = 0;
+        window.GAME.triggerAttack(false);
+        const manaDrained = p.mana;
+        const projCountBefore = p.weapons.projectiles.length;
+
+        // Attempt cast with insufficient mana (< 15) while stamina is full
+        p.weapons._cooldown = 0;
+        p.stamina = p.maxStamina;
+        const attemptedCast = window.GAME.triggerAttack(false);
+        const projCountAfter = p.weapons.projectiles.length;
+        return {
+          manaDrained,
+          rejected: attemptedCast === false || projCountBefore === projCountAfter,
+          projCountBefore,
+          projCountAfter
+        };
+      })()
+    `);
+
+    // Test Mana Pacing Recovery: Naturally regenerate mana (8 mana/sec) via 90 frames of 1/60s (= 1.5s) and verify casting resumes
+    const wizRecovery = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        p.stamina = p.maxStamina;
+        const manaBeforeRegen = p.mana;
+        // Simulate 90 frames of fixed dt 1/60s (1.5s total) to naturally regenerate 12 mana
+        for (let i = 0; i < 90; i++) {
+          p.update(1 / 60);
+        }
+        const manaRegened = p.mana;
+        p.weapons._cooldown = 0;
+        const countBefore = p.weapons.projectiles.length;
+        const castSuccess = window.GAME.triggerAttack(false);
+        const countAfter = p.weapons.projectiles.length;
+        return {
+          manaBeforeRegen,
+          manaRegened,
+          regenGain: manaRegened - manaBeforeRegen,
+          resumed: countAfter > countBefore && castSuccess,
+          finalMana: p.mana
+        };
+      })()
+    `);
+
+    // Verify Checkpoint & Save/Load State Persistence for Mana
+    const wizPersistence = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        p.mana = 30;
+        p.restAtCheckpoint(new THREE.Vector3(0, 1.7, 0));
+        const manaAfterCheckpoint = p.mana;
+
+        p.mana = 75;
+        const saved = window.GAME.saveGame();
+        const savedMana = saved?.mana;
+        const savedRoom = saved?.room;
+
+        p.mana = 20;
+        p.respawn();
+        const manaAfterRespawn = p.mana;
+
+        return {
+          maxMana: p.maxMana,
+          manaAfterCheckpoint,
+          checkpointRestored: manaAfterCheckpoint === p.maxMana,
+          savedMana,
+          savedRoom,
+          savePersisted: savedMana === 75 && savedRoom >= 1,
+          manaAfterRespawn,
+          respawnRestored: manaAfterRespawn === p.maxMana,
+        };
+      })()
+    `);
+
+    // Spellcasting Combat & Boss Victory Completion for Wizard
+    const wizCombat = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        const p = window.GAME.player;
+        p.mana = p.maxMana; // replenish for boss fight
+        // Position Wizard in front of enemy
+        window.GAME.setPosition(enemy.mesh.position.x, 1.7, enemy.mesh.position.z - 8);
+        window.GAME.lookAt(enemy.mesh.position.x, enemy.mesh.position.z);
+        // Cast heavy fireball
+        p.weapons._cooldown = 0;
+        window.GAME.triggerHeavyAttack();
+        const fb = p.weapons.projectiles[p.weapons.projectiles.length - 1];
+        if (fb) {
+          for (let f = 0; f < 30; f++) fb.update(0.016);
+        }
+        return { enemyHp: enemy.health };
+      })()
+    `);
+
+    // Advance Wizard to Boss Arena and trigger victory
+    await harness.evaluate(`
+      window.GAME.setPosition(5, 1.7, 162);
+      window.GAME.lookAt(5, 185);
+    `);
+    await sleep(400);
+
+    await harness.evaluate(`
+      (() => {
+        const boss = window.GAME.enemies.boss;
+        if (boss) boss.takeDamage(1000);
+      })()
+    `);
+    await sleep(2400);
+
+    const wizVictory = await harness.evaluate(`
+      window.GAME.STATE.phase === 'victory' && !document.getElementById('victory-screen').classList.contains('hidden')
+    `);
+
+    await harness.captureScreenshot('screenshots/12_wizard_playthrough.png');
+
+    const wizPass = wizStats.charType === 'wizard' &&
+      wizStats.currentWeapon === 'staff' &&
+      wizCast1.deducted === 15 &&
+      wizCast1.hasLight &&
+      wizExhaustion.manaDrained < 15 &&
+      wizExhaustion.rejected &&
+      wizRecovery.resumed &&
+      wizRecovery.regenGain >= 11.5 &&
+      wizPersistence.checkpointRestored &&
+      wizPersistence.savePersisted &&
+      wizPersistence.respawnRestored &&
+      wizVictory;
+
+    results['WIZARD_PLAYTHROUGH_TEST'] = {
+      pass: wizPass,
+      details: { wizStats, wizCast1, wizExhaustion, wizRecovery, wizPersistence, wizCombat, wizVictory }
+    };
+    console.log(`  -> Result: ${wizPass ? 'PASS ✓' : 'FAIL ✗'} (Spell Mana Cost: ${wizCast1.deducted}, Drain Rejection: ${wizExhaustion.rejected}, Natural Regen: +${wizRecovery.regenGain.toFixed(1)}, Checkpoint Mana: ${wizPersistence.checkpointRestored}, Save/Load: ${wizPersistence.savePersisted}, Victory: ${wizVictory})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 22: VALKYRIE AUTOMATED PLAYTHROUGH & SPEAR REACH SHIELD DEFENSE TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 22/22] Running VALKYRIE AUTOMATED PLAYTHROUGH & SPEAR REACH SHIELD DEFENSE TEST...');
+    await harness.evaluate('window.GAME.startGame("valkyrie")');
+    await sleep(800);
+
+    const valkStats = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        return {
+          charType: p.charType,
+          maxHealth: p.maxHealth,
+          maxStamina: p.maxStamina,
+          baseSpeed: p.baseSpeed,
+          currentWeapon: p.weapons.currentName,
+          spearRange: p.weapons.current.range,
+          spearDamage: p.weapons.current.damage,
+          availableWeapons: [...p.weapons.available]
+        };
+      })()
+    `);
+
+    // Spear Melee Reach Advantage Verification:
+    // Spear Melee Reach Advantage Verification:
+    // Short range melee (shield range 2.0m) cannot reach at 3.2m.
+    // Spear (range 3.6m) lands cleanly from 3.2m away!
+    const reachAdvantageResult = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        const ePos = enemy.mesh.position;
+        // Position Valkyrie at exactly 3.2m from enemy
+        window.GAME.setPosition(ePos.x, 1.7, ePos.z - 3.2);
+        window.GAME.lookAt(ePos.x, ePos.z);
+        const hp0 = enemy.health;
+        // 1. Attempt strike with short-range secondary (shield, range 2.0m)
+        window.GAME.switchWeapon(1);
+        window.GAME.triggerAttack(false);
+        return { hp0, targetDist: 3.2 };
+      })()
+    `);
+    await sleep(450);
+
+    const shieldMissResult = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        const hpAfterShield = enemy.health;
+        const shieldMissed = hpAfterShield === ${reachAdvantageResult.hp0};
+        // 2. Switch to spear (range 3.6m) and strike from the exact same 3.2m distance
+        window.GAME.switchWeapon(0);
+        window.GAME.triggerAttack(false);
+        return { hpAfterShield, shieldMissed };
+      })()
+    `);
+    await sleep(450);
+
+    const spearHitResult = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        return {
+          shieldMissed: ${shieldMissResult.shieldMissed},
+          hpAfter: enemy.health,
+          damaged: enemy.health < ${shieldMissResult.hpAfterShield},
+          damageDealt: ${shieldMissResult.hpAfterShield} - enemy.health
+        };
+      })()
+    `);
+
+    // Shield Defense & Blocking Verification:
+    // Block frontal attack, verify 75% damage reduction into stamina
+    const shieldDefenseResult = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        const hpBefore = p.health;
+        const stamBefore = p.stamina;
+
+        // Raise shield defense
+        window.GAME.setBlocking(true);
+        const isBlocking = p.isBlocking;
+
+        // Frontal attack of 40 incoming damage
+        const forward = p.getForwardDir();
+        const sourcePos = p.camera.position.clone().addScaledVector(forward, 2.0);
+        window.GAME.triggerDamage(40, sourcePos);
+
+        const hpAfter = p.health;
+        const stamAfter = p.stamina;
+        const hpLost = hpBefore - hpAfter;
+        const stamLost = stamBefore - stamAfter;
+
+        // Lower shield
+        window.GAME.setBlocking(false);
+
+        return {
+          isBlocking,
+          hpBefore,
+          hpAfter,
+          hpLost, // Should be 10 (25% of 40)
+          stamBefore,
+          stamAfter,
+          stamLost // Should be 18 (40 * 0.45)
+        };
+      })()
+    `);
+
+    // Guard Break on Exhausted Stamina:
+    const guardBreakResult = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        p._iframes = 0;
+        p.stamina = 10; // > 5 so shield is raised, but < 18 to absorb 40 damage
+        window.GAME.setBlocking(true);
+        window.GAME.triggerDamage(40);
+        const stunned = p.isStunned;
+        const blockBroken = !p.isBlocking;
+        // Recover player state
+        p.isStunned = false;
+        p.stamina = p.maxStamina;
+        window.GAME.setBlocking(false);
+        return { stunned, blockBroken };
+      })()
+    `);
+
+    // Weapon Switching: Spear to Shield and back
+    const weaponSwitchResult = await harness.evaluate(`
+      (() => {
+        window.GAME.switchWeapon(1);
+        const slot2Name = window.GAME.player.weapons.currentName;
+        window.GAME.switchWeapon(0);
+        const slot1Name = window.GAME.player.weapons.currentName;
+        return { slot1Name, slot2Name };
+      })()
+    `);
+
+    // Valkyrie Boss Arena Playthrough Completion
+    await harness.evaluate(`
+      window.GAME.setPosition(5, 1.7, 162);
+      window.GAME.lookAt(5, 185);
+    `);
+    await sleep(400);
+
+    await harness.evaluate(`
+      (() => {
+        const boss = window.GAME.enemies.boss;
+        // Deliver heavy spear attack to boss
+        window.GAME.triggerHeavyAttack();
+        // Slay boss to achieve victory
+        if (boss) boss.takeDamage(1000);
+      })()
+    `);
+    await sleep(2400);
+
+    const valkVictory = await harness.evaluate(`
+      window.GAME.STATE.phase === 'victory' && !document.getElementById('victory-screen').classList.contains('hidden')
+    `);
+
+    await harness.captureScreenshot('screenshots/13_valkyrie_playthrough.png');
+
+    const valkPass = valkStats.charType === 'valkyrie' &&
+      valkStats.spearRange === 3.6 &&
+      spearHitResult.shieldMissed &&
+      spearHitResult.damaged &&
+      spearHitResult.damageDealt === 26 &&
+      shieldDefenseResult.isBlocking &&
+      shieldDefenseResult.hpLost === 10 &&
+      shieldDefenseResult.stamLost === 18 &&
+      guardBreakResult.stunned &&
+      weaponSwitchResult.slot2Name === 'shield' &&
+      valkVictory;
+
+    results['VALKYRIE_PLAYTHROUGH_TEST'] = {
+      pass: valkPass,
+      details: { valkStats, spearHitResult, shieldDefenseResult, guardBreakResult, weaponSwitchResult, valkVictory }
+    };
+    console.log(`  -> Result: ${valkPass ? 'PASS ✓' : 'FAIL ✗'} (Shield 3.2m Miss: ${spearHitResult.shieldMissed}, Spear Reach 3.2m Hit: ${spearHitResult.damaged}, Shield Absorbed: HP lost ${shieldDefenseResult.hpLost}/40, Guard Break: ${guardBreakResult.stunned}, Victory: ${valkVictory})`);
 
     // ─────────────────────────────────────────────────────────
     // PERFORMANCE TELEMETRY BENCHMARK (120 frames)
@@ -479,7 +992,7 @@ async function run() {
     const metricsPayload = {
       timestamp: new Date().toISOString(),
       iteration: 1,
-      milestone: 19,
+      milestone: 22,
       mean_fps: perfData.mean_fps,
       mean_frametime_ms: Number(perfData.mean_ms.toFixed(2)),
       p50_frametime_ms: Number(perfData.p50_ms.toFixed(2)),

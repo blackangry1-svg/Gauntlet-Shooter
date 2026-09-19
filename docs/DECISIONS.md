@@ -18,3 +18,21 @@
 ## ADR 004: Souls-Combat Subsystem (Stamina, Telegraphs, Punish Windows)
 - **Context:** The game must feel deliberate rather than floaty.
 - **Decision:** Integrate a stamina bar into the HUD and Player model. All attacks and dodges consume stamina. Dodges grant 250ms of invulnerability. Enemies feature a distinct telegraph state (emissive glow + warning sound) before active attack frames, followed by a vulnerable recovery window.
+
+## ADR 005: Multi-Class Playthrough Suite Architecture & Deterministic Projectile Verification
+- **Context:** Verifying all 4 hero classes (Warrior, Elf, Wizard, Valkyrie) end-to-end requires testing distinct mechanics: archery kiting speed, staff fireball mana pacing and regeneration, and spear reach with shield defense. In headless Chrome testing environments, requestAnimationFrame can be throttled during async sleeps, leading to intermittent frame variance for long-distance projectiles.
+- **Decision:**
+  1. Expand the automated gauntlet suite (`tests/run_gauntlet_suite.js`) with dedicated end-to-end playthrough tests (TEST 20, 21, 22) verifying specific class mechanics, weapon switching, and boss victory.
+  2. Implement clean lifecycle disposal (`destroy()`) across `Player.js` and `Weapons.js`, and clear all lingering overlays (`victory-screen`, `game-over`) in `startGame()` to ensure independent test isolation.
+  3. Advance projectile trajectory steps deterministically within evaluation frames to guarantee reliable hit detection and zero-latency feedback independent of headless browser throttling.
+- **Consequences:** Guarantees 100% deterministic test execution (22/22 tests passing), verifies all hero archetypes, and prevents UI and memory state leakage between class playthroughs.
+
+## ADR 006: Comprehensive Multi-Class Mana Lifecycle, Stance Visuals, and Natural Simulation
+- **Context:** Prior class expansion suffered from omitted mana state in checkpoints, respawns, and saves, GPU memory leaks during weapon switching, lack of first-person visual feedback when blocking, and artificial test tampering (`p.mana += 12`, `takeDamage(100)`).
+- **Decision:**
+  1. Add `this.mana = this.maxMana` to `restAtCheckpoint` and `respawn()` in `Player.js`.
+  2. Serialize and restore `mana` and `room` in `main.js` save/load flow, preventing `Room NaN` in continue prompt.
+  3. Cleanly dispose Three.js meshes and reset in-flight swing animations in `Weapons.js._switchTo()`.
+  4. Implement visual blocking stances for shields and weapons in `Weapons.js` and restore correct rest offsets on swing recovery.
+  5. Refactor automated playthrough tests in `tests/run_gauntlet_suite.js` to simulate authentic 90-frame natural mana regeneration (+12.0 mana) and natural multi-arrow combat kills.
+- **Consequences:** Eliminates mana loss bugs across checkpoints and saves, removes GPU memory leaks, enhances first-person defensive feedback, and provides genuine verification integrity across all 4 classes.

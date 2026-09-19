@@ -162,15 +162,37 @@ function startGame(charType, fromSave = false, savedData = null) {
   document.getElementById('main-menu').classList.add('hidden');
   document.getElementById('game-container').classList.remove('hidden');
   document.getElementById('click-to-play').classList.remove('hidden');
+  const victoryScreen = document.getElementById('victory-screen');
+  if (victoryScreen) victoryScreen.classList.add('hidden');
+  const gameOverScreen = document.getElementById('game-over');
+  if (gameOverScreen) gameOverScreen.classList.add('hidden');
+  const pauseMenu = document.getElementById('pause-menu');
+  if (pauseMenu) pauseMenu.classList.add('hidden');
 
   audio.startMusic();
   audio.setMusicState('explore');
 
+  // Dispose previous player subsystem cleanly
+  if (player && typeof player.destroy === 'function') {
+    player.destroy();
+  }
+
   // Instantiate player
   player = new Player(camera, scene, input, audio, charType);
+
+  // Update portrait icon in HUD
+  const portraitIcons = {
+    warrior: '🛡️',
+    elf: '🏹',
+    wizard: '🔮',
+    valkyrie: '⚡',
+  };
+  const portIcon = document.getElementById('portrait-icon');
+  if (portIcon) portIcon.textContent = portraitIcons[charType] || '🛡️';
   if (fromSave && savedData) {
     player.health  = savedData.health ?? player.health;
     player.stamina = savedData.stamina ?? player.stamina;
+    player.mana    = savedData.mana ?? player.mana;
     if (savedData.checkpointPos) {
       player.checkpointPos.copy(savedData.checkpointPos);
       camera.position.copy(player.checkpointPos);
@@ -352,12 +374,26 @@ document.getElementById('btn-resume').addEventListener('click', () => {
 
 document.getElementById('btn-save').addEventListener('click', () => {
   if (player) {
+    const pz = camera.position.z;
+    const px = camera.position.x;
+    let roomNum = 1;
+    if (pz < 18) roomNum = 1;
+    else if (pz < 44) roomNum = 2;
+    else if (pz < 68 && px >= -10) roomNum = 3;
+    else if (px < -10 && pz < 76) roomNum = 4;
+    else if (px < -6 && pz >= 76) roomNum = 5;
+    else if (pz >= 70 && pz < 125) roomNum = 6;
+    else if (pz < 156) roomNum = 7;
+    else roomNum = 8;
+
     save.save({
       character: STATE.character,
       health: player.health,
       stamina: player.stamina,
+      mana: player.mana,
       checkpointPos: player.checkpointPos,
       score: STATE.score,
+      room: roomNum,
     });
     const status = document.getElementById('save-status');
     status.textContent = '✓ Progress Saved at Checkpoint';
@@ -375,6 +411,9 @@ document.getElementById('btn-quit').addEventListener('click', () => {
   map.clear();
   enemies.clear();
   particles.clear();
+  if (player && typeof player.destroy === 'function') {
+    player.destroy();
+  }
   player = null;
 });
 
@@ -477,8 +516,13 @@ window.GAME = {
       player.lookAt(x, z);
     }
   },
-  triggerDamage: (amount) => {
-    if (player) player.takeDamage(amount);
+  triggerDamage: (amount, sourcePos = null) => {
+    if (player) player.takeDamage(amount, sourcePos);
+  },
+  setBlocking: (active = true) => {
+    if (player && typeof player.setBlocking === 'function') {
+      player.setBlocking(active);
+    }
   },
   triggerDodge: () => {
     if (player) {
@@ -508,4 +552,9 @@ window.GAME = {
     }
   },
   respawn: respawnPlayer,
+  saveGame: () => {
+    document.getElementById('btn-save').click();
+    return save.load();
+  },
+  save,
 };

@@ -16,7 +16,7 @@ const CHAR_STATS = {
   warrior:  { hp: 160, stamina: 110, mana: 50,  speed: 4.8, weapons: ['sword', 'shield'] },
   elf:      { hp: 100, stamina: 120, mana: 90,  speed: 5.6, weapons: ['bow', 'sword'] },
   wizard:   { hp: 90,  stamina: 90,  mana: 140, speed: 4.8, weapons: ['staff', 'sword'] },
-  valkyrie: { hp: 130, stamina: 100, mana: 80,  speed: 5.2, weapons: ['spear', 'sword'] },
+  valkyrie: { hp: 130, stamina: 100, mana: 80,  speed: 5.2, weapons: ['spear', 'shield'] },
 };
 
 export class Player {
@@ -62,6 +62,7 @@ export class Player {
 
     // Blocking & Stun
     this.isBlocking = false;
+    this._manualBlock = false;
     this.isStunned  = false;
     this.stunTimer  = 0;
 
@@ -118,6 +119,11 @@ export class Player {
     return true;
   }
 
+  setBlocking(active) {
+    this._manualBlock = !!active;
+    this.isBlocking = this._manualBlock && !this.isStunned && !this.isDodging && this.stamina > 5;
+  }
+
   hasStamina(amount) {
     return this.stamina >= amount;
   }
@@ -141,6 +147,7 @@ export class Player {
           this.stamina = 0;
           this.guardBreak();
           this.health = Math.max(0, this.health - amount);
+          this._iframes = 0.35;
           this._flashHurt(100);
           return;
         }
@@ -158,6 +165,7 @@ export class Player {
     this.isStunned = true;
     this.stunTimer = 0.9;
     this.isBlocking = false;
+    this._manualBlock = false;
     this.audio.playSFX('guardBreak');
   }
 
@@ -195,6 +203,7 @@ export class Player {
     this.checkpointPos.copy(pos);
     this.health  = this.maxHealth;
     this.stamina = this.maxStamina;
+    this.mana    = this.maxMana;
     this.flasks  = this.maxFlasks;
     this.audio.playSFX('bonfireRest');
   }
@@ -203,9 +212,11 @@ export class Player {
     this.camera.position.copy(this.checkpointPos);
     this.health  = this.maxHealth;
     this.stamina = this.maxStamina;
+    this.mana    = this.maxMana;
     this.flasks  = this.maxFlasks;
     this.isDodging = false;
     this.isStunned = false;
+    this._manualBlock = false;
     this._iframes = 0;
   }
 
@@ -238,8 +249,8 @@ export class Player {
       this._checkInteraction();
     }
 
-    // Blocking (Hold Right Mouse Button)
-    this.isBlocking = !this.isStunned && !this.isDodging && this.input.mouseDown(2) && this.stamina > 5;
+    // Blocking (Hold Right Mouse Button or manual block trigger)
+    this.isBlocking = !this.isStunned && !this.isDodging && (this.input.mouseDown(2) || this._manualBlock) && this.stamina > 5;
 
     // Movement calculation
     const fw = this.input.moveForward  ? 1 : (this.input.moveBackward ? -1 : 0);
@@ -373,5 +384,11 @@ export class Player {
     const dir = new THREE.Vector3();
     this.camera.getWorldDirection(dir);
     return dir;
+  }
+
+  destroy() {
+    if (this.weapons && typeof this.weapons.destroy === 'function') {
+      this.weapons.destroy();
+    }
   }
 }

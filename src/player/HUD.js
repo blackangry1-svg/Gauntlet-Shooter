@@ -83,7 +83,7 @@ export class HUD {
   /**
    * Draw minimap — top-down view of current room + player position + enemies
    */
-  drawMinimap(map, enemies, playerPos) {
+  drawMinimap(map, enemies, playerPos, playerFwd = null) {
     const ctx = this._minimapCtx;
     const W = this._minimap.width;
     const H = this._minimap.height;
@@ -143,7 +143,11 @@ export class HUD {
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(wx(playerPos.x), wz(playerPos.z));
-    ctx.lineTo(wx(playerPos.x), wz(playerPos.z) - 8);
+    if (playerFwd) {
+      ctx.lineTo(wx(playerPos.x) + playerFwd.x * 9, wz(playerPos.z) + playerFwd.z * 9);
+    } else {
+      ctx.lineTo(wx(playerPos.x), wz(playerPos.z) + 9);
+    }
     ctx.stroke();
 
     // Border

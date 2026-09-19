@@ -10,16 +10,26 @@ export class EnemyManager {
     this.audio  = audio;
     this._enemies = [];
     this._hitboxes = [];
+    this.enemyProjectiles = [];
+    this.walls = [];
     this.onBossHealthChange = null;
     this.onScore = null;
     this.boss = null;
   }
 
+  setWalls(walls) {
+    this.walls = Array.isArray(walls) ? walls : [];
+    for (const e of this._enemies) {
+      e.setWalls(this.walls);
+    }
+  }
+
   spawnEnemy(TypeClass, position, player, camera) {
-    const enemy = new TypeClass(this.scene, this.audio);
+    const enemy = new TypeClass(this.scene, this.audio, this);
     enemy.mesh.position.copy(position);
     enemy.player = player;
     enemy.camera = camera;
+    enemy.setWalls(this.walls);
     this._addEnemy(enemy);
     if (enemy.isBoss) this.boss = enemy;
     return enemy;
@@ -49,6 +59,10 @@ export class EnemyManager {
     if (countEl) countEl.textContent = alive;
   }
 
+  spawnProjectile(proj) {
+    this.enemyProjectiles.push(proj);
+  }
+
   update(dt, playerPos) {
     let bossAlive = false;
     let bossHpPct = 0;
@@ -61,6 +75,16 @@ export class EnemyManager {
           bossAlive = true;
           bossHpPct = Math.max(0, enemy.health / enemy.maxHealth);
         }
+      }
+    }
+
+    // Update enemy projectiles
+    for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+      const p = this.enemyProjectiles[i];
+      p.update(dt);
+      if (p.dead) {
+        p.removeFromScene();
+        this.enemyProjectiles.splice(i, 1);
       }
     }
 
@@ -91,6 +115,10 @@ export class EnemyManager {
       this.scene.remove(e.mesh);
       e.dispose();
     }
+    for (const p of this.enemyProjectiles) {
+      p.removeFromScene();
+    }
+    this.enemyProjectiles = [];
     this._enemies = [];
     this._hitboxes = [];
     this.boss = null;

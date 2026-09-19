@@ -124,9 +124,10 @@ export class Weapons {
     return group;
   }
 
-  inject(enemies, particles) {
+  inject(enemies, particles, walls = []) {
     this.enemies = enemies;
     this.particles = particles;
+    this.walls = walls;
   }
 
   update(dt) {
@@ -150,13 +151,13 @@ export class Weapons {
         // Phase 3: Recovery (0.6 - 1.0)
         if (t < 0.3) {
           const windup = t / 0.3;
-          this._weaponMesh.rotation.x = windup * 0.4;
-          this._weaponMesh.position.z = -0.45 + windup * 0.08;
+          this._weaponMesh.rotation.x = windup * (this._isHeavy ? 0.6 : 0.4);
+          this._weaponMesh.position.z = -0.45 + windup * (this._isHeavy ? 0.12 : 0.08);
         } else if (t < 0.6) {
           const strike = (t - 0.3) / 0.3;
-          this._weaponMesh.rotation.x = 0.4 - strike * 1.6;
-          this._weaponMesh.rotation.y = -strike * 0.5;
-          this._weaponMesh.position.z = -0.37 - strike * 0.15;
+          this._weaponMesh.rotation.x = 0.4 - strike * (this._isHeavy ? 2.0 : 1.6);
+          this._weaponMesh.rotation.y = -strike * (this._isHeavy ? 0.7 : 0.5);
+          this._weaponMesh.position.z = -0.37 - strike * (this._isHeavy ? 0.22 : 0.15);
           // Trigger melee hit detection during active frames
           if (this.current.type === 'melee' && t >= 0.35 && t <= 0.55) {
             this._performMeleeHit();
@@ -170,10 +171,12 @@ export class Weapons {
       }
     }
 
-    // Attack Trigger (Left Mouse Button)
+    // Attack Trigger (Left Mouse = Light Attack, R = Heavy Attack)
     // Only attack when not blocking, not stunned, not in cooldown
     if (this.input.mouseJustDown(0)) {
       this.triggerAttack(false);
+    } else if (this.input.heavyAttack) {
+      this.triggerAttack(true);
     }
 
     // Update projectiles
@@ -198,27 +201,33 @@ export class Weapons {
 
   _attack() {
     const weapon = this.current;
-    const stamCost = weapon.staminaCost;
+    const stamCost = this._isHeavy ? Math.round(weapon.staminaCost * 1.7) : weapon.staminaCost;
+    const manaCost = weapon.manaCost || 0;
 
     // Check player stamina
     if (this.player && !this.player.consumeStamina(stamCost)) {
       return; // Not enough stamina
     }
+    // Check player mana for magic attacks
+    if (manaCost > 0 && this.player && !this.player.consumeMana(manaCost)) {
+      return; // Not enough mana
+    }
 
-    this._cooldown = weapon.cooldown;
+    this._cooldown = this._isHeavy ? weapon.cooldown * 1.35 : weapon.cooldown;
     this._swinging = true;
     this._swingT = 0;
     this._currentAttackId++;
     this._hitEnemiesThisSwing.clear();
 
+    const dmg = this._isHeavy ? weapon.heavyDamage : weapon.damage;
     if (weapon.type === 'melee') {
-      this.audio.playSFX('swordSwing');
+      this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordSwing');
     } else if (weapon.type === 'projectile') {
       this.audio.playSFX('arrowFire');
-      this._spawnProjectile('arrow', weapon.damage, weapon.range, 28, 0xd4af37);
+      this._spawnProjectile('arrow', dmg, weapon.range, 28, 0xd4af37);
     } else if (weapon.type === 'magic') {
       this.audio.playSFX('fireballCast');
-      this._spawnProjectile('fireball', weapon.damage, weapon.range, 18, 0xff5522);
+      this._spawnProjectile('fireball', dmg, weapon.range, 18, 0xff5522);
     }
   }
 
@@ -226,6 +235,7 @@ export class Weapons {
     if (!this.enemies) return;
 
     const weapon = this.current;
+    const damage = this._isHeavy ? weapon.heavyDamage : weapon.damage;
     const playerPos = this.camera.position;
     const forward = new THREE.Vector3();
     this.camera.getWorldDirection(forward);
@@ -243,13 +253,13 @@ export class Weapons {
         // Forward arc (cos >= 0.45, ~63 degrees)
         if (dot >= 0.45) {
           this._hitEnemiesThisSwing.add(enemy);
-          enemy.takeDamage(weapon.damage);
-          this.audio.playSFX('swordHit');
+          enemy.takeDamage(damage, this._isHeavy);
+          this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordHit');
           if (this.particles) {
             const hitPoint = enemy.mesh.position.clone().add(new THREE.Vector3(0, 1.2, 0));
-            this.particles.spawnHit(hitPoint, 'slash');
+            this.particles.spawnHit(hitPoint, this._isHeavy ? 'spark' : 'slash');
           }
-          spawnDamageNumber(enemy.mesh.position, weapon.damage, this.camera, '#ffdd44');
+          spawnDamageNumber(enemy.mesh.position, damage, this.camera, this._isHeavy ? '#ff6622' : '#ffdd44');
           break;
         }
       }
@@ -259,14 +269,14 @@ export class Weapons {
   _spawnProjectile(type, damage, maxRange, speed, color) {
     const proj = new Projectile(
       this.scene, this.camera, type, damage, maxRange, speed, color,
-      this.enemies, this.particles, this.audio
+      this.enemies, this.particles, this.audio, this.walls
     );
     this.projectiles.push(proj);
   }
 }
 
 class Projectile {
-  constructor(scene, camera, type, damage, maxRange, speed, color, enemies, particles, audio) {
+  constructor(scene, camera, type, damage, maxRange, speed, color, enemies, particles, audio, walls = []) {
     this.scene    = scene;
     this.camera   = camera;
     this.damage   = damage;
@@ -275,6 +285,7 @@ class Projectile {
     this.enemies  = enemies;
     this.particles= particles;
     this.audio    = audio;
+    this.walls    = walls;
     this.dead     = false;
     this._traveled= 0;
 
@@ -309,6 +320,7 @@ class Projectile {
   update(dt) {
     if (this.dead) return;
 
+    const prevPos = this.mesh.position.clone();
     const step = this.speed * dt;
     this.mesh.position.addScaledVector(this.direction, step);
     this._traveled += step;
@@ -318,11 +330,34 @@ class Projectile {
       return;
     }
 
+    // 1. Check world wall collision (swept segment prevents wall penetration/tunneling)
+    if (this.walls && this.walls.length > 0) {
+      const minPx = Math.min(prevPos.x, this.mesh.position.x);
+      const maxPx = Math.max(prevPos.x, this.mesh.position.x);
+      const minPz = Math.min(prevPos.z, this.mesh.position.z);
+      const maxPz = Math.max(prevPos.z, this.mesh.position.z);
+
+      for (const w of this.walls) {
+        const minX = w.x - w.w / 2;
+        const maxX = w.x + w.w / 2;
+        const minZ = w.z - w.d / 2;
+        const maxZ = w.z + w.d / 2;
+        if (maxPx >= minX && minPx <= maxX && maxPz >= minZ && minPz <= maxZ) {
+          this.dead = true;
+          if (this.particles) this.particles.spawnHit(this.mesh.position, 'spark');
+          this.audio.playSFX('arrowHit', 0.5);
+          return;
+        }
+      }
+    }
+
+    // 2. Check enemy hitboxes along segment
     if (this.enemies) {
       const raycaster = new THREE.Raycaster(
-        this.mesh.position.clone(),
-        this.direction.clone(),
-        0, step + 0.3
+        prevPos,
+        this.direction,
+        0,
+        step + 0.25
       );
       const hits = raycaster.intersectObjects(this.enemies.getHitboxes(), true);
       if (hits.length > 0) {
@@ -339,8 +374,16 @@ class Projectile {
   }
 
   removeFromScene() {
+    if (this._light) {
+      this.mesh.remove(this._light);
+      if (this._light.dispose) this._light.dispose();
+    }
     this.scene.remove(this.mesh);
     this.mesh.geometry.dispose();
-    this.mesh.material.dispose();
+    if (Array.isArray(this.mesh.material)) {
+      this.mesh.material.forEach(m => m.dispose());
+    } else if (this.mesh.material) {
+      this.mesh.material.dispose();
+    }
   }
 }

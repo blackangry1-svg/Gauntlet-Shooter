@@ -71,6 +71,8 @@ export class AudioManager {
       // Boss roar / phase change
       bossRoar:    { gen: 'boom', freq: 55, duration: 0.9, attack: 0.02, decay: 0.88 },
       bossPhase:   { gen: 'boom', freq: 45, duration: 1.2, attack: 0.03, decay: 1.17 },
+      // Golem / ground smash boom
+      boom:        { gen: 'boom', freq: 65, duration: 0.55, attack: 0.01, decay: 0.54 },
       // Footstep — low thud
       footstep:    { gen: 'hit', freq: 80, duration: 0.08, attack: 0.005, decay: 0.075 },
       // UI click

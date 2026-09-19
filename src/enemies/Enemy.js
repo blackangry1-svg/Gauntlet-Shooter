@@ -22,9 +22,10 @@ function getOrCreateSpriteTexture(path) {
 }
 
 export class Enemy {
-  constructor(scene, audio, config) {
-    this.scene  = scene;
-    this.audio  = audio;
+  constructor(scene, audio, config, manager = null) {
+    this.scene   = scene;
+    this.audio   = audio;
+    this.manager = manager;
 
     this.enemyType      = config.type    || 'orc';
     this.maxHealth      = config.hp      || 50;
@@ -38,6 +39,8 @@ export class Enemy {
     this.attackCooldown = config.atkCD   || 1.5;
     this.scoreValue     = config.score   || 100;
     this.isBoss         = false;
+    this.walls          = [];
+    this.enemyRadius    = (config.size || 1.6) * 0.35;
 
     // Sprite sheet grid definition
     this.sheetRows = config.rows || 6;
@@ -67,6 +70,38 @@ export class Enemy {
     // Build billboard mesh with cloned texture for independent UV offsets
     this._buildMesh(config.size || 1.6, config.spritePath, config.color || 0x228833);
     this.setAnimation('idle');
+  }
+
+  setWalls(walls) {
+    this.walls = Array.isArray(walls) ? walls : [];
+  }
+
+  _resolveX(oldPos, newPos) {
+    const r = this.enemyRadius || 0.4;
+    for (const wall of this.walls) {
+      const minX = wall.x - wall.w / 2 - r;
+      const maxX = wall.x + wall.w / 2 + r;
+      const minZ = wall.z - wall.d / 2 - r;
+      const maxZ = wall.z + wall.d / 2 + r;
+      if (newPos.x > minX && newPos.x < maxX && oldPos.z > minZ && oldPos.z < maxZ) {
+        return oldPos.x;
+      }
+    }
+    return newPos.x;
+  }
+
+  _resolveZ(oldPos, newPos) {
+    const r = this.enemyRadius || 0.4;
+    for (const wall of this.walls) {
+      const minX = wall.x - wall.w / 2 - r;
+      const maxX = wall.x + wall.w / 2 + r;
+      const minZ = wall.z - wall.d / 2 - r;
+      const maxZ = wall.z + wall.d / 2 + r;
+      if (newPos.z > minZ && newPos.z < maxZ && newPos.x > minX && newPos.x < maxX) {
+        return oldPos.z;
+      }
+    }
+    return newPos.z;
   }
 
   _buildMesh(size, spritePath, fallbackColor) {
@@ -141,7 +176,7 @@ export class Enemy {
     this.tex.offset.y = (this.sheetRows - 1 - row) / this.sheetRows;
   }
 
-  takeDamage(amount) {
+  takeDamage(amount, isHeavy = false) {
     if (this.dead) return;
     this.health -= amount;
     this._hitTimer = 0.15;
@@ -154,6 +189,15 @@ export class Enemy {
 
     if (this.health <= 0) {
       this._die();
+    } else if (isHeavy && !this.isBoss) {
+      this.state = 'stagger';
+      this.setAnimation('recover');
+      this._stateT = 0;
+      this._staggerDuration = 0.65;
+      if (this.material) {
+        this.material.emissive = new THREE.Color(1, 0.8, 0.2);
+        this.material.emissiveIntensity = 1.2;
+      }
     } else if (this.state === 'idle') {
       this.state = 'chase';
       this.setAnimation('chase');
@@ -198,6 +242,9 @@ export class Enemy {
           // Keep telegraph glow
           this.material.emissive = new THREE.Color(1, 0.6, 0.1);
           this.material.emissiveIntensity = 1.0;
+        } else if (this.state === 'stagger') {
+          this.material.emissive = new THREE.Color(1, 0.8, 0.2);
+          this.material.emissiveIntensity = 0.8;
         } else {
           this.material.emissiveIntensity = 0;
         }
@@ -242,13 +289,31 @@ export class Enemy {
             this.material.emissiveIntensity = 1.2;
           }
         } else {
-          // Move toward player
+          // Move toward player with AABB wall collision resolution
           const dir = new THREE.Vector3().subVectors(playerPos, this.mesh.position);
           dir.y = 0;
           if (dir.lengthSq() > 0.01) {
             dir.normalize();
-            this.mesh.position.addScaledVector(dir, this.speed * dt);
+            const moveDist = this.speed * dt;
+            const oldPos = this.mesh.position.clone();
+            const newPos = oldPos.clone();
+            newPos.x += dir.x * moveDist;
+            newPos.z += dir.z * moveDist;
+
+            newPos.x = this._resolveX(oldPos, newPos);
+            newPos.z = this._resolveZ(oldPos, newPos);
+            this.mesh.position.copy(newPos);
           }
+        }
+        break;
+
+      case 'stagger':
+        // Punish window caused by heavy attack interrupt
+        if (this._stateT >= (this._staggerDuration || 0.65)) {
+          this.state = 'chase';
+          this.setAnimation('chase');
+          this._stateT = 0;
+          this._cooldownT = 0.5;
         }
         break;
 
@@ -309,11 +374,98 @@ export class Enemy {
 }
 
 // ─────────────────────────────────────────────────────────────
+// ENEMY PROJECTILES (Physical arrows, etc.)
+// ─────────────────────────────────────────────────────────────
+
+export class EnemyProjectile {
+  constructor(scene, startPos, targetPos, damage, speed, color, player, audio, walls = []) {
+    this.scene  = scene;
+    this.damage = damage;
+    this.speed  = speed;
+    this.player = player;
+    this.audio  = audio;
+    this.walls  = walls;
+    this.dead   = false;
+    this._traveled = 0;
+    this.maxRange  = 35;
+
+    this.direction = new THREE.Vector3().subVectors(targetPos, startPos);
+    this.direction.y = 0;
+    if (this.direction.lengthSq() > 0.001) {
+      this.direction.normalize();
+    } else {
+      this.direction.set(0, 0, 1);
+    }
+
+    const geo = new THREE.CylinderGeometry(0.02, 0.02, 0.45, 4);
+    const mat = new THREE.MeshStandardMaterial({
+      color,
+      emissive: color,
+      emissiveIntensity: 0.8,
+    });
+    this.mesh = new THREE.Mesh(geo, mat);
+    this.mesh.position.copy(startPos);
+    this.mesh.position.y += 1.1; // chest height
+    this.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), this.direction);
+    scene.add(this.mesh);
+  }
+
+  update(dt) {
+    if (this.dead) return;
+
+    const prevPos = this.mesh.position.clone();
+    const step = this.speed * dt;
+    this.mesh.position.addScaledVector(this.direction, step);
+    this._traveled += step;
+
+    if (this._traveled >= this.maxRange) {
+      this.dead = true;
+      return;
+    }
+
+    // World wall collision (swept segment)
+    if (this.walls && this.walls.length > 0) {
+      const minPx = Math.min(prevPos.x, this.mesh.position.x);
+      const maxPx = Math.max(prevPos.x, this.mesh.position.x);
+      const minPz = Math.min(prevPos.z, this.mesh.position.z);
+      const maxPz = Math.max(prevPos.z, this.mesh.position.z);
+      for (const w of this.walls) {
+        const minX = w.x - w.w / 2;
+        const maxX = w.x + w.w / 2;
+        const minZ = w.z - w.d / 2;
+        const maxZ = w.z + w.d / 2;
+        if (maxPx >= minX && minPx <= maxX && maxPz >= minZ && minPz <= maxZ) {
+          this.dead = true;
+          this.audio.playSFX('arrowHit', 0.4);
+          return;
+        }
+      }
+    }
+
+    // Player collision
+    if (this.player) {
+      const pPos = this.player.camera.position;
+      const dist = Math.hypot(this.mesh.position.x - pPos.x, this.mesh.position.z - pPos.z);
+      if (dist < 0.75) {
+        this.player.takeDamage(this.damage, this.mesh.position);
+        this.dead = true;
+      }
+    }
+  }
+
+  removeFromScene() {
+    this.scene.remove(this.mesh);
+    this.mesh.geometry.dispose();
+    this.mesh.material.dispose();
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
 // ENEMY ARCHETYPES
 // ─────────────────────────────────────────────────────────────
 
 export class OrcGrunt extends Enemy {
-  constructor(scene, audio) {
+  constructor(scene, audio, manager = null) {
     super(scene, audio, {
       type: 'orc',
       hp: 60,
@@ -337,12 +489,12 @@ export class OrcGrunt extends Enemy {
         recover: { row: 0, count: 1, speed: 1 },
         dead:    { row: 5, count: 6, speed: 6 },
       }
-    });
+    }, manager);
   }
 }
 
 export class SkeletonArcher extends Enemy {
-  constructor(scene, audio) {
+  constructor(scene, audio, manager = null) {
     super(scene, audio, {
       type: 'archer',
       hp: 45,
@@ -366,27 +518,31 @@ export class SkeletonArcher extends Enemy {
         recover: { row: 0, count: 1, speed: 1 },
         dead:    { row: 5, count: 6, speed: 6 },
       }
-    });
+    }, manager);
   }
 
   _executeAttack(playerPos, dist) {
     this.audio.playSFX('arrowFire', 0.8);
-    // Spawn enemy arrow toward player
-    if (this.player) {
-      setTimeout(() => {
-        if (!this.dead && this.player) {
-          const currentDist = this.mesh.position.distanceTo(this.player.camera.position);
-          if (currentDist < 25) {
-            this.player.takeDamage(this.damage, this.mesh.position);
-          }
-        }
-      }, 250);
+    // Spawn physical arrow projectile that travels and can be blocked or dodged
+    if (this.manager && this.player) {
+      const proj = new EnemyProjectile(
+        this.scene,
+        this.mesh.position,
+        this.player.camera.position,
+        this.damage,
+        22,
+        0xeecc44,
+        this.player,
+        this.audio,
+        this.walls
+      );
+      this.manager.spawnProjectile(proj);
     }
   }
 }
 
 export class DeathBat extends Enemy {
-  constructor(scene, audio) {
+  constructor(scene, audio, manager = null) {
     super(scene, audio, {
       type: 'bat',
       hp: 35,
@@ -410,13 +566,13 @@ export class DeathBat extends Enemy {
         recover: { row: 0, count: 1, speed: 1 },
         dead:    { row: 5, count: 4, speed: 8 },
       }
-    });
+    }, manager);
     this.mesh.position.y = 1.2; // flying
   }
 }
 
 export class StoneGolem extends Enemy {
-  constructor(scene, audio) {
+  constructor(scene, audio, manager = null) {
     super(scene, audio, {
       type: 'golem',
       hp: 240,
@@ -440,7 +596,7 @@ export class StoneGolem extends Enemy {
         recover: { row: 0, count: 1, speed: 1 },
         dead:    { row: 3, count: 4, speed: 4 },
       }
-    });
+    }, manager);
   }
 
   _executeAttack(playerPos, dist) {
@@ -450,7 +606,7 @@ export class StoneGolem extends Enemy {
 }
 
 export class DeathKnight extends Enemy {
-  constructor(scene, audio) {
+  constructor(scene, audio, manager = null) {
     super(scene, audio, {
       type: 'boss',
       hp: 550,
@@ -474,9 +630,10 @@ export class DeathKnight extends Enemy {
         recover: { row: 0, count: 1, speed: 1 },
         dead:    { row: 2, count: 6, speed: 5 },
       }
-    });
+    }, manager);
     this.isBoss = true;
     this.phase = 1;
+    this.currentAttackType = 'cleave';
   }
 
   update(dt, playerPos) {
@@ -485,18 +642,75 @@ export class DeathKnight extends Enemy {
     // Phase 2 transition at 50% HP
     if (this.phase === 1 && this.health <= this.maxHealth * 0.5) {
       this.phase = 2;
-      this.speed = 3.6;
+      this.speed = 3.5;
       this.damage = 36;
-      this.telegraphTime = 0.45;
-      this.recoverTime = 0.55;
+      this.attackCooldown = 1.3;
       this.audio.playSFX('bossPhase', 1.2);
+    }
+
+    // Phase 2 red/purple aura pulse
+    if (this.phase === 2 && this.material && this.state !== 'windup' && this.state !== 'stagger') {
+      const pulse = Math.sin(Date.now() * 0.007) * 0.3 + 0.5;
+      this.material.emissive = new THREE.Color(0.8 * pulse, 0.1 * pulse, 0.5 * pulse);
+      this.material.emissiveIntensity = 0.9 * pulse;
+    }
+
+    // Intelligent Boss Attack Selection
+    if (this.state === 'chase' && playerPos && this._cooldownT <= 0) {
+      const dist = this.mesh.position.distanceTo(playerPos);
+      if (this.phase === 2 && dist <= 6.5 && Math.random() < 0.4) {
+        // Phase 2 Ground Shatter Slam
+        this.currentAttackType = 'slam';
+        this.telegraphTime = 0.80;
+        this.recoverTime = 0.65;
+        this.attackRange = 6.5;
+      } else if (dist > 3.4 && dist <= 7.5) {
+        // Abyssal Lunge Thrust
+        this.currentAttackType = 'thrust';
+        this.telegraphTime = this.phase === 2 ? 0.45 : 0.55;
+        this.recoverTime = 0.70;
+        this.attackRange = 7.5;
+      } else if (dist <= 3.4) {
+        // Heavy Cleave
+        this.currentAttackType = 'cleave';
+        this.telegraphTime = this.phase === 2 ? 0.45 : 0.65;
+        this.recoverTime = 0.75;
+        this.attackRange = 3.4;
+      }
     }
 
     super.update(dt, playerPos);
   }
 
   _executeAttack(playerPos, dist) {
-    this.audio.playSFX('heavySwing', 1.0);
-    super._executeAttack(playerPos, dist);
+    if (this.currentAttackType === 'slam') {
+      // Area-of-effect ground shockwave
+      this.audio.playSFX('boom', 1.2);
+      if (dist <= 6.0 && this.player) {
+        this.player.takeDamage(Math.round(this.damage * 1.15), this.mesh.position);
+      }
+    } else if (this.currentAttackType === 'thrust') {
+      // Lunging thrust forward
+      this.audio.playSFX('heavySwing', 1.1);
+      const lunge = new THREE.Vector3().subVectors(playerPos, this.mesh.position);
+      lunge.y = 0;
+      if (lunge.lengthSq() > 0.01) {
+        lunge.normalize();
+        const oldPos = this.mesh.position.clone();
+        const newPos = oldPos.clone().addScaledVector(lunge, 3.2);
+        newPos.x = this._resolveX(oldPos, newPos);
+        newPos.z = this._resolveZ(oldPos, newPos);
+        this.mesh.position.copy(newPos);
+      }
+      const newDist = this.mesh.position.distanceTo(playerPos);
+      if (newDist <= 3.4 && this.player) {
+        this.player.takeDamage(this.damage, this.mesh.position);
+      }
+    } else {
+      // Standard heavy cleaving slash
+      this.audio.playSFX('heavySwing', 1.0);
+      super._executeAttack(playerPos, dist);
+    }
   }
 }
+

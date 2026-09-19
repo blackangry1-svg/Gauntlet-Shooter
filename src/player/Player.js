@@ -57,7 +57,7 @@ export class Player {
     this._moveDir  = new THREE.Vector3();
     this.isDodging = false;
     this.dodgeTimer = 0;
-    this.dodgeDuration = 0.35;
+    this.dodgeDuration = 0.38;
     this._dodgeDir = new THREE.Vector3();
 
     // Blocking & Stun
@@ -102,12 +102,19 @@ export class Player {
     this.pitch = 0;
     this.camera.rotation.y = this.yaw;
     this.camera.rotation.x = this.pitch;
+    this.camera.updateMatrixWorld();
   }
 
   consumeStamina(amount) {
     if (this.stamina < amount) return false;
     this.stamina = Math.max(0, this.stamina - amount);
     this._staminaTimer = this.staminaRegenDelay;
+    return true;
+  }
+
+  consumeMana(amount) {
+    if (this.mana < amount) return false;
+    this.mana = Math.max(0, this.mana - amount);
     return true;
   }
 
@@ -239,25 +246,29 @@ export class Player {
     const rt = this.input.moveRight    ? 1 : (this.input.moveLeft     ? -1 : 0);
     const isTryingMove = (fw !== 0 || rt !== 0);
 
-    const sinY = Math.sin(this.yaw);
-    const cosY = Math.cos(this.yaw);
-    this._moveDir.set(
-      rt * cosY - fw * sinY,
-      0,
-      rt * sinY + fw * cosY
-    );
-    if (this._moveDir.lengthSq() > 0) this._moveDir.normalize();
+    const forward = new THREE.Vector3();
+    this.camera.getWorldDirection(forward);
+    forward.y = 0;
+    if (forward.lengthSq() > 0.001) forward.normalize();
+
+    // Right vector on XZ plane: 90 degrees clockwise from forward
+    const right = new THREE.Vector3(-forward.z, 0, forward.x);
+
+    this._moveDir.set(0, 0, 0);
+    if (fw !== 0) this._moveDir.addScaledVector(forward, fw);
+    if (rt !== 0) this._moveDir.addScaledVector(right, rt);
+    if (this._moveDir.lengthSq() > 0.001) this._moveDir.normalize();
 
     // Dodge execution (Space)
     if (!this.isDodging && !this.isStunned && this.input.dodge && this.consumeStamina(22)) {
       this.isDodging = true;
       this.dodgeTimer = this.dodgeDuration;
-      this._iframes = 0.25; // 250ms invulnerability window
+      this._iframes = 0.28; // 280ms invulnerability window
       if (isTryingMove) {
         this._dodgeDir.copy(this._moveDir);
       } else {
         // Dodge backward if stationary
-        this._dodgeDir.set(sinY, 0, -cosY).normalize();
+        this._dodgeDir.copy(forward).negate();
       }
       this.audio.playSFX('dodge');
     }

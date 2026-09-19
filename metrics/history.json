@@ -764,5 +764,804 @@
     },
     "total_passed": 13,
     "total_tests": 13
+  },
+  {
+    "timestamp": "2026-09-19T12:59:40.279Z",
+    "iteration": 1,
+    "milestone": 19,
+    "mean_fps": 60,
+    "mean_frametime_ms": 16.67,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 16.8,
+    "p99_frametime_ms": 17,
+    "frames_over_20ms": 0,
+    "frames_over_33ms": 0,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 2
+          },
+          "posMoved": {
+            "x": -3.0371240618854347e-16,
+            "z": -0.48000000000000076
+          },
+          "distMoved": 2.480000000000001
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "posAfterWall": -1.0399999999999974
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 28
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.16666666666666669,
+          "stamBefore": 101.60000000000008,
+          "stamAfter": 79.60000000000008
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "windup",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      }
+    },
+    "total_passed": 13,
+    "total_tests": 13
+  },
+  {
+    "timestamp": "2026-09-19T13:08:48.312Z",
+    "iteration": 1,
+    "milestone": 19,
+    "mean_fps": 60,
+    "mean_frametime_ms": 16.67,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 16.8,
+    "p99_frametime_ms": 16.9,
+    "frames_over_20ms": 0,
+    "frames_over_33ms": 0,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 2
+          },
+          "posMoved": {
+            "x": -3.0371240618854347e-16,
+            "z": 4.480000000000002
+          },
+          "distMoved": 2.480000000000002,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 28
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": false,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.016666666666666715,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "windup",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 55,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": false,
+        "details": {
+          "wallCount": 35,
+          "diedAtWall": false
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      }
+    },
+    "total_passed": 17,
+    "total_tests": 19
+  },
+  {
+    "timestamp": "2026-09-19T13:12:04.743Z",
+    "iteration": 1,
+    "milestone": 19,
+    "mean_fps": 60,
+    "mean_frametime_ms": 16.67,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 16.8,
+    "p99_frametime_ms": 17,
+    "frames_over_20ms": 0,
+    "frames_over_33ms": 0,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 2
+          },
+          "posMoved": {
+            "x": -3.2330675497490107e-16,
+            "z": 4.640000000000002
+          },
+          "distMoved": 2.6400000000000023,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 28
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.2466666666666667,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "windup",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 55,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      }
+    },
+    "total_passed": 19,
+    "total_tests": 19
+  },
+  {
+    "timestamp": "2026-09-19T13:12:42.328Z",
+    "iteration": 1,
+    "milestone": 19,
+    "mean_fps": 60,
+    "mean_frametime_ms": 16.67,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 16.8,
+    "p99_frametime_ms": 17.2,
+    "frames_over_20ms": 0,
+    "frames_over_33ms": 0,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 2
+          },
+          "posMoved": {
+            "x": -3.2330675497490107e-16,
+            "z": 4.640000000000002
+          },
+          "distMoved": 2.6400000000000023,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 28
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.26333333333333336,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "windup",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 55,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      }
+    },
+    "total_passed": 19,
+    "total_tests": 19
+  },
+  {
+    "timestamp": "2026-09-19T13:14:24.949Z",
+    "iteration": 1,
+    "milestone": 19,
+    "mean_fps": 58,
+    "mean_frametime_ms": 17.3,
+    "p50_frametime_ms": 17.3,
+    "p95_frametime_ms": 17.7,
+    "p99_frametime_ms": 17.9,
+    "frames_over_20ms": 0,
+    "frames_over_33ms": 0,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 2
+          },
+          "posMoved": {
+            "x": -3.1350958058172227e-16,
+            "z": 4.560000000000002
+          },
+          "distMoved": 2.5600000000000023,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 28
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.2466666666666667,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "windup",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 55,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 35,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      }
+    },
+    "total_passed": 19,
+    "total_tests": 19
   }
 ]

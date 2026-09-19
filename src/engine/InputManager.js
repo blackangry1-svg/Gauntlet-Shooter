@@ -77,6 +77,7 @@ export class InputManager {
   get interact()     { return this.justPressed('KeyE') || this.justPressed('KeyF'); }
   get dodge()        { return this.justPressed('Space'); }
   get useFlask()     { return this.justPressed('KeyQ'); }
+  get heavyAttack()  { return this.justPressed('KeyR'); }
 
   // Must be called at end of each frame
   endFrame() {

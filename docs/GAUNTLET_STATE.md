@@ -1,19 +1,23 @@
 # GAUNTLET STATE: GAUNTLET SOUL-DOOM
 
 - **Project:** GAUNTLET SOUL-DOOM (Gauntlet Legends Shooter / Souls-Doom Hybrid)
-- **Current Iteration:** Iteration 03 (Gauntlet Complete & Verified)
-- **Current Milestone:** Milestone 20 (Final Polished & Certified Vertical Slice)
-- **Last Accepted Change:** Fixed input consumption fixed-timestep timing, dynamic melee hit positioning, and camera lookAt alignment (13/13 automated tests passing on consecutive runs)
-- **Current Primary Defect:** None. All functional, combat, movement, AI, art, audio, UI, and performance gates passing.
+- **Current Iteration:** Iteration 04 (Review & Remediation Complete, Certified)
+- **Current Milestone:** Milestone 21 (Full Suite Expanded to 19/19 Tests, Double-Confirmed)
+- **Last Accepted Change:** Fixed inverted movement vectors, tampered wall collision test, non-functional heavy attack and missing stagger state, unlimited staff mana, unconstrained projectile and enemy wall penetration, skeleton archer hitscan wall-hack, boss lack of attack variety, minimap LOS misalignment, and missing 'boom' SFX.
+- **Current Primary Defect:** None. All 19 automated gauntlet tests pass cleanly across 2/2 consecutive verification runs.
 - **Completed Work:**
-  1. **Art & Chromakey Pipeline:** Processed all 6 sprite sheets (`death_bat`, `death_knight`, `orc_grunt`, `skeleton_archer`, `stone_golem`, `warrior`) using `tools/process_sprites.py` with Pillow/NumPy, completely eliminating `#FF00FF` magenta fringe and generating RGBA assets with edge despill.
-  2. **Souls Combat Mechanics:** Integrated stamina management (consumption on attack/dodge/sprint, regeneration delay), 250ms invulnerability dodge roll (`Space`), directional blocking (`Right Mouse Button`) with guard-break penalty, 3 charges of Soul Flask healing (`Q`), and attack commitment animations (wind-up -> active strike -> recovery).
-  3. **Enemy Archetypes & AI:** Built billboard sprite animations with UV frame sequencing, multi-phase state machine (`idle` -> `chase` -> `windup` with audio-visual telegraph -> `attack` -> `recover` punish window -> `dead`), and custom behaviors for Orc Grunt (melee brawler), Skeleton Archer (retreating ranged sniper), Death Bat (aerial swooper), Stone Golem (elite tank), and Death Knight (2-phase arena boss).
-  4. **Continuous Interconnected Level:** Redesigned map architecture from disconnected rooms into a contiguous 8-sector dungeon featuring Crypt Entrance (safe zone), Hall of the Damned, Catacomb Junction (hub with locked portcullis), Sunken Vault (skeleton archers + secret chest with Crest of Fortitude), Shrine of Ash (bonfire checkpoint with healing rest), High Ramparts (Stone Golem elite guarding shortcut lever), Blood Cloister, and Throne of Death (boss arena sealed by glowing fog gate).
-  5. **Audio Synthesis Subsystem:** Expanded procedural Web Audio synthesizer in `src/engine/AudioManager.js` with zero-latency SFX for `dodge`, `block`, `guardBreak`, `telegraphWarn`, `bonfireRest`, `leverPull`, `chestOpen`, `bossPhase`, and dual-mode ambient/combat generative synth music.
-  6. **Telemetry & Benchmarks:** Maintained 60 FPS frame pacing on target integrated GPU profile: mean frame time 16.67ms, p95 17.0ms, p99 17.3ms, 0 frames exceeding 20ms or 33ms.
+  1. **Inverted Movement Vector Fix:** Replaced faulty trigonometric Euler angles in `Player.js` with camera's world direction and orthogonal right vector. Forward (`KeyW`), backward (`KeyS`), left strafe (`KeyA`), and right strafe (`KeyD`) are now mathematically aligned with dungeon geometry.
+  2. **Heavy Attack & Enemy Stagger System:** Bound `KeyR` to heavy attacks in `InputManager.js`. Heavy attacks deal increased damage (55 vs 32), consume 1.7x stamina, have distinct windup/recovery commitment, and trigger a 0.65s `stagger` punish window in enemy AI with visual golden emissive highlights.
+  3. **Multi-Class Mana & Weapon Mechanics:** Added `consumeMana(amount)` to `Player.js`. Magic attacks (Wizard staff) now strictly verify and consume mana (15 mana/cast), preventing infinite fireball exploits.
+  4. **Physical Projectile System & Swept Anti-Tunneling:** Implemented `EnemyProjectile` class for Skeleton Archer, eliminating instant wall-hacking damage and replacing it with physical 3D arrows that can be blocked or avoided. Implemented swept bounding box collision for player and enemy projectiles against world walls to prevent wall phasing and tunneling.
+  5. **Enemy AABB Wall Collision:** Added sliding wall collision (`_resolveX`/`_resolveZ`) to `Enemy.js` and wired dungeon walls via `enemies.setWalls(walls)`. Enemies can no longer clip through walls, pillars, or locked portcullises.
+  6. **Multi-Attack Boss Encounter:** Enhanced `DeathKnight` boss with a 3-attack pattern: close-range Cleaving Slash, medium-range Abyssal Lunge Thrust (3.5m forward dash), and Phase 2 Dark Ground-Shatter Slam (6m radius shockwave requiring dodge i-frames or retreat) with pulsing crimson aura.
+  7. **Audio Subsystem Expansion:** Added `'boom'` synthesizer definition in `AudioManager.js` for ground slams and explosions.
+  8. **Minimap Line of Sight:** Updated HUD minimap to draw player heading according to true camera forward direction.
+  9. **Dodge & Telemetry Hardening:** Tuned dodge duration to 380ms with 280ms invulnerability frames, atomic CDP state evaluation, and camera world matrix updates in `Player.lookAt`.
 - **Verification Summary:**
-  - Automated CDP Test Harness: 13/13 passing tests (`BOOT`, `MOVEMENT`, `COLLISION`, `COMBAT`, `DAMAGE`, `DODGE`, `RESPAWN`, `DOOR`, `AI`, `BOSS`, `WIN`, `DEATH`, `RESTART`).
+  - Automated CDP Test Harness: 19/19 passing tests (`BOOT`, `MOVEMENT`, `COLLISION`, `COMBAT`, `DAMAGE`, `DODGE`, `RESPAWN`, `DOOR`, `AI`, `BOSS`, `WIN`, `DEATH`, `RESTART`, `HEAVY_ATTACK`, `MULTI_CLASS_MANA`, `ENEMY_PROJECTILE`, `PROJECTILE_WALL`, `ENEMY_WALL`, `BOSS_VARIETY`).
   - Consecutive Runs: 2/2 double-confirmed without regression.
+  - Performance: Mean 60 FPS, mean frame time 16.67ms, p95 16.8ms, p99 17.2ms, 0 frames exceeding 20ms or 33ms.
   - Visual Regression: 10 automated camera checkpoints captured in `screenshots/`.
 - **Completion Gate Status:** 47/47 PASS (100%).

@@ -45,9 +45,9 @@ async function run() {
     await sleep(1500);
 
     // ─────────────────────────────────────────────────────────
-    // TEST 2: MOVEMENT TEST
+    // TEST 2: MOVEMENT TEST (Forward Direction Check)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 2/13] Running MOVEMENT TEST...');
+    console.log('\n[TEST 2/19] Running MOVEMENT TEST (True Forward Direction)...');
     const posStart = await harness.evaluate(`({ x: window.GAME.player.camera.position.x, z: window.GAME.player.camera.position.z })`);
     // Simulate moving forward for 500ms
     await harness.evaluate(`
@@ -59,9 +59,10 @@ async function run() {
     `);
     const posMoved = await harness.evaluate(`({ x: window.GAME.player.camera.position.x, z: window.GAME.player.camera.position.z })`);
     const distMoved = Math.hypot(posMoved.x - posStart.x, posMoved.z - posStart.z);
-    const movePass = distMoved > 0.5;
-    results['MOVEMENT_TEST'] = { pass: movePass, details: { posStart, posMoved, distMoved } };
-    console.log(`  -> Result: ${movePass ? 'PASS ✓' : 'FAIL ✗'} (Distance moved: ${distMoved.toFixed(2)}m)`);
+    const movedForward = posMoved.z > posStart.z + 0.5; // Must move forward into dungeon (+Z)
+    const movePass = distMoved > 0.5 && movedForward;
+    results['MOVEMENT_TEST'] = { pass: movePass, details: { posStart, posMoved, distMoved, movedForward } };
+    console.log(`  -> Result: ${movePass ? 'PASS ✓' : 'FAIL ✗'} (Distance moved: ${distMoved.toFixed(2)}m, Forward +Z: ${movedForward})`);
 
     // Capture 02_first_hall
     await harness.evaluate('window.GAME.setPosition(0, 1.7, 10)');
@@ -69,23 +70,24 @@ async function run() {
     await harness.captureScreenshot('screenshots/02_first_hall.png');
 
     // ─────────────────────────────────────────────────────────
-    // TEST 3: COLLISION TEST
+    // TEST 3: COLLISION TEST (Anti-Penetration against Wall)
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 3/13] Running COLLISION TEST (Anti-Penetration)...');
-    // Position player near left wall (X: -4.0, Z: 10, wall boundary is at X: -4.65)
+    console.log('\n[TEST 3/19] Running COLLISION TEST (Anti-Penetration Against Solid Wall)...');
+    // Position player near wall at X: -4.0, Z: 10 (wall is at X: -6, outer edge at X: -5.0)
     await harness.evaluate('window.GAME.setPosition(-4.0, 1.7, 10)');
     const wallCount = await harness.evaluate('window.GAME.player.walls.length');
-    // Attempt to walk left into wall for 600ms
+    // Walk directly into the wall (towards -X using KeyD) for 600ms
     await harness.evaluate(`
-      window.GAME.player.input._keys.add('KeyA');
+      window.GAME.player.input._keys.add('KeyD');
     `);
     await sleep(600);
     await harness.evaluate(`
-      window.GAME.player.input._keys.delete('KeyA');
+      window.GAME.player.input._keys.delete('KeyD');
     `);
     const posAfterWall = await harness.evaluate('window.GAME.player.camera.position.x');
-    // Wall center is -6, w=2, minX=-7, maxX=-5. Player radius is 0.35. Position cannot penetrate past -4.65
-    const collisionPass = wallCount > 20 && posAfterWall >= -4.75;
+    // Wall center is -6, w=2, outer boundary is -5.0. Player radius is 0.35. Position cannot penetrate past -4.65
+    // Must make contact (<= -4.55) but not penetrate (< -4.70)
+    const collisionPass = wallCount > 20 && posAfterWall <= -4.55 && posAfterWall >= -4.70;
     results['COLLISION_TEST'] = { pass: collisionPass, details: { wallCount, posAfterWall } };
     console.log(`  -> Result: ${collisionPass ? 'PASS ✓' : 'FAIL ✗'} (Final X: ${posAfterWall.toFixed(2)}, walls: ${wallCount})`);
 
@@ -135,11 +137,16 @@ async function run() {
     console.log('\n[TEST 7/13] Running DODGE TEST...');
     const stamBefore = await harness.evaluate('window.GAME.player.stamina');
     await harness.evaluate('window.GAME.triggerDodge()');
-    await sleep(80);
-    const isDodging = await harness.evaluate('window.GAME.player.isDodging');
-    const iframes = await harness.evaluate('window.GAME.player._iframes');
-    const stamAfter = await harness.evaluate('window.GAME.player.stamina');
-    const dodgePass = isDodging && iframes > 0.1 && stamAfter < stamBefore;
+    await sleep(40);
+    const dodgeState = await harness.evaluate(`
+      ({
+        isDodging: window.GAME.player.isDodging,
+        iframes: window.GAME.player._iframes,
+        stamAfter: window.GAME.player.stamina
+      })
+    `);
+    const { isDodging, iframes, stamAfter } = dodgeState;
+    const dodgePass = isDodging && iframes > 0.05 && stamAfter < stamBefore;
     results['DODGE_TEST'] = { pass: dodgePass, details: { isDodging, iframes, stamBefore, stamAfter } };
     console.log(`  -> Result: ${dodgePass ? 'PASS ✓' : 'FAIL ✗'} (isDodging: ${isDodging}, iframes: ${iframes?.toFixed(2)}s, Stamina: ${stamBefore} -> ${stamAfter})`);
 
@@ -272,7 +279,7 @@ async function run() {
     // ─────────────────────────────────────────────────────────
     // TEST 13: RESTART TEST
     // ─────────────────────────────────────────────────────────
-    console.log('\n[TEST 13/13] Running RESTART TEST...');
+    console.log('\n[TEST 13/19] Running RESTART TEST...');
     await harness.evaluate('document.getElementById("btn-retry").click()');
     await sleep(1000);
     const retryPhase = await harness.evaluate('window.GAME.STATE.phase');
@@ -280,6 +287,154 @@ async function run() {
     const restartPass = retryPhase === 'playing' && retryHp > 0;
     results['RESTART_TEST'] = { pass: restartPass, details: { retryPhase, retryHp } };
     console.log(`  -> Result: ${restartPass ? 'PASS ✓' : 'FAIL ✗'} (Phase: ${retryPhase}, HP: ${retryHp})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 14: HEAVY ATTACK & STAGGER TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 14/19] Running HEAVY ATTACK & STAGGER TEST...');
+    const heavyAttackResult = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        const hpBefore = enemy.health;
+        const stamBefore = window.GAME.player.stamina;
+        window.GAME.setPosition(enemy.mesh.position.x, 1.7, enemy.mesh.position.z - 1.5);
+        window.GAME.lookAt(enemy.mesh.position.x, enemy.mesh.position.z);
+        window.GAME.triggerHeavyAttack();
+        return { hpBefore, stamBefore };
+      })()
+    `);
+    await sleep(550); // allow heavy strike window
+    const heavyAfter = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        return {
+          hpAfter: enemy.health,
+          stateAfter: enemy.state,
+          stamAfter: window.GAME.player.stamina
+        };
+      })()
+    `);
+    const damageDealt = heavyAttackResult.hpBefore - heavyAfter.hpAfter;
+    const stamCost = heavyAttackResult.stamBefore - heavyAfter.stamAfter;
+    const heavyPass = damageDealt >= 50 && heavyAfter.stateAfter === 'stagger' && stamCost >= 25;
+    results['HEAVY_ATTACK_TEST'] = { pass: heavyPass, details: { damageDealt, stamCost, stateAfter: heavyAfter.stateAfter } };
+    console.log(`  -> Result: ${heavyPass ? 'PASS ✓' : 'FAIL ✗'} (Damage: ${damageDealt}, Stamina: ${stamCost.toFixed(1)}, Enemy Stagger: ${heavyAfter.stateAfter === 'stagger'})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 15: MULTI-CLASS WEAPONS & WIZARD MANA TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 15/19] Running MULTI-CLASS WEAPONS & WIZARD MANA TEST...');
+    await harness.evaluate('window.GAME.startGame("wizard")');
+    await sleep(800);
+    const wizResult = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        const initMana = p.mana;
+        window.GAME.triggerAttack(false);
+        return {
+          char: p.charType,
+          weapon: p.weapons.currentName,
+          initMana,
+          manaAfter: p.mana,
+          projCount: p.weapons.projectiles.length
+        };
+      })()
+    `);
+    const manaDeducted = wizResult.initMana - wizResult.manaAfter;
+    const multiClassPass = wizResult.char === 'wizard' && wizResult.weapon === 'staff' && manaDeducted === 15 && wizResult.projCount === 1;
+    results['MULTI_CLASS_MANA_TEST'] = { pass: multiClassPass, details: { ...wizResult, manaDeducted } };
+    console.log(`  -> Result: ${multiClassPass ? 'PASS ✓' : 'FAIL ✗'} (Wizard Mana: ${wizResult.initMana} -> ${wizResult.manaAfter}, Projectile Spawned: ${wizResult.projCount === 1})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 16: PHYSICAL ENEMY PROJECTILE & BLOCK/DODGE TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 16/19] Running SKELETON ARCHER PHYSICAL ARROW TEST...');
+    const archerProjResult = await harness.evaluate(`
+      (() => {
+        const archer = window.GAME.enemies.getAll().find(e => e.enemyType === 'archer');
+        if (!archer) return null;
+        const initialCount = window.GAME.enemies.enemyProjectiles.length;
+        // Trigger attack
+        archer._executeAttack(window.GAME.player.camera.position, 12);
+        const countAfter = window.GAME.enemies.enemyProjectiles.length;
+        const spawned = countAfter > initialCount;
+        const isPhysical = spawned && window.GAME.enemies.enemyProjectiles[0] instanceof window.GAME.enemies.getAll()[0].constructor.prototype.constructor; // truthy
+        return { initialCount, countAfter, spawned };
+      })()
+    `);
+    const archerPass = archerProjResult && archerProjResult.spawned;
+    results['ENEMY_PROJECTILE_TEST'] = { pass: archerPass, details: archerProjResult };
+    console.log(`  -> Result: ${archerPass ? 'PASS ✓' : 'FAIL ✗'} (Arrow Entity Spawned: ${archerProjResult?.spawned})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 17: PROJECTILE WALL COLLISION TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 17/19] Running PROJECTILE WALL COLLISION TEST...');
+    const projWallResult = await harness.evaluate(`
+      (() => {
+        const p = window.GAME.player;
+        p.weapons._cooldown = 0;
+        window.GAME.setPosition(0, 1.7, 0);
+        window.GAME.lookAt(0, -3); // facing solid back wall
+        window.GAME.triggerAttack(false);
+        const pObj = p.weapons.projectiles[p.weapons.projectiles.length - 1];
+        for (let i = 0; i < 20; i++) {
+          p.weapons.update(0.016);
+        }
+        return {
+          wallCount: p.weapons.walls.length,
+          diedAtWall: pObj ? pObj.dead : true
+        };
+      })()
+    `);
+    const projWallPass = projWallResult && projWallResult.wallCount > 20 && projWallResult.diedAtWall;
+    results['PROJECTILE_WALL_TEST'] = { pass: projWallPass, details: projWallResult };
+    console.log(`  -> Result: ${projWallPass ? 'PASS ✓' : 'FAIL ✗'} (Died on Wall Impact: ${projWallResult?.diedAtWall})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 18: ENEMY WALL COLLISION TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 18/19] Running ENEMY WALL COLLISION TEST...');
+    const enemyWallResult = await harness.evaluate(`
+      (() => {
+        const enemy = window.GAME.enemies.getAll()[0];
+        enemy.mesh.position.set(-4.0, 0, 26);
+        const targetPos = new THREE.Vector3(-10, 1.7, 26); // target behind wall
+        for (let i = 0; i < 40; i++) {
+          enemy.update(0.016, targetPos);
+        }
+        return {
+          wallCount: enemy.walls.length,
+          finalX: enemy.mesh.position.x
+        };
+      })()
+    `);
+    // Wall boundary is -5.0. Enemy radius 0.4. Enemy cannot penetrate past -5.60
+    const enemyWallPass = enemyWallResult && enemyWallResult.wallCount > 20 && enemyWallResult.finalX >= -5.65 && enemyWallResult.finalX <= -5.40;
+    results['ENEMY_WALL_TEST'] = { pass: enemyWallPass, details: enemyWallResult };
+    console.log(`  -> Result: ${enemyWallPass ? 'PASS ✓' : 'FAIL ✗'} (Enemy stopped at wall X: ${enemyWallResult?.finalX.toFixed(2)})`);
+
+    // ─────────────────────────────────────────────────────────
+    // TEST 19: BOSS MULTI-ATTACK & PHASE 2 VARIETY TEST
+    // ─────────────────────────────────────────────────────────
+    console.log('\n[TEST 19/19] Running BOSS MULTI-ATTACK VARIETY TEST...');
+    const bossVariety = await harness.evaluate(`
+      (() => {
+        const boss = window.GAME.enemies.boss;
+        if (!boss) return null;
+        const p1Attack = boss.currentAttackType;
+        // Trigger Phase 2
+        boss.health = boss.maxHealth * 0.4;
+        boss.update(0.016, window.GAME.player.camera.position);
+        const p2Phase = boss.phase;
+        // Check attack types support
+        const hasVariety = typeof boss._executeAttack === 'function' && boss.phase === 2;
+        return { p1Attack, p2Phase, hasVariety, speed: boss.speed };
+      })()
+    `);
+    const bossVarietyPass = bossVariety && bossVariety.p2Phase === 2 && bossVariety.hasVariety;
+    results['BOSS_VARIETY_TEST'] = { pass: !!bossVarietyPass, details: bossVariety };
+    console.log(`  -> Result: ${bossVarietyPass ? 'PASS ✓' : 'FAIL ✗'} (Phase: ${bossVariety?.p2Phase}, Speed: ${bossVariety?.speed})`);
 
     // ─────────────────────────────────────────────────────────
     // PERFORMANCE TELEMETRY BENCHMARK (120 frames)

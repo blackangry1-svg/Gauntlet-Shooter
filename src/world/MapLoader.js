@@ -374,6 +374,8 @@ export class MapLoader {
     if (this.shortcutGateWall) {
       const idx = this.walls.indexOf(this.shortcutGateWall);
       if (idx !== -1) this.walls.splice(idx, 1);
+      const mIdx = this.miniWalls.indexOf(this.shortcutGateWall);
+      if (mIdx !== -1) this.miniWalls.splice(mIdx, 1);
     }
 
     if (hud) {

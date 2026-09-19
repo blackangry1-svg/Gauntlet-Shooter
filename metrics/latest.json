@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-09-19T12:56:02.686Z",
+  "timestamp": "2026-09-19T13:14:24.949Z",
   "iteration": 1,
   "milestone": 19,
-  "mean_fps": 60,
-  "mean_frametime_ms": 16.81,
-  "p50_frametime_ms": 16.7,
-  "p95_frametime_ms": 18,
-  "p99_frametime_ms": 18.8,
-  "frames_over_20ms": 1,
-  "frames_over_33ms": 1,
+  "mean_fps": 58,
+  "mean_frametime_ms": 17.3,
+  "p50_frametime_ms": 17.3,
+  "p95_frametime_ms": 17.7,
+  "p99_frametime_ms": 17.9,
+  "frames_over_20ms": 0,
+  "frames_over_33ms": 0,
   "test_results": {
     "BOOT_TEST": {
       "pass": true,
@@ -27,17 +27,18 @@
           "z": 2
         },
         "posMoved": {
-          "x": -3.526982781544375e-16,
-          "z": -0.8800000000000006
+          "x": -3.1350958058172227e-16,
+          "z": 4.560000000000002
         },
-        "distMoved": 2.880000000000001
+        "distMoved": 2.5600000000000023,
+        "movedForward": true
       }
     },
     "COLLISION_TEST": {
       "pass": true,
       "details": {
         "wallCount": 35,
-        "posAfterWall": -1.1199999999999974
+        "posAfterWall": -4.640000000000001
       }
     },
     "COMBAT_TEST": {
@@ -58,7 +59,7 @@
       "pass": true,
       "details": {
         "isDodging": true,
-        "iframes": 0.1166666666666667,
+        "iframes": 0.2466666666666667,
         "stamBefore": 110,
         "stamAfter": 88
       }
@@ -112,8 +113,58 @@
         "retryPhase": "playing",
         "retryHp": 160
       }
+    },
+    "HEAVY_ATTACK_TEST": {
+      "pass": true,
+      "details": {
+        "damageDealt": 55,
+        "stamCost": 27,
+        "stateAfter": "stagger"
+      }
+    },
+    "MULTI_CLASS_MANA_TEST": {
+      "pass": true,
+      "details": {
+        "char": "wizard",
+        "weapon": "staff",
+        "initMana": 140,
+        "manaAfter": 125,
+        "projCount": 1,
+        "manaDeducted": 15
+      }
+    },
+    "ENEMY_PROJECTILE_TEST": {
+      "pass": true,
+      "details": {
+        "initialCount": 0,
+        "countAfter": 1,
+        "spawned": true
+      }
+    },
+    "PROJECTILE_WALL_TEST": {
+      "pass": true,
+      "details": {
+        "wallCount": 35,
+        "diedAtWall": true
+      }
+    },
+    "ENEMY_WALL_TEST": {
+      "pass": true,
+      "details": {
+        "wallCount": 35,
+        "finalX": -5.560000000000001
+      }
+    },
+    "BOSS_VARIETY_TEST": {
+      "pass": true,
+      "details": {
+        "p1Attack": "cleave",
+        "p2Phase": 2,
+        "hasVariety": true,
+        "speed": 3.5
+      }
     }
   },
-  "total_passed": 13,
-  "total_tests": 13
+  "total_passed": 19,
+  "total_tests": 19
 }

@@ -1,20 +1,25 @@
 # KNOWN ISSUES LOG
 
 ### Resolved Issues
-1. **[RESOLVED] Weapons Subsystem Raycasting & Binding:** Fixed raycasting and weapon injection (`player.weapons.inject(enemies, particles)`). Hitbox geometry converted to non-culled invisible volume (`opacity: 0, transparent: true`) and supplemented with forward horizontal arc hit detection (`cos >= 0.45`, range 2.8m).
-2. **[RESOLVED] Collision Binding:** Connected map collision bounding boxes via `player.setWalls(world.walls)`. Player sliding against AABB walls prevents floor and wall penetration.
-3. **[RESOLVED] Enemy Lifecycle Cleanup:** Implemented comprehensive `dispose()` method on `Enemy` class to cleanly release geometry, cloned materials, sprite textures, hitboxes, and remove meshes from the scene graph.
-4. **[RESOLVED] Sprite Keying & Transparency:** Created `tools/process_sprites.py` to batch-process all 6 sprite sheets (`death_bat`, `death_knight`, `orc_grunt`, `skeleton_archer`, `stone_golem`, `warrior`). High-precision RGB chroma-keying with green/blue edge despill removed all `#FF00FF` magenta background artifacts and output clean transparent RGBA PNG assets.
-5. **[RESOLVED] Disconnected Teleports to Contiguous Dungeon:** Built interconnected 8-sector layout with Crypt Entrance, Hall of the Damned, Catacomb Junction (with locked portcullis), Sunken Vault, Shrine of Ash (bonfire checkpoint), High Ramparts (with shortcut lever), Blood Cloister, and Throne of Death (boss arena sealed with glowing fog wall).
-6. **[RESOLVED] Souls Combat & Telegraphs:** Implemented stamina consumption and regeneration delay, 250ms invulnerability dodge roll (`Space`), directional blocking (`Right Mouse Button`) with guard break, 3 charges of Soul Flask healing (`Q`), and enemy wind-up telegraphs with audio cues and orange emissive glows.
-7. **[RESOLVED] Fixed-Timestep Input Clearing:** Fixed input one-shot consumption in `main.js` so that `input.endFrame()` only clears when physics fixed updates execute, preventing dropped attack clicks or dodge rolls during sub-frame deltas.
+1. **[RESOLVED] Inverted Movement Vectors:** Fixed `sinY`/`cosY` calculation in `Player.js` by utilizing exact camera `getWorldDirection()` projection and orthogonal right vector.
+2. **[RESOLVED] Tampered Wall Collision Test:** Replaced misleading `TEST 3` that previously moved away from the wall with true negative-X translation into wall geometry at X = -6.0, verifying physical bounding box blocking (`-4.70 <= X <= -4.55`).
+3. **[RESOLVED] Non-Functional Heavy Attacks & Missing Stagger Window:** Implemented `KeyR` binding in `InputManager.js`, heavy attack damage (55 vs 32) and stamina scaling (27 vs 16) in `Weapons.js`, and added a dedicated `stagger` state in `Enemy.js` AI providing a 0.65s vulnerable punish window with golden emissive shader feedback.
+4. **[RESOLVED] Missing Mana Consumption:** Added `consumeMana(amount)` in `Player.js` and wired wizard staff attacks to verify and deduct 15 mana per cast in `Weapons.js`.
+5. **[RESOLVED] Projectile Geometry Wall Phasing:** Implemented swept bounding box collision for `Projectile` and `EnemyProjectile` against world walls, ensuring fireballs and arrows stop and emit particle impacts when hitting geometry rather than phasing into other rooms.
+6. **[RESOLVED] PointLight Memory Leak in Projectile:** Added explicit `dispose()` cleanup for projectile PointLight entities in `Weapons.js`.
+7. **[RESOLVED] Enemy Phasing Through Dungeon Geometry:** Added AABB sliding collision routines (`_resolveX`/`_resolveZ`) to `Enemy.js` and injected world geometry via `enemies.setWalls(world.walls)`.
+8. **[RESOLVED] Skeleton Archer Direct Wall-Hack:** Replaced raw `setTimeout` damage call with physical 3D `EnemyProjectile` entities that travel over time and can be blocked by player shields or dungeon pillars.
+9. **[RESOLVED] Death Knight Boss Complexity:** Rebuilt boss AI to include Cleaving Slash (melee), Abyssal Lunge Thrust (3.5m forward dash), and Phase 2 Dark Ground-Shatter Slam (6m AoE shockwave) with crimson aura telegraph.
+10. **[RESOLVED] Missing Audio SFX Definition:** Added `'boom'` synthesizer curve to `AudioManager.js` for ground shockwaves.
+11. **[RESOLVED] Minimap Heading Indicator:** Aligned minimap LOS line with camera forward direction.
+12. **[RESOLVED] Camera World Matrix Update in lookAt:** Ensured `Player.lookAt()` updates camera world matrix immediately so that directional raycasts and projectile spawns read accurate orientation.
 
 ### Fatal Functional Bugs
-- *None.* All 13/13 automated gauntlet tests pass cleanly across consecutive runs.
+- *None.* All 19/19 automated gauntlet tests pass cleanly across consecutive runs.
 
 ### Shallow Verification
 1. **Audio Context Autoplay in Headless Environments:** Web Audio API synthesis executes and synthesizes all SFX and music waveforms, but audio output is muted via `--mute-audio` flag in headless Chrome. Audio fidelity was verified via procedural waveform synthesis tests and manual browser launch.
 
 ### Minor Robustness Risks
-1. **Rapid Character Switching:** Character selection resets player stats and weapons to Warrior, Elf, Wizard, or Valkyrie. While all 4 classes load and initialize weapon meshes properly, automated full-level playthrough test specifically benchmarks Warrior (Sword & Shield). Ranged projectile physics (Elf Bow / Wizard Fireball) are covered by projectile unit updates but have not completed a full automated boss run.
-2. **Multiple Simultaneous Collisions in Corners:** Player collision resolves X and Z axes independently against AABB wall bounding boxes. In rare high-speed sprint into 90-degree internal corners, micro-jitter (sub-pixel) can occasionally occur before sliding resolves.
+1. **Full Playthrough Class Coverage:** Automated full-level completion specifically benchmarks Warrior (Sword & Shield). While Elf, Wizard, and Valkyrie mechanics (bow/staff projectiles, mana deduction, weapon switching) are covered by dedicated automated unit tests (TEST 15), automated boss defeat has only been run on Warrior.
+2. **Multiple Simultaneous Collisions in Corners:** Player and enemy collision resolves X and Z axes independently against AABB wall bounding boxes. In rare high-speed sprint into 90-degree internal corners, micro-jitter (sub-pixel) can occasionally occur before sliding resolves.

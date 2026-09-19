@@ -187,7 +187,8 @@ function startGame(charType, fromSave = false, savedData = null) {
   // Critical architectural bindings
   player.setWalls(world.walls);
   player.setInteractables(world.interactables);
-  player.weapons.inject(enemies, particles);
+  enemies.setWalls(world.walls);
+  player.weapons.inject(enemies, particles, world.walls);
 
   // Spawn enemy encounters across the interconnected level
   spawnWorldEncounters();
@@ -260,6 +261,8 @@ function checkLevelTriggers() {
     STATE.bossTriggered = true;
     map.sealBossArena();
     player.setWalls(map.walls); // Update walls with fog gate
+    enemies.setWalls(map.walls);
+    player.weapons.inject(enemies, particles, map.walls);
     audio.setMusicState('boss');
     audio.playSFX('bossRoar', 1.2);
     document.getElementById('boss-bar').classList.remove('hidden');
@@ -435,7 +438,7 @@ function gameLoop(now) {
     }
 
     hud.update(player);
-    hud.drawMinimap(map, enemies, camera.position);
+    hud.drawMinimap(map, enemies, camera.position, player.getForwardDir());
   } else {
     accumulator = 0;
     didUpdate = true;
@@ -487,6 +490,17 @@ window.GAME = {
       return player.weapons.triggerAttack(isHeavy);
     }
     return false;
+  },
+  triggerHeavyAttack: () => {
+    if (player && player.weapons) {
+      return player.weapons.triggerAttack(true);
+    }
+    return false;
+  },
+  switchWeapon: (idx) => {
+    if (player && player.weapons) {
+      player.weapons._switchTo(idx);
+    }
   },
   triggerInteract: () => {
     if (player) {

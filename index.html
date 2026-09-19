@@ -136,6 +136,7 @@
     <div id="hud-center">
       <div id="room-info">DUNGEON · ROOM <span id="room-num">1</span>/8</div>
       <div id="wave-info">ENEMIES: <span id="enemy-count">0</span></div>
+      <button id="btn-hud-pause" class="hud-pause-btn" type="button">⏸ PAUSE [ESC]</button>
     </div>
 
     <!-- Top right: score + minimap -->
@@ -214,10 +215,47 @@
 <div id="pause-menu" class="hidden">
   <div id="pause-content">
     <h2>⏸ PAUSED</h2>
-    <button class="menu-btn primary" id="btn-resume">▶ RESUME</button>
-    <button class="menu-btn" id="btn-save">💾 SAVE GAME</button>
-    <button class="menu-btn danger" id="btn-quit">🚪 QUIT TO MENU</button>
+    <div class="pause-actions">
+      <button class="menu-btn primary" id="btn-resume">▶ RESUME</button>
+      <button class="menu-btn" id="btn-save">💾 SAVE GAME</button>
+      <button class="menu-btn danger" id="btn-quit">🚪 QUIT TO MENU</button>
+    </div>
     <div id="save-status"></div>
+
+    <div class="settings-section">
+      <h3>SETTINGS</h3>
+      <div class="setting-row">
+        <label for="setting-sens">Mouse Sensitivity</label>
+        <input type="range" id="setting-sens" min="20" max="300" value="100" step="5">
+        <span class="setting-val" id="val-sens">100%</span>
+      </div>
+      <div class="setting-row">
+        <label for="setting-vol">Audio Volume</label>
+        <input type="range" id="setting-vol" min="0" max="100" value="60" step="5">
+        <span class="setting-val" id="val-vol">60%</span>
+      </div>
+      <div class="setting-row">
+        <label class="setting-toggle">
+          <input type="checkbox" id="setting-invert-y">
+          <span>Invert Y-Axis</span>
+        </label>
+      </div>
+      <details class="controls-summary">
+        <summary>Controls Guide</summary>
+        <div class="controls-list-compact">
+          <span>WASD</span><span>Move</span>
+          <span>Mouse</span><span>Look</span>
+          <span>Left Click</span><span>Attack / Shoot</span>
+          <span>Right Click</span><span>Block / Aim</span>
+          <span>Space</span><span>Dodge</span>
+          <span>Q</span><span>Heal (Flask)</span>
+          <span>R</span><span>Heavy Attack</span>
+          <span>E / F</span><span>Interact</span>
+          <span>1 - 3</span><span>Weapon</span>
+          <span>ESC</span><span>Pause / Resume</span>
+        </div>
+      </details>
+    </div>
   </div>
 </div>
 

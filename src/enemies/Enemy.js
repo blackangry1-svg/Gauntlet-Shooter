@@ -5,20 +5,44 @@
  * and vulnerable punish recovery windows.
  */
 
-// Shared Texture Cache for zero redundant memory
-const TEXTURE_CACHE = new Map();
+// Shared Image Cache for sprite sheets
+const SPRITE_IMAGE_CACHE = new Map();
 
-function getOrCreateSpriteTexture(path) {
-  if (TEXTURE_CACHE.has(path)) {
-    return TEXTURE_CACHE.get(path);
+export function getSharedSpriteImage(path, onReady) {
+  let entry = SPRITE_IMAGE_CACHE.get(path);
+  if (!entry) {
+    entry = { image: null, callbacks: [] };
+    SPRITE_IMAGE_CACHE.set(path, entry);
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      entry.image = img;
+      for (const cb of entry.callbacks) cb(img);
+      entry.callbacks.length = 0;
+    };
+    img.onerror = (e) => {
+      console.error('[Enemy] Failed to load sprite texture:', path, e);
+      for (const cb of entry.callbacks) cb(null);
+      entry.callbacks.length = 0;
+    };
+    img.src = path;
   }
-  const loader = new THREE.TextureLoader();
-  const tex = loader.load(path);
-  tex.magFilter = THREE.NearestFilter;
-  tex.minFilter = THREE.LinearMipmapLinearFilter;
-  tex.generateMipmaps = true;
-  TEXTURE_CACHE.set(path, tex);
-  return tex;
+  if (entry.image) {
+    onReady(entry.image);
+  } else {
+    entry.callbacks.push(onReady);
+  }
+}
+
+export function preloadEnemyTextures() {
+  const paths = [
+    '/assets/sprites/orc_grunt.png',
+    '/assets/sprites/skeleton_archer.png',
+    '/assets/sprites/death_bat.png',
+    '/assets/sprites/stone_golem.png',
+    '/assets/sprites/death_knight.png',
+  ];
+  paths.forEach(p => getSharedSpriteImage(p, () => {}));
 }
 
 export class Enemy {
@@ -108,12 +132,46 @@ export class Enemy {
     this.mesh = new THREE.Group();
 
     if (spritePath) {
-      const masterTex = getOrCreateSpriteTexture(spritePath);
-      this.tex = masterTex.clone();
+      this.tex = new THREE.Texture();
+      this.tex.magFilter = THREE.NearestFilter;
+      this.tex.minFilter = THREE.LinearMipmapLinearFilter;
+      this.tex.generateMipmaps = true;
       this.tex.repeat.set(1 / this.sheetCols, 1 / this.sheetRows);
+
+      // Check if image is already cached from preload
+      const cached = SPRITE_IMAGE_CACHE.get(spritePath);
+      if (cached && cached.image) {
+        this.tex.image = cached.image;
+        this.tex.needsUpdate = true;
+      }
+
+      getSharedSpriteImage(spritePath, (img) => {
+        if (!img) {
+          if (this.material) {
+            this.material.map = null;
+            this.material.emissiveMap = null;
+            this.material.color = new THREE.Color(fallbackColor);
+            this.material.emissive = new THREE.Color(fallbackColor);
+            this.material.alphaTest = 0;
+            this.material.needsUpdate = true;
+          }
+          return;
+        }
+        this.tex.image = img;
+        this.tex.needsUpdate = true;
+        this._updateUV();
+        if (this.material) {
+          this.material.map = this.tex;
+          this.material.emissiveMap = this.tex;
+          this.material.needsUpdate = true;
+        }
+      });
 
       this.material = new THREE.MeshLambertMaterial({
         map: this.tex,
+        emissiveMap: this.tex,
+        emissive: new THREE.Color(0.85, 0.85, 0.85),
+        emissiveIntensity: 0.85,
         transparent: true,
         alphaTest: 0.5,
         side: THREE.DoubleSide,
@@ -122,6 +180,8 @@ export class Enemy {
     } else {
       this.material = new THREE.MeshLambertMaterial({
         color: fallbackColor,
+        emissive: new THREE.Color(fallbackColor),
+        emissiveIntensity: 0.5,
         side: THREE.DoubleSide,
       });
     }
@@ -183,8 +243,8 @@ export class Enemy {
 
     // Emissive flash
     if (this.material) {
-      this.material.emissive = new THREE.Color(1, 0.4, 0.4);
-      this.material.emissiveIntensity = 1.2;
+      this.material.emissive.setRGB(1.0, 0.35, 0.35);
+      this.material.emissiveIntensity = 1.4;
     }
 
     if (this.health <= 0) {
@@ -195,7 +255,7 @@ export class Enemy {
       this._stateT = 0;
       this._staggerDuration = 0.65;
       if (this.material) {
-        this.material.emissive = new THREE.Color(1, 0.8, 0.2);
+        this.material.emissive.setRGB(1.0, 0.85, 0.2);
         this.material.emissiveIntensity = 1.2;
       }
     } else if (this.state === 'idle') {
@@ -215,7 +275,10 @@ export class Enemy {
     const startY = this.mesh.position.y;
     const interval = setInterval(() => {
       t += 0.05;
-      if (this.material) this.material.opacity = Math.max(0, 1 - t);
+      if (this.material) {
+        this.material.opacity = Math.max(0, 1 - t);
+        this.material.emissiveIntensity = Math.max(0, 0.85 * (1 - t));
+      }
       this.mesh.position.y = startY - t * 0.4;
       if (t >= 1.0) {
         clearInterval(interval);
@@ -240,13 +303,14 @@ export class Enemy {
       if (this._hitTimer <= 0 && this.material) {
         if (this.state === 'windup') {
           // Keep telegraph glow
-          this.material.emissive = new THREE.Color(1, 0.6, 0.1);
-          this.material.emissiveIntensity = 1.0;
+          this.material.emissive.setRGB(1.0, 0.65, 0.15);
+          this.material.emissiveIntensity = 1.3;
         } else if (this.state === 'stagger') {
-          this.material.emissive = new THREE.Color(1, 0.8, 0.2);
-          this.material.emissiveIntensity = 0.8;
+          this.material.emissive.setRGB(1.0, 0.85, 0.2);
+          this.material.emissiveIntensity = 1.2;
         } else {
-          this.material.emissiveIntensity = 0;
+          this.material.emissive.setRGB(0.85, 0.85, 0.85);
+          this.material.emissiveIntensity = 0.85;
         }
       }
     }
@@ -285,8 +349,8 @@ export class Enemy {
           this._stateT = 0;
           this.audio.playSFX('telegraphWarn', 0.6);
           if (this.material) {
-            this.material.emissive = new THREE.Color(1, 0.6, 0.1);
-            this.material.emissiveIntensity = 1.2;
+            this.material.emissive.setRGB(1.0, 0.65, 0.15);
+            this.material.emissiveIntensity = 1.3;
           }
         } else {
           // Move toward player with AABB wall collision resolution
@@ -314,6 +378,10 @@ export class Enemy {
           this.setAnimation('chase');
           this._stateT = 0;
           this._cooldownT = 0.5;
+          if (this.material) {
+            this.material.emissive.setRGB(0.85, 0.85, 0.85);
+            this.material.emissiveIntensity = 0.85;
+          }
         }
         break;
 
@@ -324,7 +392,10 @@ export class Enemy {
           this.state = 'attack';
           this.setAnimation('attack');
           this._stateT = 0;
-          if (this.material) this.material.emissiveIntensity = 0;
+          if (this.material) {
+            this.material.emissive.setRGB(0.85, 0.85, 0.85);
+            this.material.emissiveIntensity = 0.85;
+          }
           this._executeAttack(playerPos, distToPlayer);
         }
         break;
@@ -346,6 +417,10 @@ export class Enemy {
           this.setAnimation('chase');
           this._cooldownT = this.attackCooldown;
           this._stateT = 0;
+          if (this.material) {
+            this.material.emissive.setRGB(0.85, 0.85, 0.85);
+            this.material.emissiveIntensity = 0.85;
+          }
         }
         break;
     }
@@ -651,8 +726,8 @@ export class DeathKnight extends Enemy {
     // Phase 2 red/purple aura pulse
     if (this.phase === 2 && this.material && this.state !== 'windup' && this.state !== 'stagger') {
       const pulse = Math.sin(Date.now() * 0.007) * 0.3 + 0.5;
-      this.material.emissive = new THREE.Color(0.8 * pulse, 0.1 * pulse, 0.5 * pulse);
-      this.material.emissiveIntensity = 0.9 * pulse;
+      this.material.emissive.setRGB(0.7 * pulse + 0.3, 0.15 * pulse + 0.2, 0.5 * pulse + 0.3);
+      this.material.emissiveIntensity = 1.0;
     }
 
     // Intelligent Boss Attack Selection

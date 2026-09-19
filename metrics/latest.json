@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-09-19T15:57:45.952Z",
+  "timestamp": "2026-09-19T17:59:46.387Z",
   "iteration": 1,
   "milestone": 22,
   "mean_fps": 60,
   "mean_frametime_ms": 16.67,
   "p50_frametime_ms": 16.7,
-  "p95_frametime_ms": 16.9,
-  "p99_frametime_ms": 17.3,
+  "p95_frametime_ms": 16.8,
+  "p99_frametime_ms": 16.9,
   "frames_over_20ms": 0,
   "frames_over_33ms": 0,
   "test_results": {
@@ -27,10 +27,10 @@
           "z": 2
         },
         "posMoved": {
-          "x": -3.1350958058172227e-16,
-          "z": 4.560000000000002
+          "x": -3.0371240618854347e-16,
+          "z": 4.480000000000002
         },
-        "distMoved": 2.5600000000000023,
+        "distMoved": 2.480000000000002,
         "movedForward": true
       }
     },
@@ -60,8 +60,8 @@
       "details": {
         "isDodging": true,
         "iframes": 0.2466666666666667,
-        "stamBefore": 100.3333333333334,
-        "stamAfter": 78.3333333333334
+        "stamBefore": 98.43333333333338,
+        "stamAfter": 76.43333333333338
       }
     },
     "RESPAWN_TEST": {
@@ -180,7 +180,7 @@
           ]
         },
         "elfSpeedResult": {
-          "dist": 2.1466666666666754,
+          "dist": 1.960000000000008,
           "speed": 5.6
         },
         "elfCombatResult": {
@@ -235,11 +235,11 @@
           "projCountAfter": 2
         },
         "wizRecovery": {
-          "manaBeforeRegen": 5,
-          "manaRegened": 16.99999999999998,
+          "manaBeforeRegen": 5.133333333333334,
+          "manaRegened": 17.13333333333331,
           "regenGain": 11.999999999999979,
           "resumed": true,
-          "finalMana": 1.9999999999999787
+          "finalMana": 2.1333333333333115
         },
         "wizPersistence": {
           "maxMana": 140,

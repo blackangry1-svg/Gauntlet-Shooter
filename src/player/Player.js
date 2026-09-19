@@ -49,6 +49,8 @@ export class Player {
     // Camera & orientation (starts facing down the dungeon along +Z)
     this.yaw   = Math.PI;
     this.pitch = 0;
+    this.mouseSensitivity = MOUSE_SENS;
+    this.invertY = false;
     camera.rotation.order = 'YXZ';
     camera.position.set(0, PLAYER_HEIGHT, 0);
 
@@ -230,11 +232,21 @@ export class Player {
       if (this.stunTimer <= 0) this.isStunned = false;
     }
 
-    // Mouse look
-    if (document.pointerLockElement) {
-      this.yaw   -= this.input.mouseX * MOUSE_SENS;
-      this.pitch -= this.input.mouseY * MOUSE_SENS;
+    // Mouse look: active during gameplay simulation when pointer is locked (or in headless test)
+    const isLocked = !!document.pointerLockElement ||
+                     (typeof navigator !== 'undefined' && navigator.userAgent.includes('HeadlessChrome')) ||
+                     !!(typeof window !== 'undefined' && window.__HEADLESS_TEST__);
+    if (isLocked && (this.input.mouseX !== 0 || this.input.mouseY !== 0)) {
+      const sens = this.mouseSensitivity || MOUSE_SENS;
+      const ySign = this.invertY ? 1 : -1;
+      this.yaw   -= this.input.mouseX * sens;
+      this.pitch += this.input.mouseY * sens * ySign;
       this.pitch  = Math.max(-MAX_PITCH, Math.min(MAX_PITCH, this.pitch));
+      this.input.mouseX = 0;
+      this.input.mouseY = 0;
+    } else if (!isLocked) {
+      this.input.mouseX = 0;
+      this.input.mouseY = 0;
     }
     this.camera.rotation.y = this.yaw;
     this.camera.rotation.x = this.pitch;

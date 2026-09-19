@@ -17,9 +17,9 @@ export class InputManager {
     // Bind
     window.addEventListener('keydown',  e => this._onKeyDown(e));
     window.addEventListener('keyup',    e => this._onKeyUp(e));
-    window.addEventListener('mousemove',e => this._onMouseMove(e));
-    window.addEventListener('mousedown',e => this._onMouseDown(e));
-    window.addEventListener('mouseup',  e => this._onMouseUp(e));
+    document.addEventListener('mousemove', e => this._onMouseMove(e), { passive: true });
+    document.addEventListener('mousedown', e => this._onMouseDown(e));
+    document.addEventListener('mouseup',   e => this._onMouseUp(e));
     window.addEventListener('contextmenu', e => e.preventDefault());
   }
 
@@ -40,11 +40,24 @@ export class InputManager {
   }
 
   _onMouseMove(e) {
-    this.mouseX = e.movementX || 0;
-    this.mouseY = e.movementY || 0;
+    const mx = e.movementX ?? e.mozMovementX ?? e.webkitMovementX ?? 0;
+    const my = e.movementY ?? e.mozMovementY ?? e.webkitMovementY ?? 0;
+    this.mouseX += mx;
+    this.mouseY += my;
   }
 
   _onMouseDown(e) {
+    if (e.target && typeof e.target.closest === 'function') {
+      if (e.target.closest('button, input, select, details, a, #pause-menu, #click-to-play, #main-menu, #game-over, #victory-screen') || e.target.id === 'click-to-play' || e.target.id === 'btn-hud-pause') {
+        return;
+      }
+    }
+    const isLocked = !!document.pointerLockElement ||
+                     (typeof navigator !== 'undefined' && navigator.userAgent.includes('HeadlessChrome')) ||
+                     !!(typeof window !== 'undefined' && window.__HEADLESS_TEST__);
+    if (!isLocked) {
+      return;
+    }
     this.mouseButtons.add(e.button);
     this._mouseJustDown.add(e.button);
   }
@@ -52,6 +65,25 @@ export class InputManager {
   _onMouseUp(e) {
     this.mouseButtons.delete(e.button);
     this._mouseJustUp.add(e.button);
+  }
+
+  clearMouse() {
+    this.mouseX = 0;
+    this.mouseY = 0;
+    this.mouseButtons.clear();
+    this._mouseJustDown.clear();
+    this._mouseJustUp.clear();
+  }
+
+  clearKeys() {
+    this._keys.clear();
+    this._pressed.clear();
+    this._released.clear();
+  }
+
+  clearAll() {
+    this.clearKeys();
+    this.clearMouse();
   }
 
   // Check if a key is currently held

@@ -113,7 +113,9 @@ export class EnemyManager {
   clear() {
     for (const e of this._enemies) {
       this.scene.remove(e.mesh);
-      e.dispose();
+      if (typeof e.dispose === 'function') {
+        e.dispose();
+      }
     }
     for (const p of this.enemyProjectiles) {
       p.removeFromScene();

@@ -12,9 +12,12 @@ import { Player } from './player/Player.js';
 import { HUD } from './player/HUD.js';
 import { MapLoader } from './world/MapLoader.js';
 import { EnemyManager } from './enemies/EnemyManager.js';
-import { OrcGrunt, SkeletonArcher, StoneGolem, DeathBat, DeathKnight } from './enemies/Enemy.js';
+import { preloadEnemyTextures, OrcGrunt, SkeletonArcher, StoneGolem, DeathBat, DeathKnight } from './enemies/Enemy.js';
 import { ParticleSystem } from './combat/ParticleSystem.js';
 import { MainMenu } from './ui/MainMenu.js';
+
+// Preload enemy sprite sheets into memory immediately
+preloadEnemyTextures();
 
 // ─────────────────────────────────────────────────────────────
 // RENDERER & SCENE
@@ -64,6 +67,90 @@ const map       = new MapLoader(scene);
 const enemies   = new EnemyManager(scene, audio);
 const particles = new ParticleSystem(scene);
 let player      = null;
+
+// ─────────────────────────────────────────────────────────────
+// SETTINGS MANAGEMENT & PERSISTENCE
+// ─────────────────────────────────────────────────────────────
+const SETTINGS_KEY = 'gauntlet_shooter_settings';
+const DEFAULT_SETTINGS = {
+  sensitivity: 100, // percentage (100% = 0.002)
+  volume: 60,       // percentage (60% = 0.6)
+  invertY: false,
+};
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (raw) return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch (e) {}
+  return { ...DEFAULT_SETTINGS };
+}
+
+function saveSettings(settings) {
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  } catch (e) {}
+}
+
+const currentSettings = loadSettings();
+
+function applySettings(settings) {
+  if (player) {
+    player.mouseSensitivity = (settings.sensitivity / 100) * 0.002;
+    player.invertY = !!settings.invertY;
+  }
+  audio.setVolume(settings.volume / 100);
+
+  const sensInput = document.getElementById('setting-sens');
+  const sensVal = document.getElementById('val-sens');
+  const volInput = document.getElementById('setting-vol');
+  const volVal = document.getElementById('val-vol');
+  const invertInput = document.getElementById('setting-invert-y');
+
+  if (sensInput) sensInput.value = settings.sensitivity;
+  if (sensVal) sensVal.textContent = `${settings.sensitivity}%`;
+  if (volInput) volInput.value = settings.volume;
+  if (volVal) volVal.textContent = `${settings.volume}%`;
+  if (invertInput) invertInput.checked = !!settings.invertY;
+}
+
+function initSettingsUI() {
+  const sensInput = document.getElementById('setting-sens');
+  const sensVal = document.getElementById('val-sens');
+  const volInput = document.getElementById('setting-vol');
+  const volVal = document.getElementById('val-vol');
+  const invertInput = document.getElementById('setting-invert-y');
+
+  if (sensInput) {
+    sensInput.addEventListener('input', (e) => {
+      currentSettings.sensitivity = parseInt(e.target.value, 10);
+      if (sensVal) sensVal.textContent = `${currentSettings.sensitivity}%`;
+      applySettings(currentSettings);
+      saveSettings(currentSettings);
+    });
+  }
+
+  if (volInput) {
+    volInput.addEventListener('input', (e) => {
+      currentSettings.volume = parseInt(e.target.value, 10);
+      if (volVal) volVal.textContent = `${currentSettings.volume}%`;
+      applySettings(currentSettings);
+      saveSettings(currentSettings);
+    });
+  }
+
+  if (invertInput) {
+    invertInput.addEventListener('change', (e) => {
+      currentSettings.invertY = e.target.checked;
+      applySettings(currentSettings);
+      saveSettings(currentSettings);
+    });
+  }
+
+  applySettings(currentSettings);
+}
+
+initSettingsUI();
 
 // ─────────────────────────────────────────────────────────────
 // PROCEDURAL & ASSET MATERIALS
@@ -230,17 +317,9 @@ function startGame(charType, fromSave = false, savedData = null) {
     }
   };
 
-  // Pointer lock handling
-  const ctp = document.getElementById('click-to-play');
-  ctp.onclick = () => canvas.requestPointerLock();
-
-  document.addEventListener('pointerlockchange', () => {
-    if (document.pointerLockElement === canvas) {
-      ctp.classList.add('hidden');
-    } else if (STATE.phase === 'playing') {
-      ctp.classList.remove('hidden');
-    }
-  });
+  // Apply player controls settings
+  player.mouseSensitivity = (currentSettings.sensitivity / 100) * 0.002;
+  player.invertY = !!currentSettings.invertY;
 }
 
 function spawnWorldEncounters() {
@@ -364,12 +443,113 @@ function addScore(amount) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// POINTER LOCK & PAUSE LOGIC
+// ─────────────────────────────────────────────────────────────
+function requestGamePointerLock() {
+  if (STATE.phase !== 'playing') return;
+  try {
+    const p = canvas.requestPointerLock();
+    if (p && typeof p.catch === 'function') {
+      p.catch(() => {});
+    }
+  } catch (e) {}
+}
+
+const ctp = document.getElementById('click-to-play');
+if (ctp) {
+  ctp.addEventListener('click', (e) => {
+    e.stopPropagation();
+    input.clearMouse();
+    requestGamePointerLock();
+  });
+}
+
+canvas.addEventListener('click', () => {
+  if (STATE.phase === 'playing' && document.pointerLockElement !== canvas) {
+    input.clearMouse();
+    requestGamePointerLock();
+  }
+});
+
+const gameContainer = document.getElementById('game-container');
+if (gameContainer) {
+  gameContainer.addEventListener('click', (e) => {
+    if (STATE.phase === 'playing' && document.pointerLockElement !== canvas) {
+      if (e.target.closest('#hud-center button, #pause-menu, button, input')) {
+        return;
+      }
+      input.clearMouse();
+      requestGamePointerLock();
+    }
+  });
+}
+
+document.addEventListener('pointerlockchange', () => {
+  const isLocked = !!(document.pointerLockElement && (document.pointerLockElement === canvas || document.pointerLockElement === document.body));
+  if (isLocked) {
+    ctp?.classList.add('hidden');
+  } else if (STATE.phase === 'playing') {
+    ctp?.classList.remove('hidden');
+    input.clearAll();
+  }
+});
+
+document.addEventListener('pointerlockerror', (e) => {
+  console.warn('[PointerLock] pointerlockerror event:', e);
+});
+
+function pauseGame() {
+  if (STATE.phase !== 'playing') return;
+  STATE.phase = 'paused';
+  if (document.pointerLockElement) {
+    try { document.exitPointerLock(); } catch (e) {}
+  }
+  input.clearAll();
+  ctp?.classList.add('hidden');
+  document.getElementById('pause-menu')?.classList.remove('hidden');
+}
+
+function resumeGame() {
+  if (STATE.phase !== 'paused') return;
+  STATE.phase = 'playing';
+  input.clearAll();
+  document.getElementById('pause-menu')?.classList.add('hidden');
+  requestGamePointerLock();
+}
+
+function togglePause() {
+  if (STATE.phase === 'playing') {
+    pauseGame();
+  } else if (STATE.phase === 'paused') {
+    resumeGame();
+  }
+}
+
+// Global Escape listener for pause menu toggle
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Escape') {
+    if (STATE.phase === 'playing' || STATE.phase === 'paused') {
+      e.preventDefault();
+      togglePause();
+    }
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
 // UI BUTTONS
 // ─────────────────────────────────────────────────────────────
-document.getElementById('btn-resume').addEventListener('click', () => {
-  STATE.phase = 'playing';
-  document.getElementById('pause-menu').classList.add('hidden');
-  canvas.requestPointerLock();
+document.getElementById('btn-resume')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  resumeGame();
+});
+document.getElementById('btn-hud-pause')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  togglePause();
+});
+document.getElementById('pause-menu')?.addEventListener('click', (e) => {
+  if (e.target.id === 'pause-menu') {
+    resumeGame();
+  }
 });
 
 document.getElementById('btn-save').addEventListener('click', () => {
@@ -454,13 +634,6 @@ function gameLoop(now) {
   let didUpdate = false;
 
   if (STATE.phase === 'playing' && player) {
-    // Escape key pause
-    if (input.justPressed('Escape') && document.pointerLockElement === canvas) {
-      STATE.phase = 'paused';
-      document.exitPointerLock();
-      document.getElementById('pause-menu').classList.remove('hidden');
-    }
-
     // Run fixed updates
     while (accumulator >= FIXED_DT) {
       player.update(FIXED_DT);
@@ -557,4 +730,13 @@ window.GAME = {
     return save.load();
   },
   save,
+  get settings() { return currentSettings; },
+  setSettings: (s) => {
+    Object.assign(currentSettings, s);
+    applySettings(currentSettings);
+    saveSettings(currentSettings);
+  },
+  togglePause,
+  pauseGame,
+  resumeGame,
 };

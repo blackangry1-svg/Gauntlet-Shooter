@@ -74,7 +74,9 @@ export class InputManager {
   get moveLeft()     { return this._keys.has('KeyA') || this._keys.has('ArrowLeft'); }
   get moveRight()    { return this._keys.has('KeyD') || this._keys.has('ArrowRight'); }
   get sprint()       { return this._keys.has('ShiftLeft') || this._keys.has('ShiftRight'); }
-  get interact()     { return this._keys.has('KeyF'); }
+  get interact()     { return this.justPressed('KeyE') || this.justPressed('KeyF'); }
+  get dodge()        { return this.justPressed('Space'); }
+  get useFlask()     { return this.justPressed('KeyQ'); }
 
   // Must be called at end of each frame
   endFrame() {

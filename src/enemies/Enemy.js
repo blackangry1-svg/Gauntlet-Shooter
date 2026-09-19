@@ -1,107 +1,144 @@
 /**
- * Enemy.js — Billboard Sprite Enemy Base + All Enemy Types
- * Pre-rendered 3D sprite style — always faces camera (billboard)
- * AI: simple seek/patrol/attack state machine
+ * Enemy.js — Billboard Sprite Enemy Base + All Enemy Archetypes
+ * Pre-rendered 3D sprite billboard presentation with clean transparent alpha,
+ * UV sprite sheet frame animation, readable attack telegraphs, active strike frames,
+ * and vulnerable punish recovery windows.
  */
 
-const PINK = new THREE.Color(1, 0, 1); // #FF00FF chromakey
+// Shared Texture Cache for zero redundant memory
+const TEXTURE_CACHE = new Map();
 
-// ─────────────────────────────────────────────────────────────
-// BASE ENEMY CLASS
-// ─────────────────────────────────────────────────────────────
+function getOrCreateSpriteTexture(path) {
+  if (TEXTURE_CACHE.has(path)) {
+    return TEXTURE_CACHE.get(path);
+  }
+  const loader = new THREE.TextureLoader();
+  const tex = loader.load(path);
+  tex.magFilter = THREE.NearestFilter;
+  tex.minFilter = THREE.LinearMipmapLinearFilter;
+  tex.generateMipmaps = true;
+  TEXTURE_CACHE.set(path, tex);
+  return tex;
+}
+
 export class Enemy {
   constructor(scene, audio, config) {
     this.scene  = scene;
     this.audio  = audio;
 
-    this.enemyType  = config.type    || 'orc';
-    this.maxHealth  = config.hp      || 50;
-    this.health     = this.maxHealth;
-    this.speed      = config.speed   || 2.5;
-    this.damage     = config.damage  || 10;
-    this.attackRange= config.range   || 1.8;
-    this.detectRange= config.detect  || 15;
-    this.attackCooldown = config.atkCD || 1.2;
-    this.scoreValue = config.score   || 100;
-    this.isBoss     = false;
+    this.enemyType      = config.type    || 'orc';
+    this.maxHealth      = config.hp      || 50;
+    this.health         = this.maxHealth;
+    this.speed          = config.speed   || 2.4;
+    this.damage         = config.damage  || 12;
+    this.attackRange    = config.range   || 2.2;
+    this.detectRange    = config.detect  || 18;
+    this.telegraphTime  = config.telegraph || 0.45;
+    this.recoverTime    = config.recover || 0.6;
+    this.attackCooldown = config.atkCD   || 1.5;
+    this.scoreValue     = config.score   || 100;
+    this.isBoss         = false;
 
-    // AI state
-    this.state      = 'idle'; // idle | patrol | chase | attack | dead
-    this._atkTimer  = 0;
-    this._stateT    = 0;
-    this._patrolDir = new THREE.Vector3(Math.random() - 0.5, 0, Math.random() - 0.5).normalize();
+    // Sprite sheet grid definition
+    this.sheetRows = config.rows || 6;
+    this.sheetCols = config.cols || 6;
+    this.animSets  = config.anims || {
+      idle:    { row: 0, count: 6, speed: 6 },
+      chase:   { row: 2, count: 6, speed: 9 },
+      windup:  { row: 4, count: 3, speed: 5 },
+      attack:  { row: 4, count: 6, speed: 12 },
+      recover: { row: 0, count: 1, speed: 1 },
+      dead:    { row: 5, count: 6, speed: 6 },
+    };
 
-    // Billboard sprite mesh
-    this.mesh = this._buildBillboard(config.size || 1.0, config.color || 0xaa6622, config.spriteTex || null);
+    // AI State: 'idle' | 'chase' | 'windup' | 'attack' | 'recover' | 'stagger' | 'dead'
+    this.state       = 'idle';
+    this._stateT     = 0;
+    this._cooldownT  = 0;
+    this._animFrame  = 0;
+    this._animTimer  = 0;
+    this._hitTimer   = 0;
+    this.dead        = false;
 
-
-    // Callbacks
+    this.player = null;
+    this.camera = null;
     this.onDeath = null;
-    this.player  = null;
-    this.camera  = null;
-    this.dead    = false;
 
-    // Hit flash
-    this._hitTimer = 0;
+    // Build billboard mesh with cloned texture for independent UV offsets
+    this._buildMesh(config.size || 1.6, config.spritePath, config.color || 0x228833);
+    this.setAnimation('idle');
   }
 
-  _buildBillboard(size, color, spriteTexPath) {
-    const group = new THREE.Group();
+  _buildMesh(size, spritePath, fallbackColor) {
+    this.mesh = new THREE.Group();
 
-    // Load sprite texture if available
-    let mat;
-    if (spriteTexPath) {
-      const loader = new THREE.TextureLoader();
-      const tex = loader.load(spriteTexPath, () => {}, undefined, () => {
-        // Fallback to color on load error
-        mat.color.set(color);
-      });
-      mat = new THREE.MeshLambertMaterial({
-        map: tex,
-        color: 0xffffff,
-        side: THREE.DoubleSide,
+    if (spritePath) {
+      const masterTex = getOrCreateSpriteTexture(spritePath);
+      this.tex = masterTex.clone();
+      this.tex.repeat.set(1 / this.sheetCols, 1 / this.sheetRows);
+
+      this.material = new THREE.MeshLambertMaterial({
+        map: this.tex,
         transparent: true,
-        alphaTest: 0.15,
+        alphaTest: 0.5,
+        side: THREE.DoubleSide,
+        depthWrite: true,
       });
     } else {
-      mat = new THREE.MeshLambertMaterial({
-        color,
+      this.material = new THREE.MeshLambertMaterial({
+        color: fallbackColor,
         side: THREE.DoubleSide,
-        transparent: true,
-        alphaTest: 0.1,
       });
     }
 
-    // Sprite plane (always faces camera)
-    const geo = new THREE.PlaneGeometry(size, size * 1.5);
-    const sprite = new THREE.Mesh(geo, mat);
-    sprite.position.y = size * 0.75; // lift off floor
-    sprite.userData.isSprite = true;
-    group.add(sprite);
+    const spriteGeo = new THREE.PlaneGeometry(size, size * 1.35);
+    this.spriteMesh = new THREE.Mesh(spriteGeo, this.material);
+    this.spriteMesh.position.y = (size * 1.35) / 2;
+    this.spriteMesh.userData.isSprite = true;
+    this.mesh.add(this.spriteMesh);
 
+    // Hitbox cylinder approximation — transparent 0 opacity so Raycaster can intersect it
+    const hitGeo = new THREE.CylinderGeometry(size * 0.45, size * 0.45, size * 1.4, 8);
+    const hitMat = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    });
+    this.hitbox = new THREE.Mesh(hitGeo, hitMat);
+    this.hitbox.position.y = (size * 1.4) / 2;
+    this.hitbox.userData.isHitbox = true;
+    this.mesh.add(this.hitbox);
 
-    // Invisible hitbox (AABB cylinder approximation)
-    const hitGeo = new THREE.BoxGeometry(size * 0.6, size * 1.4, size * 0.6);
-    const hitMat = new THREE.MeshBasicMaterial({ visible: false });
-    const hitbox = new THREE.Mesh(hitGeo, hitMat);
-    hitbox.position.y = size * 0.7;
-    hitbox.userData.isHitbox = true;
-    group.add(hitbox);
-
-    // Shadow blob
-    const shadowGeo = new THREE.PlaneGeometry(size * 0.7, size * 0.35);
+    // Ground shadow blob
+    const shadowGeo = new THREE.PlaneGeometry(size * 0.8, size * 0.45);
     const shadowMat = new THREE.MeshBasicMaterial({
       color: 0x000000,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.4,
       depthWrite: false,
     });
     const shadow = new THREE.Mesh(shadowGeo, shadowMat);
     shadow.rotation.x = -Math.PI / 2;
-    shadow.position.y = 0.01;
-    group.add(shadow);
+    shadow.position.y = 0.02;
+    this.mesh.add(shadow);
+  }
 
-    return group;
+  setAnimation(animName) {
+    if (this._currentAnim === animName) return;
+    this._currentAnim = animName;
+    this._animFrame = 0;
+    this._animTimer = 0;
+    this._updateUV();
+  }
+
+  _updateUV() {
+    if (!this.tex) return;
+    const def = this.animSets[this._currentAnim] || this.animSets.idle;
+    const row = Math.min(this.sheetRows - 1, def.row);
+    const col = this._animFrame % (def.count || 1);
+
+    this.tex.offset.x = col / this.sheetCols;
+    this.tex.offset.y = (this.sheetRows - 1 - row) / this.sheetRows;
   }
 
   takeDamage(amount) {
@@ -109,19 +146,17 @@ export class Enemy {
     this.health -= amount;
     this._hitTimer = 0.15;
 
-    // Flash white on hit
-    this.mesh.traverse(child => {
-      if (child.isMesh && child.userData.isSprite) {
-        child.material.emissive = new THREE.Color(1, 0.5, 0.5);
-        child.material.emissiveIntensity = 1;
-      }
-    });
+    // Emissive flash
+    if (this.material) {
+      this.material.emissive = new THREE.Color(1, 0.4, 0.4);
+      this.material.emissiveIntensity = 1.2;
+    }
 
     if (this.health <= 0) {
       this._die();
-    } else {
-      // Chase player when hit
+    } else if (this.state === 'idle') {
       this.state = 'chase';
+      this.setAnimation('chase');
     }
   }
 
@@ -129,20 +164,20 @@ export class Enemy {
     if (this.dead) return;
     this.dead = true;
     this.state = 'dead';
+    this.setAnimation('dead');
 
-    // Death animation — fall down
-    const group = this.mesh;
+    // Fade and sink
     let t = 0;
-    const startY = group.position.y;
-    const anim = setInterval(() => {
+    const startY = this.mesh.position.y;
+    const interval = setInterval(() => {
       t += 0.05;
-      group.rotation.z = t * 2;
-      group.position.y = startY - t * 0.3;
-      if (t >= 1) {
-        clearInterval(anim);
-        this.scene.remove(group);
+      if (this.material) this.material.opacity = Math.max(0, 1 - t);
+      this.mesh.position.y = startY - t * 0.4;
+      if (t >= 1.0) {
+        clearInterval(interval);
+        this.dispose();
       }
-    }, 16);
+    }, 20);
 
     if (this.onDeath) this.onDeath();
   }
@@ -150,340 +185,318 @@ export class Enemy {
   update(dt, playerPos) {
     if (this.dead) return;
 
-    // Billboard — always face camera
+    // Billboard: face camera
     if (this.camera) {
       this.mesh.lookAt(this.camera.position.x, this.mesh.position.y, this.camera.position.z);
     }
 
-    // Hit flash clear
+    // Hit flash decay
     if (this._hitTimer > 0) {
       this._hitTimer -= dt;
-      if (this._hitTimer <= 0) {
-        this.mesh.traverse(child => {
-          if (child.isMesh && child.userData.isSprite) {
-            child.material.emissiveIntensity = 0;
-          }
-        });
+      if (this._hitTimer <= 0 && this.material) {
+        if (this.state === 'windup') {
+          // Keep telegraph glow
+          this.material.emissive = new THREE.Color(1, 0.6, 0.1);
+          this.material.emissiveIntensity = 1.0;
+        } else {
+          this.material.emissiveIntensity = 0;
+        }
       }
     }
 
-    // AI timers
-    this._atkTimer = Math.max(0, this._atkTimer - dt);
-    this._stateT  += dt;
+    // Frame animation timer
+    const def = this.animSets[this._currentAnim] || this.animSets.idle;
+    this._animTimer += dt * (def.speed || 6);
+    if (this._animTimer >= 1.0) {
+      this._animTimer -= 1.0;
+      this._animFrame = (this._animFrame + 1) % def.count;
+      this._updateUV();
+    }
+
+    // Cooldown
+    if (this._cooldownT > 0) this._cooldownT -= dt;
+    this._stateT += dt;
 
     if (!playerPos) return;
-    const distSq = this.mesh.position.distanceToSquared(playerPos);
+    const distToPlayer = this.mesh.position.distanceTo(playerPos);
 
-    // State machine
+    // AI State Machine
     switch (this.state) {
       case 'idle':
-        if (distSq < this.detectRange * this.detectRange) {
+        if (distToPlayer < this.detectRange) {
           this.state = 'chase';
+          this.setAnimation('chase');
           this._stateT = 0;
-        } else if (this._stateT > 3) {
-          this.state = 'patrol';
-          this._stateT = 0;
-        }
-        break;
-
-      case 'patrol':
-        this._moveInDir(this._patrolDir, dt);
-        if (this._stateT > 2) {
-          // New random direction
-          this._patrolDir.set(Math.random() - 0.5, 0, Math.random() - 0.5).normalize();
-          this._stateT = 0;
-        }
-        if (distSq < this.detectRange * this.detectRange) {
-          this.state = 'chase';
         }
         break;
 
       case 'chase':
-        const toPlayer = new THREE.Vector3().subVectors(playerPos, this.mesh.position).setY(0).normalize();
-        this._moveInDir(toPlayer, dt);
-
-        if (distSq < this.attackRange * this.attackRange) {
-          this.state = 'attack';
+        if (distToPlayer <= this.attackRange && this._cooldownT <= 0) {
+          // Begin Telegraph / Wind-up phase
+          this.state = 'windup';
+          this.setAnimation('windup');
           this._stateT = 0;
-        } else if (distSq > (this.detectRange * 1.5) ** 2) {
-          this.state = 'patrol';
+          this.audio.playSFX('telegraphWarn', 0.6);
+          if (this.material) {
+            this.material.emissive = new THREE.Color(1, 0.6, 0.1);
+            this.material.emissiveIntensity = 1.2;
+          }
+        } else {
+          // Move toward player
+          const dir = new THREE.Vector3().subVectors(playerPos, this.mesh.position);
+          dir.y = 0;
+          if (dir.lengthSq() > 0.01) {
+            dir.normalize();
+            this.mesh.position.addScaledVector(dir, this.speed * dt);
+          }
+        }
+        break;
+
+      case 'windup':
+        // Anticipation / Telegraph window
+        if (this._stateT >= this.telegraphTime) {
+          // Transition to Active Attack
+          this.state = 'attack';
+          this.setAnimation('attack');
+          this._stateT = 0;
+          if (this.material) this.material.emissiveIntensity = 0;
+          this._executeAttack(playerPos, distToPlayer);
         }
         break;
 
       case 'attack':
-        if (this._atkTimer <= 0) {
-          this._doAttack();
-          this._atkTimer = this.attackCooldown;
+        // Active strike duration (0.2s)
+        if (this._stateT >= 0.22) {
+          // Enter Recovery / Punish Window
+          this.state = 'recover';
+          this.setAnimation('recover');
+          this._stateT = 0;
         }
-        // Return to chase if player moved away
-        if (distSq > this.attackRange * this.attackRange * 1.5) {
+        break;
+
+      case 'recover':
+        // Vulnerable recovery state
+        if (this._stateT >= this.recoverTime) {
           this.state = 'chase';
+          this.setAnimation('chase');
+          this._cooldownT = this.attackCooldown;
+          this._stateT = 0;
         }
         break;
     }
   }
 
-  _moveInDir(dir, dt) {
-    const newPos = this.mesh.position.clone().addScaledVector(dir, this.speed * dt);
-    // Simple ground clamp
-    newPos.y = 0;
-    this.mesh.position.copy(newPos);
-  }
-
-  _doAttack() {
-    if (!this.player) return;
-    // Direct damage to player (called when in range)
-    this.player.takeDamage(this.damage);
-    this.audio.playSFX('swordHit', 0.5);
+  _executeAttack(playerPos, dist) {
+    if (dist <= this.attackRange * 1.2 && this.player) {
+      this.player.takeDamage(this.damage, this.mesh.position);
+    }
   }
 
   dispose() {
-    this.mesh.traverse(child => {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) child.material.dispose();
-    });
+    this.scene.remove(this.mesh);
+    if (this.spriteMesh) {
+      this.spriteMesh.geometry.dispose();
+      this.spriteMesh.material.dispose();
+    }
+    if (this.hitbox) {
+      this.hitbox.geometry.dispose();
+      this.hitbox.material.dispose();
+    }
+    if (this.tex) {
+      this.tex.dispose();
+    }
   }
 }
 
 // ─────────────────────────────────────────────────────────────
-// ORC GRUNT — Melee charger
+// ENEMY ARCHETYPES
 // ─────────────────────────────────────────────────────────────
+
 export class OrcGrunt extends Enemy {
   constructor(scene, audio) {
     super(scene, audio, {
-      type: 'orc', hp: 60, speed: 3.5, damage: 12,
-      range: 2.0, detect: 14, atkCD: 1.0,
-      size: 1.1, color: 0x2d5a1a, score: 100,
-      spriteTex: '/assets/sprites/orc_grunt.jpg',
+      type: 'orc',
+      hp: 60,
+      speed: 2.5,
+      damage: 16,
+      range: 2.2,
+      detect: 16,
+      telegraph: 0.45,
+      recover: 0.55,
+      atkCD: 1.4,
+      score: 100,
+      size: 1.7,
+      spritePath: '/assets/sprites/orc_grunt.png',
+      rows: 6,
+      cols: 6,
+      anims: {
+        idle:    { row: 0, count: 6, speed: 5 },
+        chase:   { row: 2, count: 6, speed: 8 },
+        windup:  { row: 4, count: 4, speed: 8 },
+        attack:  { row: 4, count: 6, speed: 14 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 5, count: 6, speed: 6 },
+      }
     });
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// SKELETON ARCHER — Ranged kiter
-// ─────────────────────────────────────────────────────────────
 export class SkeletonArcher extends Enemy {
   constructor(scene, audio) {
     super(scene, audio, {
-      type: 'archer', hp: 35, speed: 2.0, damage: 10,
-      range: 12, detect: 18, atkCD: 2.0,
-      size: 0.9, color: 0xc8b090, score: 150,
-      spriteTex: '/assets/sprites/skeleton_archer.jpg',
-    });
-    this._arrowCooldown = 0;
-    this.PREF_DIST = 8; // preferred attack distance
-  }
-
-
-  update(dt, playerPos) {
-    if (this.dead) return;
-
-    // Billboard
-    if (this.camera) {
-      this.mesh.lookAt(this.camera.position.x, this.mesh.position.y, this.camera.position.z);
-    }
-
-    if (this._hitTimer > 0) {
-      this._hitTimer -= dt;
-      if (this._hitTimer <= 0) {
-        this.mesh.traverse(c => {
-          if (c.isMesh && c.userData.isSprite) c.material.emissiveIntensity = 0;
-        });
+      type: 'archer',
+      hp: 45,
+      speed: 1.8,
+      damage: 18,
+      range: 16.0,
+      detect: 22,
+      telegraph: 0.65,
+      recover: 0.85,
+      atkCD: 2.2,
+      score: 150,
+      size: 1.6,
+      spritePath: '/assets/sprites/skeleton_archer.png',
+      rows: 6,
+      cols: 6,
+      anims: {
+        idle:    { row: 0, count: 6, speed: 4 },
+        chase:   { row: 1, count: 6, speed: 6 },
+        windup:  { row: 2, count: 4, speed: 6 },
+        attack:  { row: 3, count: 6, speed: 12 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 5, count: 6, speed: 6 },
       }
-    }
-
-    this._atkTimer = Math.max(0, this._atkTimer - dt);
-    if (!playerPos) return;
-
-    const dist = this.mesh.position.distanceTo(playerPos);
-    const toPlayer = new THREE.Vector3().subVectors(playerPos, this.mesh.position).setY(0).normalize();
-    const awayFromPlayer = toPlayer.clone().negate();
-
-    if (dist > this.detectRange) {
-      // Out of range — idle
-      return;
-    }
-
-    // Kite: maintain preferred distance
-    if (dist < this.PREF_DIST - 1) {
-      // Too close — back away
-      this._moveInDir(awayFromPlayer, dt);
-    } else if (dist > this.PREF_DIST + 2) {
-      // Too far — move closer
-      this._moveInDir(toPlayer, dt * 0.5);
-    }
-
-    // Shoot arrow
-    if (dist < this.attackRange && this._atkTimer <= 0) {
-      this._shootArrow(playerPos);
-      this._atkTimer = this.attackCooldown;
-    }
+    });
   }
 
-  _shootArrow(targetPos) {
-    if (!this.player) return;
-    // Simplified: deal damage with accuracy falloff based on range
-    const dist = this.mesh.position.distanceTo(targetPos);
-    const hitChance = Math.max(0.2, 1 - dist / 20);
-    if (Math.random() < hitChance) {
-      this.player.takeDamage(this.damage);
+  _executeAttack(playerPos, dist) {
+    this.audio.playSFX('arrowFire', 0.8);
+    // Spawn enemy arrow toward player
+    if (this.player) {
+      setTimeout(() => {
+        if (!this.dead && this.player) {
+          const currentDist = this.mesh.position.distanceTo(this.player.camera.position);
+          if (currentDist < 25) {
+            this.player.takeDamage(this.damage, this.mesh.position);
+          }
+        }
+      }, 250);
     }
-    this.audio.playSFX('arrowFire', 0.5);
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// DEATH BAT — Flying swooper
-// ─────────────────────────────────────────────────────────────
 export class DeathBat extends Enemy {
   constructor(scene, audio) {
     super(scene, audio, {
-      type: 'bat', hp: 30, speed: 5.0, damage: 14,
-      range: 1.5, detect: 20, atkCD: 0.8,
-      size: 0.75, color: 0x220033, score: 80,
-      spriteTex: '/assets/sprites/death_bat.jpg',
-    });
-    this._flyT = Math.random() * Math.PI * 2; // phase offset
-  }
-
-  update(dt, playerPos) {
-    if (this.dead) return;
-
-    this._flyT += dt * 3;
-    // Hover up and down
-    this.mesh.position.y = 1.2 + Math.sin(this._flyT) * 0.4;
-
-    // Billboard
-    if (this.camera) {
-      this.mesh.lookAt(this.camera.position.x, this.mesh.position.y, this.camera.position.z);
-    }
-
-    if (this._hitTimer > 0) {
-      this._hitTimer -= dt;
-    }
-
-    this._atkTimer = Math.max(0, this._atkTimer - dt);
-    if (!playerPos) return;
-
-    const distSq = this.mesh.position.distanceToSquared(playerPos);
-    if (distSq < this.detectRange * this.detectRange) {
-      // Dive toward player
-      const dir = new THREE.Vector3().subVectors(playerPos, this.mesh.position).normalize();
-      this.mesh.position.addScaledVector(dir, this.speed * dt);
-      this.mesh.position.y = Math.max(0.5, this.mesh.position.y); // don't go underground
-
-      if (distSq < this.attackRange * this.attackRange && this._atkTimer <= 0) {
-        this._doAttack();
-        this._atkTimer = this.attackCooldown;
+      type: 'bat',
+      hp: 35,
+      speed: 4.2,
+      damage: 12,
+      range: 2.0,
+      detect: 20,
+      telegraph: 0.32,
+      recover: 0.45,
+      atkCD: 1.2,
+      score: 80,
+      size: 1.3,
+      spritePath: '/assets/sprites/death_bat.png',
+      rows: 6,
+      cols: 4,
+      anims: {
+        idle:    { row: 0, count: 4, speed: 8 },
+        chase:   { row: 2, count: 4, speed: 12 },
+        windup:  { row: 1, count: 4, speed: 10 },
+        attack:  { row: 4, count: 4, speed: 14 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 5, count: 4, speed: 8 },
       }
-    }
+    });
+    this.mesh.position.y = 1.2; // flying
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// STONE GOLEM — Slow heavy tank
-// ─────────────────────────────────────────────────────────────
 export class StoneGolem extends Enemy {
   constructor(scene, audio) {
     super(scene, audio, {
-      type: 'golem', hp: 180, speed: 1.2, damage: 30,
-      range: 2.5, detect: 12, atkCD: 2.5,
-      size: 1.6, color: 0x556677, score: 300,
-      spriteTex: '/assets/sprites/stone_golem.jpg',
+      type: 'golem',
+      hp: 240,
+      speed: 1.6,
+      damage: 32,
+      range: 2.8,
+      detect: 16,
+      telegraph: 0.85,
+      recover: 1.10,
+      atkCD: 2.4,
+      score: 400,
+      size: 2.4,
+      spritePath: '/assets/sprites/stone_golem.png',
+      rows: 4,
+      cols: 4,
+      anims: {
+        idle:    { row: 0, count: 4, speed: 4 },
+        chase:   { row: 1, count: 4, speed: 5 },
+        windup:  { row: 2, count: 3, speed: 4 },
+        attack:  { row: 2, count: 4, speed: 8 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 3, count: 4, speed: 4 },
+      }
     });
   }
 
-
-  _doAttack() {
-    if (!this.player) return;
-    // Stomp — deals heavy damage
-    this.player.takeDamage(this.damage);
-    this.audio.playSFX('bossRoar', 0.4);
+  _executeAttack(playerPos, dist) {
+    this.audio.playSFX('boom', 1.0);
+    super._executeAttack(playerPos, dist);
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// DEATH KNIGHT — Final Boss
-// Two phases: Phase 1 sword, Phase 2 magic
-// ─────────────────────────────────────────────────────────────
 export class DeathKnight extends Enemy {
   constructor(scene, audio) {
     super(scene, audio, {
-      type: 'boss', hp: 600, speed: 2.8, damage: 35,
-      range: 3.0, detect: 50, atkCD: 1.5,
-      size: 2.0, color: 0x110022, score: 2000,
-      spriteTex: '/assets/sprites/death_knight.jpg',
-    });
-    this.isBoss   = true;
-    this._phase   = 1;
-    this._roarT   = 0;
-    this._magicT  = 0;
-
-    // Glow effect
-    this.mesh.traverse(c => {
-      if (c.isMesh && c.userData.isSprite) {
-        c.material.emissive = new THREE.Color(0.4, 0, 0.8);
-        c.material.emissiveIntensity = 0.3;
+      type: 'boss',
+      hp: 550,
+      speed: 2.8,
+      damage: 28,
+      range: 3.2,
+      detect: 30,
+      telegraph: 0.65,
+      recover: 0.80,
+      atkCD: 1.8,
+      score: 2500,
+      size: 2.6,
+      spritePath: '/assets/sprites/death_knight.png',
+      rows: 3,
+      cols: 6,
+      anims: {
+        idle:    { row: 0, count: 6, speed: 6 },
+        chase:   { row: 0, count: 6, speed: 8 },
+        windup:  { row: 1, count: 3, speed: 6 },
+        attack:  { row: 1, count: 6, speed: 12 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 2, count: 6, speed: 5 },
       }
     });
-
-    // Add boss aura light
-    this._auraLight = new THREE.PointLight(0x440088, 1.0, 8);
-    this._auraLight.position.y = 1.5;
-    this.mesh.add(this._auraLight);
+    this.isBoss = true;
+    this.phase = 1;
   }
 
   update(dt, playerPos) {
     if (this.dead) return;
 
-    // Phase transition at 50% HP
-    if (this._phase === 1 && this.health < this.maxHealth * 0.5) {
-      this._enterPhase2();
+    // Phase 2 transition at 50% HP
+    if (this.phase === 1 && this.health <= this.maxHealth * 0.5) {
+      this.phase = 2;
+      this.speed = 3.6;
+      this.damage = 36;
+      this.telegraphTime = 0.45;
+      this.recoverTime = 0.55;
+      this.audio.playSFX('bossPhase', 1.2);
     }
 
-    // Aura flicker
-    this._roarT += dt;
-    this._auraLight.intensity = 1.0 + Math.sin(this._roarT * 4) * 0.3;
-
-    // Call base update
     super.update(dt, playerPos);
-
-    // Phase 2: periodic magic nova
-    if (this._phase === 2) {
-      this._magicT += dt;
-      if (this._magicT > 5) {
-        this._castMagicNova(playerPos);
-        this._magicT = 0;
-      }
-    }
   }
 
-  _enterPhase2() {
-    this._phase = 2;
-    this.speed  = 3.5;
-    this.damage = 50;
-    this.attackCooldown = 1.0;
-
-    // Visual change
-    this.mesh.traverse(c => {
-      if (c.isMesh && c.userData.isSprite) {
-        c.material.emissive = new THREE.Color(0.8, 0, 0.2);
-        c.material.emissiveIntensity = 0.6;
-      }
-    });
-    this._auraLight.color.set(0xff0044);
-
-    this.audio.playSFX('bossRoar', 1.0);
-  }
-
-  _castMagicNova(playerPos) {
-    if (!this.player || !playerPos) return;
-    const dist = this.mesh.position.distanceTo(playerPos);
-    // Magic nova hits if in range
-    if (dist < 8) {
-      const dmg = 20 + Math.random() * 20;
-      this.player.takeDamage(Math.round(dmg));
-      this.audio.playSFX('fireballExplode', 1.0);
-    }
+  _executeAttack(playerPos, dist) {
+    this.audio.playSFX('heavySwing', 1.0);
+    super._executeAttack(playerPos, dist);
   }
 }

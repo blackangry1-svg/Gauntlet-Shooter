@@ -2,10 +2,12 @@
   "name": "gauntlet-shooter",
   "version": "1.0.0",
   "description": "Gauntlet Legends FPS - Web-based dungeon shooter",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node tests/test_boot.js"
   },
   "dependencies": {},
   "devDependencies": {}

@@ -282,9 +282,65 @@ html, body {
 .bar-fill.blue {
   background: linear-gradient(90deg, #0033aa, #3366ee);
   box-shadow: 0 0 6px rgba(0,100,200,0.5);
+.bar-fill.green {
+  background: linear-gradient(90deg, #1b8a3e, #2ecc71);
+  box-shadow: 0 0 6px rgba(46, 204, 113, 0.5);
   width: 100%;
 }
 .bar-text { font-size: 0.7rem; color: var(--text); width: 30px; }
+
+.hud-flask-row {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.7rem; color: #ffd700;
+  margin-top: 2px;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.4);
+}
+
+/* Interaction Prompt */
+#interact-prompt {
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 6, 8, 0.85);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  box-shadow: 0 0 15px rgba(200, 168, 75, 0.4);
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.2s ease;
+}
+.prompt-badge {
+  background: var(--gold);
+  color: #111;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Checkpoint Banner */
+#checkpoint-banner {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(15, 10, 5, 0.92);
+  border: 2px solid var(--gold);
+  padding: 20px 40px;
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(255, 180, 0, 0.6);
+  z-index: 120;
+  pointer-events: none;
+  animation: fadeInOut 2.8s ease forwards;
+}
 
 /* Center HUD */
 #hud-center {

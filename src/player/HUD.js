@@ -4,32 +4,68 @@
  */
 export class HUD {
   constructor() {
-    this._healthBar  = document.getElementById('health-bar');
-    this._manaBar    = document.getElementById('mana-bar');
-    this._healthText = document.getElementById('health-text');
-    this._manaText   = document.getElementById('mana-text');
-    this._enemyCount = document.getElementById('enemy-count');
-    this._minimap    = document.getElementById('minimap');
-    this._minimapCtx = this._minimap.getContext('2d');
-    this._roomNum    = document.getElementById('room-num');
-    this._scoreEl    = document.getElementById('score-value');
+    this._healthBar   = document.getElementById('health-bar');
+    this._staminaBar  = document.getElementById('stamina-bar');
+    this._manaBar     = document.getElementById('mana-bar');
+    this._healthText  = document.getElementById('health-text');
+    this._staminaText = document.getElementById('stamina-text');
+    this._manaText    = document.getElementById('mana-text');
+    this._flaskText   = document.getElementById('flask-text');
+    this._interactPrompt = document.getElementById('interact-prompt');
+    this._interactText   = document.getElementById('interact-text');
+    this._checkpointBanner = document.getElementById('checkpoint-banner');
+    this._enemyCount  = document.getElementById('enemy-count');
+    this._minimap     = document.getElementById('minimap');
+    this._minimapCtx  = this._minimap.getContext('2d');
+    this._roomNum     = document.getElementById('room-num');
+    this._scoreEl     = document.getElementById('score-value');
   }
 
   update(player) {
     if (!player) return;
 
-    const hpPct = player.health / player.maxHealth;
-    const mpPct = player.mana   / player.maxMana;
+    const hpPct   = player.health / player.maxHealth;
+    const stamPct = player.stamina / player.maxStamina;
+    const mpPct   = player.mana   / player.maxMana;
 
-    this._healthBar.style.width = Math.max(0, hpPct * 100) + '%';
-    this._manaBar.style.width   = Math.max(0, mpPct * 100) + '%';
-    this._healthText.textContent = Math.ceil(player.health);
-    this._manaText.textContent   = Math.ceil(player.mana);
+    if (this._healthBar)  this._healthBar.style.width  = Math.max(0, hpPct * 100) + '%';
+    if (this._staminaBar) this._staminaBar.style.width = Math.max(0, stamPct * 100) + '%';
+    if (this._manaBar)    this._manaBar.style.width    = Math.max(0, mpPct * 100) + '%';
+
+    if (this._healthText)  this._healthText.textContent  = Math.ceil(player.health);
+    if (this._staminaText) this._staminaText.textContent = Math.ceil(player.stamina);
+    if (this._manaText)    this._manaText.textContent    = Math.ceil(player.mana);
+
+    if (this._flaskText && player.flasks !== undefined) {
+      this._flaskText.textContent = `Flasks: ${player.flasks}/${player.maxFlasks} [Q]`;
+    }
 
     // Low health pulsing
-    this._healthBar.style.filter = hpPct < 0.25
-      ? `brightness(${1.2 + Math.sin(Date.now() * 0.01) * 0.3})`
-      : '';
+    if (this._healthBar) {
+      this._healthBar.style.filter = hpPct < 0.25
+        ? `brightness(${1.2 + Math.sin(Date.now() * 0.01) * 0.3})`
+        : '';
+    }
+  }
+
+  showInteractPrompt(text = 'INTERACT') {
+    if (this._interactPrompt) {
+      this._interactText.textContent = text;
+      this._interactPrompt.classList.remove('hidden');
+    }
+  }
+
+  hideInteractPrompt() {
+    if (this._interactPrompt) {
+      this._interactPrompt.classList.add('hidden');
+    }
+  }
+
+  showCheckpointBanner() {
+    if (this._checkpointBanner) {
+      this._checkpointBanner.classList.remove('hidden');
+      setTimeout(() => this._checkpointBanner?.classList.add('hidden'), 2800);
+    }
   }
 
   setRoom(current, total) {

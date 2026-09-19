@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-09-19T12:56:02.686Z",
+  "iteration": 1,
+  "milestone": 19,
+  "mean_fps": 60,
+  "mean_frametime_ms": 16.81,
+  "p50_frametime_ms": 16.7,
+  "p95_frametime_ms": 18,
+  "p99_frametime_ms": 18.8,
+  "frames_over_20ms": 1,
+  "frames_over_33ms": 1,
+  "test_results": {
+    "BOOT_TEST": {
+      "pass": true,
+      "details": {
+        "title": "⚔️ Gauntlet Legends Shooter",
+        "hasCanvas": true,
+        "isThreeLoaded": true,
+        "errors": []
+      }
+    },
+    "MOVEMENT_TEST": {
+      "pass": true,
+      "details": {
+        "posStart": {
+          "x": 0,
+          "z": 2
+        },
+        "posMoved": {
+          "x": -3.526982781544375e-16,
+          "z": -0.8800000000000006
+        },
+        "distMoved": 2.880000000000001
+      }
+    },
+    "COLLISION_TEST": {
+      "pass": true,
+      "details": {
+        "wallCount": 35,
+        "posAfterWall": -1.1199999999999974
+      }
+    },
+    "COMBAT_TEST": {
+      "pass": true,
+      "details": {
+        "enemyHpBefore": 60,
+        "enemyHpAfter": 28
+      }
+    },
+    "DAMAGE_TEST": {
+      "pass": true,
+      "details": {
+        "playerHpBefore": 144,
+        "playerHpAfter": 119
+      }
+    },
+    "DODGE_TEST": {
+      "pass": true,
+      "details": {
+        "isDodging": true,
+        "iframes": 0.1166666666666667,
+        "stamBefore": 110,
+        "stamAfter": 88
+      }
+    },
+    "RESPAWN_TEST": {
+      "pass": true,
+      "details": {
+        "isCheckpointActive": true,
+        "playerHpFull": true
+      }
+    },
+    "DOOR_TEST": {
+      "pass": true,
+      "details": {
+        "gateBefore": false,
+        "gateAfter": true
+      }
+    },
+    "AI_TEST": {
+      "pass": true,
+      "details": {
+        "state": "windup",
+        "hp": 240,
+        "hasTelegraph": true
+      }
+    },
+    "BOSS_TEST": {
+      "pass": true,
+      "details": {
+        "bossTriggered": true,
+        "bossBarVisible": true,
+        "fogWallExists": true
+      }
+    },
+    "WIN_TEST": {
+      "pass": true,
+      "details": {
+        "victoryVisible": true,
+        "phaseVictory": true
+      }
+    },
+    "DEATH_TEST": {
+      "pass": true,
+      "details": {
+        "gameOverVisible": true
+      }
+    },
+    "RESTART_TEST": {
+      "pass": true,
+      "details": {
+        "retryPhase": "playing",
+        "retryHp": 160
+      }
+    }
+  },
+  "total_passed": 13,
+  "total_tests": 13
+}

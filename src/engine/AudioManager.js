@@ -34,8 +34,18 @@ export class AudioManager {
     return {
       // Sword swing — fast whoosh
       swordSwing:  { gen: 'noise', freq: 400, duration: 0.15, attack: 0.01, decay: 0.14, filter: 800 },
+      // Heavy swing — deeper whoosh
+      heavySwing:  { gen: 'noise', freq: 220, duration: 0.28, attack: 0.02, decay: 0.26, filter: 450 },
       // Sword hit — meaty thud
       swordHit:    { gen: 'hit', freq: 120, duration: 0.2, attack: 0.005, decay: 0.19 },
+      // Dodge whoosh
+      dodge:       { gen: 'noise', freq: 500, duration: 0.22, attack: 0.01, decay: 0.21, filter: 1100 },
+      // Block clang — metallic deflection
+      block:       { gen: 'tone', type: 'triangle', freq: 580, duration: 0.2, attack: 0.005, decay: 0.195, slide: 320 },
+      // Guard break
+      guardBreak:  { gen: 'boom', freq: 90, duration: 0.45, attack: 0.01, decay: 0.44 },
+      // Telegraph warning sound
+      telegraphWarn: { gen: 'tone', type: 'sine', freq: 350, duration: 0.35, attack: 0.03, decay: 0.32, slide: 550 },
       // Arrow fire — twang
       arrowFire:   { gen: 'tone', type: 'sawtooth', freq: 200, duration: 0.12, attack: 0.005, decay: 0.115, slide: 80 },
       // Arrow hit
@@ -52,8 +62,15 @@ export class AudioManager {
       roomClear:   { gen: 'chord', freqs: [523, 659, 784], duration: 0.8, attack: 0.05, decay: 0.75 },
       // Pickup — coin jingle
       pickup:      { gen: 'tone', type: 'sine', freq: 880, duration: 0.12, attack: 0.01, decay: 0.11 },
-      // Boss roar
-      bossRoar:    { gen: 'boom', freq: 60, duration: 0.7, attack: 0.02, decay: 0.68 },
+      // Bonfire / Checkpoint rest
+      bonfireRest: { gen: 'chord', freqs: [440, 554, 659, 880], duration: 1.4, attack: 0.1, decay: 1.3 },
+      // Lever pull / door opening
+      leverPull:   { gen: 'noise', freq: 180, duration: 0.6, attack: 0.05, decay: 0.55, filter: 350 },
+      // Chest open
+      chestOpen:   { gen: 'chord', freqs: [330, 494, 659], duration: 0.7, attack: 0.03, decay: 0.67 },
+      // Boss roar / phase change
+      bossRoar:    { gen: 'boom', freq: 55, duration: 0.9, attack: 0.02, decay: 0.88 },
+      bossPhase:   { gen: 'boom', freq: 45, duration: 1.2, attack: 0.03, decay: 1.17 },
       // Footstep — low thud
       footstep:    { gen: 'hit', freq: 80, duration: 0.08, attack: 0.005, decay: 0.075 },
       // UI click
@@ -158,6 +175,54 @@ export class AudioManager {
         osc.start(now);
         osc.stop(now + def.duration + 0.01);
       }
+    }
+  }
+
+  startMusic() {
+    if (!this._ctx || this._musicRunning) return;
+    this._musicRunning = true;
+    const ctx = this._ctx;
+
+    // Ambient drone synth
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    osc1.type = 'sawtooth';
+    osc2.type = 'sine';
+    osc1.frequency.value = 55;  // A1
+    osc2.frequency.value = 82.5;// E2 (fifth)
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 160;
+
+    this._musicGain = ctx.createGain();
+    this._musicGain.gain.value = 0.15;
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(this._musicGain);
+    this._musicGain.connect(this._masterGain);
+
+    osc1.start();
+    osc2.start();
+    this._ambienceOscs = [osc1, osc2, filter];
+  }
+
+  setMusicState(state) {
+    if (!this._musicGain || !this._ambienceOscs) return;
+    const ctx = this._ctx;
+    const filter = this._ambienceOscs[2];
+    const now = ctx.currentTime;
+
+    if (state === 'boss') {
+      filter.frequency.linearRampToValueAtTime(320, now + 1.5);
+      this._musicGain.gain.linearRampToValueAtTime(0.25, now + 1.5);
+    } else if (state === 'combat') {
+      filter.frequency.linearRampToValueAtTime(240, now + 1.0);
+      this._musicGain.gain.linearRampToValueAtTime(0.20, now + 1.0);
+    } else { // 'explore'
+      filter.frequency.linearRampToValueAtTime(140, now + 2.0);
+      this._musicGain.gain.linearRampToValueAtTime(0.12, now + 2.0);
     }
   }
 

@@ -112,11 +112,22 @@
           <span id="health-text" class="bar-text">100</span>
         </div>
         <div class="hud-bar-row">
+          <span class="bar-icon">⚡</span>
+          <div class="bar-track">
+            <div id="stamina-bar" class="bar-fill green"></div>
+          </div>
+          <span id="stamina-text" class="bar-text">100</span>
+        </div>
+        <div class="hud-bar-row">
           <span class="bar-icon">🔮</span>
           <div class="bar-track">
             <div id="mana-bar" class="bar-fill blue"></div>
           </div>
           <span id="mana-text" class="bar-text">80</span>
+        </div>
+        <div class="hud-flask-row">
+          <span class="bar-icon">🧪</span>
+          <span id="flask-text" class="bar-text">Flasks: 3/3 [Q]</span>
         </div>
       </div>
     </div>
@@ -177,6 +188,17 @@
   <div id="room-clear" class="hidden">
     <div class="banner-text">ROOM CLEARED!</div>
     <div class="banner-sub">Advancing to next chamber...</div>
+  </div>
+
+  <!-- Checkpoint Banner -->
+  <div id="checkpoint-banner" class="hidden">
+    <div class="banner-text">SHRINE RESTED</div>
+    <div class="banner-sub">Flasks and Health Restored · Progress Saved</div>
+  </div>
+
+  <!-- Interaction Prompt -->
+  <div id="interact-prompt" class="hidden">
+    <span class="prompt-badge">[E]</span> <span id="interact-text">REST AT SHRINE</span>
   </div>
 
   <!-- Boss health bar -->

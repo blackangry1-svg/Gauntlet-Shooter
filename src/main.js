@@ -15,6 +15,11 @@ import { EnemyManager } from './enemies/EnemyManager.js';
 import { preloadEnemyTextures, OrcGrunt, SkeletonArcher, StoneGolem, DeathBat, DeathKnight } from './enemies/Enemy.js';
 import { ParticleSystem } from './combat/ParticleSystem.js';
 import { MainMenu } from './ui/MainMenu.js';
+import { PartyManager } from './battle/PartyManager.js';
+import { BattleArena } from './battle/BattleArena.js';
+import { BattleUI } from './battle/BattleUI.js';
+import { BattleSystem } from './battle/BattleSystem.js';
+import { Element } from './battle/ElementalSystem.js';
 
 // Preload enemy sprite sheets into memory immediately
 preloadEnemyTextures();
@@ -66,6 +71,10 @@ const hud       = new HUD();
 const map       = new MapLoader(scene);
 const enemies   = new EnemyManager(scene, audio);
 const particles = new ParticleSystem(scene);
+const party       = new PartyManager();
+const battleArena = new BattleArena(scene);
+const battleUI    = new BattleUI();
+const battleSystem = new BattleSystem(party, battleArena, battleUI, audio, camera);
 let player      = null;
 
 // ─────────────────────────────────────────────────────────────
@@ -320,30 +329,128 @@ function startGame(charType, fromSave = false, savedData = null) {
   // Apply player controls settings
   player.mouseSensitivity = (currentSettings.sensitivity / 100) * 0.002;
   player.invertY = !!currentSettings.invertY;
+
+  // Wire hybrid tactical Paper Mario combat triggers
+  player.weapons.onMeleeHit = (hitEnemy) => {
+    triggerEncounter(hitEnemy, true, false); // ⚔️ Melee First Strike!
+  };
+  player.weapons.onRangedHit = (hitEnemy) => {
+    triggerEncounter(hitEnemy, false, false); // Ranged engage
+  };
+  player.onAttacked = (sourcePos) => {
+    const living = enemies.getAll().filter(e => !e.dead);
+    living.sort((a, b) => a.mesh.position.distanceTo(player.camera.position) - b.mesh.position.distanceTo(player.camera.position));
+    if (living[0]) {
+      triggerEncounter(living[0], false, true); // ⚠️ Ambushed!
+    }
+  };
+  player.onRest = () => {
+    party.restAtShrine();
+    spawnWorldEncounters();
+  };
+}
+
+function triggerEncounter(overworldEnemy, isFirstStrike = false, isAmbush = false) {
+  if (STATE.phase !== 'playing' || battleSystem.inBattle) return;
+
+  const savedPlayerPos = player.camera.position.clone();
+  const savedPlayerYaw = player.yaw;
+  const savedPlayerPitch = player.pitch;
+
+  let squad = [];
+  if (overworldEnemy instanceof StoneGolem) {
+    squad = [
+      { name: 'Smoldering Golem', hp: 120, maxHp: 120, damage: 26, speed: 8, element: Element.FIRE, spritePath: 'assets/sprites/stone_golem.png', cols: 4, rows: 6, width: 2.8, height: 3.2, xp: 95 },
+      { name: 'Forge Grunt', hp: 55, maxHp: 55, damage: 16, speed: 13, element: Element.EARTH, spritePath: 'assets/sprites/orc_grunt.png', cols: 4, rows: 5, width: 2.0, height: 2.5, xp: 40 }
+    ];
+  } else if (overworldEnemy instanceof DeathKnight) {
+    squad = [
+      { name: 'Death Knight', hp: 280, maxHp: 280, damage: 32, speed: 16, element: Element.SHADOW, spritePath: 'assets/sprites/death_knight_boss.png', cols: 4, rows: 6, width: 3.2, height: 3.8, isBoss: true, xp: 400 },
+      { name: 'Dark Acolyte', hp: 60, maxHp: 60, damage: 22, speed: 17, element: Element.THUNDER, spritePath: 'assets/sprites/skeleton_archer.png', cols: 4, rows: 6, width: 1.8, height: 2.4, xp: 80 }
+    ];
+  } else if (overworldEnemy instanceof DeathBat) {
+    squad = [
+      { name: 'Frost Bat', hp: 32, maxHp: 32, damage: 14, speed: 22, element: Element.ICE, spritePath: 'assets/sprites/death_bat.png', cols: 4, rows: 5, width: 1.6, height: 1.6, xp: 25 },
+      { name: 'Frost Bat Alpha', hp: 38, maxHp: 38, damage: 16, speed: 24, element: Element.ICE, spritePath: 'assets/sprites/death_bat.png', cols: 4, rows: 5, width: 1.8, height: 1.8, xp: 30 }
+    ];
+  } else if (overworldEnemy instanceof SkeletonArcher) {
+    squad = [
+      { name: 'Skeleton Archer', hp: 45, maxHp: 45, damage: 18, speed: 18, element: Element.WIND, spritePath: 'assets/sprites/skeleton_archer.png', cols: 4, rows: 6, width: 1.8, height: 2.4, xp: 40 },
+      { name: 'Orc Sentry', hp: 50, maxHp: 50, damage: 15, speed: 11, element: Element.EARTH, spritePath: 'assets/sprites/orc_grunt.png', cols: 4, rows: 5, width: 2.0, height: 2.5, xp: 35 }
+    ];
+  } else {
+    squad = [
+      { name: 'Orc Grunt', hp: 55, maxHp: 55, damage: 16, speed: 12, element: Element.EARTH, spritePath: 'assets/sprites/orc_grunt.png', cols: 4, rows: 5, width: 2.0, height: 2.5, xp: 35 },
+      { name: 'Orc Vanguard', hp: 65, maxHp: 65, damage: 18, speed: 14, element: Element.EARTH, spritePath: 'assets/sprites/orc_grunt.png', cols: 4, rows: 5, width: 2.0, height: 2.5, xp: 45 }
+    ];
+  }
+
+  STATE.phase = 'battle';
+  if (document.pointerLockElement) {
+    try { document.exitPointerLock(); } catch (e) {}
+  }
+
+  battleSystem.startBattle(squad, isFirstStrike, isAmbush, (isVictory, isWiped) => {
+    if (isVictory) {
+      overworldEnemy.dead = true;
+      if (overworldEnemy.mesh) overworldEnemy.mesh.visible = false;
+      enemies._onEnemyDied(overworldEnemy);
+
+      if (overworldEnemy.isBoss || squad.some(e => e.isBoss)) {
+        onBossDefeated();
+      }
+
+      player.camera.position.copy(savedPlayerPos);
+      player.yaw = savedPlayerYaw;
+      player.pitch = savedPlayerPitch;
+      player.camera.rotation.set(savedPlayerPitch, savedPlayerYaw, 0, 'YXZ');
+      STATE.phase = 'playing';
+    } else if (isWiped) {
+      player.respawn();
+      party.restAtShrine();
+      spawnWorldEncounters();
+      STATE.phase = 'playing';
+      if (hud && typeof hud.showCheckpointBanner === 'function') {
+        hud.showCheckpointBanner();
+        const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+        const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+        if (bTxt) bTxt.textContent = '💀 PARTY RESURRECTED';
+        if (bSub) bSub.textContent = 'Returned to Shrine · Foes Resurgent';
+      }
+    } else {
+      const backDir = player.getForwardDir().multiplyScalar(-2.5);
+      player.camera.position.add(backDir);
+      player.camera.rotation.set(savedPlayerPitch, savedPlayerYaw, 0, 'YXZ');
+      STATE.phase = 'playing';
+    }
+  });
 }
 
 function spawnWorldEncounters() {
   enemies.clear();
 
-  // Area 2: Hall of the Damned (Z: 24..38)
+  // ── Floor 1: Crypt of the Damned (Y = 0) ──
   enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2.5, 0, 26), player, camera);
   enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2.5, 0, 34), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-2, 0, 42), player, camera);
 
-  // Area 4: Sunken Vault (X: -26..-12, Z: 54..70)
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-24, 0, 60), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-16, 0, 68), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-20, 0, 56), player, camera);
+  // ── Floor 2: Sunken Aqueducts (Y = 4) ──
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(3, 5.2, 74), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-3, 5.2, 82), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(0, 4, 92), player, camera);
 
-  // Area 6: High Ramparts (Stone Golem Elite guarding shortcut lever)
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 0, 106), player, camera);
+  // ── Floor 3: Smoldering Forges (Y = 8) ──
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-4, 8, 126), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(4, 8, 132), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 8, 142), player, camera);
 
-  // Area 7: Blood Cloister (Bats & Grunt leading to boss)
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(2, 1.2, 134), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(8, 1.2, 142), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(5, 0, 148), player, camera);
+  // ── Floor 4: Gale Spire (Y = 12) ──
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-3, 13.2, 176), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(4, 12, 184), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-4, 12, 196), player, camera);
 
-  // Area 8: Boss Arena (Death Knight)
-  enemies.spawnEnemy(DeathKnight, new THREE.Vector3(5, 0, 185), player, camera);
+  // ── Floor 5: Throne of the Wizard King (Y = 16) ──
+  enemies.spawnEnemy(DeathKnight, new THREE.Vector3(0, 16, 242), player, camera);
 
   const countEl = document.getElementById('enemy-count');
   if (countEl) countEl.textContent = enemies.getAll().length;
@@ -356,6 +463,20 @@ function checkLevelTriggers() {
   if (!player) return;
   const pz = camera.position.z;
   const px = camera.position.x;
+  const py = camera.position.y;
+
+  // Proximity body encounter check
+  if (STATE.phase === 'playing') {
+    for (const e of enemies.getAll()) {
+      if (!e.dead && e.mesh) {
+        const dist = camera.position.distanceTo(e.mesh.position);
+        if (dist <= 1.8) {
+          triggerEncounter(e, false, true); // Ambush on touch!
+          break;
+        }
+      }
+    }
+  }
 
   // Boss Arena trigger (Z >= 158)
   if (!STATE.bossTriggered && pz >= 158 && px >= -8 && px <= 18) {
@@ -370,19 +491,15 @@ function checkLevelTriggers() {
   }
 
   // Update room label in HUD based on spatial location
-  let areaName = 'CRYPT ENTRANCE';
-  let roomNum = 1;
-  if (pz < 18) { areaName = 'CRYPT ENTRANCE'; roomNum = 1; }
-  else if (pz < 44) { areaName = 'HALL OF DAMNED'; roomNum = 2; }
-  else if (pz < 68 && px >= -10) { areaName = 'CATACOMB JUNCTION'; roomNum = 3; }
-  else if (px < -10 && pz < 76) { areaName = 'SUNKEN VAULT'; roomNum = 4; }
-  else if (px < -6 && pz >= 76) { areaName = 'SHRINE OF ASH'; roomNum = 5; }
-  else if (pz >= 70 && pz < 125) { areaName = 'HIGH RAMPARTS'; roomNum = 6; }
-  else if (pz < 156) { areaName = 'BLOOD CLOISTER'; roomNum = 7; }
-  else { areaName = 'THRONE OF DEATH'; roomNum = 8; }
+  let areaName = 'FLOOR 1: CRYPT OF THE DAMNED';
+  if (pz < 48) { areaName = 'FLOOR 1: CRYPT OF THE DAMNED'; }
+  else if (pz < 100) { areaName = 'FLOOR 2: SUNKEN AQUEDUCTS'; }
+  else if (pz < 150) { areaName = 'FLOOR 3: SMOLDERING FORGES'; }
+  else if (pz < 204) { areaName = 'FLOOR 4: GALE SPIRE'; }
+  else { areaName = 'FLOOR 5: THRONE OF WIZARD KING'; }
 
   const infoEl = document.getElementById('room-info');
-  if (infoEl) infoEl.textContent = `${areaName} · SECTOR ${roomNum}/8`;
+  if (infoEl) infoEl.textContent = `${areaName} · ELEVATION Y=${Math.round(py)}`;;
 
   // Interaction prompt check
   let nearInteractable = false;
@@ -651,6 +768,12 @@ function gameLoop(now) {
 
     hud.update(player);
     hud.drawMinimap(map, enemies, camera.position, player.getForwardDir());
+  } else if (STATE.phase === 'battle') {
+    while (accumulator >= FIXED_DT) {
+      particles.update(FIXED_DT);
+      accumulator -= FIXED_DT;
+      didUpdate = true;
+    }
   } else {
     accumulator = 0;
     didUpdate = true;
@@ -670,6 +793,11 @@ requestAnimationFrame(gameLoop);
 // ─────────────────────────────────────────────────────────────
 window.GAME = {
   STATE,
+  get party() { return party; },
+  get battleSystem() { return battleSystem; },
+  get battleArena() { return battleArena; },
+  get battleUI() { return battleUI; },
+  triggerEncounter,
   get player() { return player; },
   get map()    { return map; },
   get enemies(){ return enemies; },

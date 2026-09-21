@@ -228,8 +228,49 @@ export class AudioManager {
     }
   }
 
+  playBattleTransition(isBoss = false) {
+    if (!this._ctx) return;
+    const ctx = this._ctx;
+    const now = ctx.currentTime;
+
+    if (isBoss) {
+      const freqs = [45, 53.4, 63.5, 95];
+      freqs.forEach(f => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(f, now);
+        osc.frequency.exponentialRampToValueAtTime(f * 0.7, now + 1.2);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+        osc.connect(gain);
+        gain.connect(this._masterGain);
+        osc.start(now);
+        osc.stop(now + 1.2);
+      });
+    } else {
+      const drumBeats = [0, 0.12, 0.22, 0.36, 0.52];
+      const pitchPoles = [140, 95, 160, 110, 75];
+      drumBeats.forEach((timeOffset, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const pitch = pitchPoles[idx];
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(pitch, now + timeOffset);
+        osc.frequency.exponentialRampToValueAtTime(pitch * 0.45, now + timeOffset + 0.14);
+        gain.gain.setValueAtTime(0.4, now + timeOffset);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + 0.14);
+        osc.connect(gain);
+        gain.connect(this._masterGain);
+        osc.start(now + timeOffset);
+        osc.stop(now + timeOffset + 0.15);
+      });
+    }
+  }
+
   setVolume(vol) {
     this._volume = Math.max(0, Math.min(1, vol));
     if (this._masterGain) this._masterGain.gain.value = this._volume;
   }
 }
+

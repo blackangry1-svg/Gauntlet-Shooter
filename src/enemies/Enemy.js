@@ -136,7 +136,10 @@ export class Enemy {
       this.tex.magFilter = THREE.NearestFilter;
       this.tex.minFilter = THREE.LinearMipmapLinearFilter;
       this.tex.generateMipmaps = true;
-      this.tex.repeat.set(1 / this.sheetCols, 1 / this.sheetRows);
+      const insetScaleX = 0.02;
+      const insetScaleY = 0.02;
+      this.tex.repeat.set((1 / this.sheetCols) - insetScaleX, (1 / this.sheetRows) - insetScaleY);
+
 
       // Check if image is already cached from preload
       const cached = SPRITE_IMAGE_CACHE.get(spritePath);
@@ -231,10 +234,13 @@ export class Enemy {
     const def = this.animSets[this._currentAnim] || this.animSets.idle;
     const row = Math.min(this.sheetRows - 1, def.row);
     const col = this._animFrame % (def.count || 1);
+    const insetX = 0.01;
+    const insetY = 0.01;
 
-    this.tex.offset.x = col / this.sheetCols;
-    this.tex.offset.y = (this.sheetRows - 1 - row) / this.sheetRows;
+    this.tex.offset.x = (col / this.sheetCols) + insetX;
+    this.tex.offset.y = ((this.sheetRows - 1 - row) / this.sheetRows) + insetY;
   }
+
 
   takeDamage(amount, isHeavy = false) {
     if (this.dead) return;
@@ -554,15 +560,15 @@ export class OrcGrunt extends Enemy {
       score: 100,
       size: 1.7,
       spritePath: '/assets/sprites/orc_grunt.png',
-      rows: 6,
+      rows: 5,
       cols: 6,
       anims: {
         idle:    { row: 0, count: 6, speed: 5 },
         chase:   { row: 2, count: 6, speed: 8 },
-        windup:  { row: 4, count: 4, speed: 8 },
+        windup:  { row: 3, count: 4, speed: 8 },
         attack:  { row: 4, count: 6, speed: 14 },
         recover: { row: 0, count: 1, speed: 1 },
-        dead:    { row: 5, count: 6, speed: 6 },
+        dead:    { row: 3, count: 6, speed: 6 },
       }
     }, manager);
   }
@@ -631,15 +637,15 @@ export class DeathBat extends Enemy {
       score: 80,
       size: 1.3,
       spritePath: '/assets/sprites/death_bat.png',
-      rows: 6,
+      rows: 5,
       cols: 4,
       anims: {
         idle:    { row: 0, count: 4, speed: 8 },
         chase:   { row: 2, count: 4, speed: 12 },
         windup:  { row: 1, count: 4, speed: 10 },
-        attack:  { row: 4, count: 4, speed: 14 },
+        attack:  { row: 3, count: 4, speed: 14 },
         recover: { row: 0, count: 1, speed: 1 },
-        dead:    { row: 5, count: 4, speed: 8 },
+        dead:    { row: 4, count: 4, speed: 8 },
       }
     }, manager);
     this.mesh.position.y = 1.2; // flying

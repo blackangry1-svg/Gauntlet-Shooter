@@ -75,6 +75,8 @@ export class Player {
 
     // Weapons subsystem
     this.weapons = new Weapons(scene, camera, input, audio, stats.weapons, charType);
+    this.onRest = null;
+    this.onAttacked = null;
     this.weapons.player = this;
 
     // Invulnerability frames (iframes)
@@ -131,6 +133,7 @@ export class Player {
   }
 
   takeDamage(amount, sourcePos = null) {
+    if (this.onAttacked) { this.onAttacked(sourcePos); return; }
     if (this._iframes > 0) return; // Perfect dodge or iframe
 
     // Check block
@@ -208,6 +211,7 @@ export class Player {
     this.mana    = this.maxMana;
     this.flasks  = this.maxFlasks;
     this.audio.playSFX('bonfireRest');
+    if (this.onRest) this.onRest();
   }
 
   respawn() {

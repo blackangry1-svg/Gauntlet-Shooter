@@ -1,15 +1,14 @@
 /**
- * MapLoader.js — Continuous Interconnected Souls-Doom Level
- * Single cohesive level featuring:
- * 1. Crypt Entrance (safe tutorial)
- * 2. Hall of the Damned (first combat)
- * 3. Catacomb Junction (hub with locked shortcut gate)
- * 4. Sunken Vault (branch with skeleton archers & secret upgrade chest)
- * 5. Shrine of Ash (bonfire checkpoint)
- * 6. High Ramparts & Lever (Stone Golem elite + shortcut lever opening iron gate)
- * 7. Blood Cloister (bats & grunts final approach)
- * 8. Throne of the Death Knight (epic boss arena with fog gate)
+ * MapLoader.js — The 5-Floor Elemental Tower Citadel
+ * Complete zero-void geometry enclosure with seamless staircases & elevation:
+ * Floor 1 (Y=0):  Crypt of the Damned (Earth/Undead) + Ornate Relic Chest
+ * Floor 2 (Y=4):  Sunken Aqueducts (Water/Ice) + Shrine of Ash
+ * Floor 3 (Y=8):  Smoldering Forges (Fire/Earth) + Golem Elite & Shortcut Lever
+ * Floor 4 (Y=12): Gale Spire (Wind/Thunder) + High Sanctum Shrine
+ * Floor 5 (Y=16): Throne of the Wizard King (Dark/Chaos) + Boss Arena
  */
+
+/* global THREE */
 
 const CELL = 3.0;
 const WALL_H = 4.2;
@@ -21,7 +20,8 @@ export class MapLoader {
     this.walls = [];
     this.miniWalls = [];
     this.interactables = [];
-    this.currentRoomBounds = { minX: -35, minZ: -5, maxX: 30, maxZ: 215 };
+    this.floorRamps = [];
+    this.currentRoomBounds = { minX: -40, minZ: -5, maxX: 35, maxZ: 260 };
 
     // Shortcut gate reference
     this.shortcutGateWall = null;
@@ -44,448 +44,451 @@ export class MapLoader {
     const floorMat = materials.floor;
     const ceilMat  = materials.ceil;
 
-    // Build regions
-    this._buildCryptEntrance(wallMat, floorMat, ceilMat);
-    this._buildHallOfDamned(wallMat, floorMat, ceilMat);
-    this._buildCatacombJunction(wallMat, floorMat, ceilMat);
-    this._buildSunkenVault(wallMat, floorMat, ceilMat, player, audio, hud);
-    this._buildShrineOfAsh(wallMat, floorMat, ceilMat, player, audio, hud);
-    this._buildHighRamparts(wallMat, floorMat, ceilMat, audio, hud);
-    this._buildBloodCloister(wallMat, floorMat, ceilMat);
-    this._buildBossArena(wallMat, floorMat, ceilMat);
+    // Build the 5 Ascending Tower Floors
+    this._buildFloor1_Crypt(wallMat, floorMat, ceilMat, player, audio, hud);
+    this._buildFloor2_Aqueducts(wallMat, floorMat, ceilMat, player, audio, hud);
+    this._buildFloor3_Forges(wallMat, floorMat, ceilMat, audio, hud);
+    this._buildFloor4_GaleSpire(wallMat, floorMat, ceilMat, player, audio, hud);
+    this._buildFloor5_Throne(wallMat, floorMat, ceilMat);
+
+    if (player && typeof player.setFloorRamps === 'function') {
+      player.setFloorRamps(this.floorRamps);
+    }
 
     return {
       walls: this.walls,
       interactables: this.interactables,
+      floorRamps: this.floorRamps,
       bounds: this.currentRoomBounds,
     };
   }
 
   // ─────────────────────────────────────────────────────────────
-  // GEOMETRY HELPERS
+  // GEOMETRY HELPERS (With explicit floor elevation Y support)
   // ─────────────────────────────────────────────────────────────
-  _addWall(x, z, w, d, mat, isShortcut = false) {
+  _addWall(x, z, w, d, mat, floorY = 0, isShortcut = false) {
+    const THREE = window.THREE;
     const geo = new THREE.BoxGeometry(w, WALL_H, d);
     const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(x, WALL_H / 2, z);
+    mesh.position.set(x, floorY + WALL_H / 2, z);
     this.scene.add(mesh);
     this._meshes.push(mesh);
 
-    const aabb = { x, z, w, d, isShortcut };
+    const aabb = { x, z, w, d, floorY, isShortcut };
     this.walls.push(aabb);
     this.miniWalls.push(aabb);
     return { mesh, aabb };
   }
 
-  _addFloor(x, z, w, d, mat) {
+  _addFloor(x, z, w, d, mat, floorY = 0) {
+    const THREE = window.THREE;
     const geo = new THREE.PlaneGeometry(w, d);
     const mesh = new THREE.Mesh(geo, mat);
     mesh.rotation.x = -Math.PI / 2;
-    mesh.position.set(x, 0, z);
+    mesh.position.set(x, floorY, z);
     this.scene.add(mesh);
     this._meshes.push(mesh);
+
+    this.floorRamps.push({
+      minX: x - w / 2, maxX: x + w / 2,
+      minZ: z - d / 2, maxZ: z + d / 2,
+      y: floorY,
+      isSlope: false
+    });
   }
 
-  _addCeiling(x, z, w, d, mat) {
+  _addCeiling(x, z, w, d, mat, floorY = 0) {
+    const THREE = window.THREE;
     const geo = new THREE.PlaneGeometry(w, d);
     const mesh = new THREE.Mesh(geo, mat);
     mesh.rotation.x = Math.PI / 2;
-    mesh.position.set(x, WALL_H, z);
+    mesh.position.set(x, floorY + WALL_H, z);
     this.scene.add(mesh);
     this._meshes.push(mesh);
   }
 
-  _addTorch(x, y, z, color = 0xff7722, intensity = 1.4, distance = 9) {
-    const light = new THREE.PointLight(color, intensity, distance);
+  _addStaircase(x, startZ, endZ, w, startY, endY, mat, wallMat) {
+    const THREE = window.THREE;
+    const length = Math.abs(endZ - startZ);
+    const centerZ = (startZ + endZ) / 2;
+    const heightDiff = endY - startY;
+
+    // Sloped Ramp Mesh
+    const rampGeo = new THREE.PlaneGeometry(w, length);
+    const rampMesh = new THREE.Mesh(rampGeo, mat);
+    const angle = Math.atan2(heightDiff, length);
+    rampMesh.rotation.x = -Math.PI / 2 + angle;
+    rampMesh.position.set(x, (startY + endY) / 2, centerZ);
+    this.scene.add(rampMesh);
+    this._meshes.push(rampMesh);
+
+    // Ceiling over staircase
+    const ceilMesh = new THREE.Mesh(rampGeo, mat);
+    ceilMesh.rotation.x = Math.PI / 2 - angle;
+    ceilMesh.position.set(x, (startY + endY) / 2 + WALL_H, centerZ);
+    this.scene.add(ceilMesh);
+    this._meshes.push(ceilMesh);
+
+    // Side retaining walls along staircase
+    this._addWall(x - w / 2 - 0.5, centerZ, 1.0, length, wallMat, Math.min(startY, endY));
+    this._addWall(x + w / 2 + 0.5, centerZ, 1.0, length, wallMat, Math.min(startY, endY));
+
+    // Register ramp in player physics
+    this.floorRamps.push({
+      minX: x - w / 2, maxX: x + w / 2,
+      minZ: Math.min(startZ, endZ), maxZ: Math.max(startZ, endZ),
+      startY, endY, startZ, endZ,
+      isSlope: true
+    });
+  }
+
+  _addTorch(x, y, z, color = 0xff8833, intensity = 1.3) {
+    const THREE = window.THREE;
+    const light = new THREE.PointLight(color, intensity, 14);
     light.position.set(x, y, z);
     this.scene.add(light);
     this._meshes.push(light);
 
-    // Torch sconce mesh
-    const sconceGeo = new THREE.CylinderGeometry(0.06, 0.04, 0.4, 6);
-    const sconceMat = new THREE.MeshStandardMaterial({ color: 0x221810, metalness: 0.8, roughness: 0.4 });
-    const sconce = new THREE.Mesh(sconceGeo, sconceMat);
+    // Sconce mesh
+    const sconce = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.08, 0.04, 0.4, 6),
+      new THREE.MeshStandardMaterial({ color: 0x332211, metalness: 0.8 })
+    );
     sconce.position.set(x, y - 0.2, z);
     this.scene.add(sconce);
     this._meshes.push(sconce);
-
-    // Glowing flame sphere
-    const flameGeo = new THREE.SphereGeometry(0.08, 6, 6);
-    const flameMat = new THREE.MeshBasicMaterial({ color });
-    const flame = new THREE.Mesh(flameGeo, flameMat);
-    flame.position.set(x, y, z);
-    this.scene.add(flame);
-    this._meshes.push(flame);
   }
 
   // ─────────────────────────────────────────────────────────────
-  // 1. CRYPT ENTRANCE (Safe tutorial zone)
-  // X: -5..5, Z: -2..18
+  // FLOOR 1: CRYPT OF THE DAMNED (Y = 0)
+  // X: -20..20, Z: -2..48
   // ─────────────────────────────────────────────────────────────
-  _buildCryptEntrance(wallMat, floorMat, ceilMat) {
-    this._addFloor(0, 8, 12, 22, floorMat);
-    this._addCeiling(0, 8, 12, 22, ceilMat);
+  _buildFloor1_Crypt(wallMat, floorMat, ceilMat, player, audio, hud) {
+    const THREE = window.THREE;
 
-    // Back wall
-    this._addWall(0, -3, 14, 2, wallMat);
-    // Left & Right boundary walls
-    this._addWall(-6, 8, 2, 24, wallMat);
-    this._addWall(6, 8, 2, 24, wallMat);
+    // Entrance Chamber (Z: -2..20)
+    this._addFloor(0, 9, 10, 22, floorMat, 0);
+    this._addCeiling(0, 9, 10, 22, ceilMat, 0);
+    this._addWall(-5, 9, 1, 22, wallMat, 0);
+    this._addWall(5, 9, 1, 22, wallMat, 0);
+    this._addWall(0, -2, 10, 1, wallMat, 0); // South entrance boundary
 
-    // Entrance arch torches
-    this._addTorch(-4.8, 2.4, 2);
-    this._addTorch(4.8, 2.4, 2);
-    this._addTorch(-4.8, 2.4, 14);
-    this._addTorch(4.8, 2.4, 14);
-  }
+    // Hall of the Damned (Z: 20..48)
+    this._addFloor(0, 34, 16, 28, floorMat, 0);
+    this._addCeiling(0, 34, 16, 28, ceilMat, 0);
+    this._addWall(-8, 34, 1, 28, wallMat, 0);
+    this._addWall(8, 34, 1, 28, wallMat, 0);
 
-  // ─────────────────────────────────────────────────────────────
-  // 2. HALL OF THE DAMNED (First encounter)
-  // X: -8..8, Z: 18..44
-  // ─────────────────────────────────────────────────────────────
-  _buildHallOfDamned(wallMat, floorMat, ceilMat) {
-    this._addFloor(0, 31, 18, 28, floorMat);
-    this._addCeiling(0, 31, 18, 28, ceilMat);
+    // Pillars
+    this._addWall(-3, 30, 2, 2, wallMat, 0);
+    this._addWall(3, 30, 2, 2, wallMat, 0);
 
-    this._addWall(-8, 31, 2, 28, wallMat);
-    this._addWall(8, 31, 2, 28, wallMat);
+    // Secret Chest Alcove on West side (X: -14, Z: 36)
+    this._addFloor(-12, 36, 8, 8, floorMat, 0);
+    this._addCeiling(-12, 36, 8, 8, ceilMat, 0);
+    this._addWall(-16, 36, 1, 8, wallMat, 0); // West alcove wall
+    this._addWall(-12, 40, 8, 1, wallMat, 0); // North alcove wall
+    this._addWall(-12, 32, 8, 1, wallMat, 0); // South alcove wall
 
-    // Middle pillars
-    this._addWall(-3, 31, 2, 2, wallMat);
-    this._addWall(3, 31, 2, 2, wallMat);
+    // ── TWO-PART ANIMATED RELIC CHEST ──
+    const chestGroup = new THREE.Group();
+    chestGroup.position.set(-14, 0, 36);
 
-    this._addTorch(-6.8, 2.5, 26);
-    this._addTorch(6.8, 2.5, 26);
-    this._addTorch(-6.8, 2.5, 38);
-    this._addTorch(6.8, 2.5, 38);
-  }
+    const baseGeo = new THREE.BoxGeometry(1.4, 0.7, 1.0);
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x6e451f, roughness: 0.6, metalness: 0.3 });
+    const chestBase = new THREE.Mesh(baseGeo, baseMat);
+    chestBase.position.y = 0.35;
+    chestGroup.add(chestBase);
 
-  // ─────────────────────────────────────────────────────────────
-  // 3. CATACOMB JUNCTION (Hub with locked shortcut gate)
-  // X: -10..10, Z: 44..68
-  // ─────────────────────────────────────────────────────────────
-  _buildCatacombJunction(wallMat, floorMat, ceilMat) {
-    this._addFloor(0, 56, 22, 26, floorMat);
-    this._addCeiling(0, 56, 22, 26, ceilMat);
+    // Hinged Lid (pivot at back edge)
+    const lidGroup = new THREE.Group();
+    lidGroup.position.set(0, 0.7, -0.5);
+    const lidGeo = new THREE.BoxGeometry(1.44, 0.25, 1.04);
+    const lidMat = new THREE.MeshStandardMaterial({ color: 0x8a5525, roughness: 0.5, metalness: 0.4 });
+    const lidMesh = new THREE.Mesh(lidGeo, lidMat);
+    lidMesh.position.set(0, 0.12, 0.5);
+    lidGroup.add(lidMesh);
 
-    this._addWall(8, 56, 2, 26, wallMat); // Right wall
+    // Golden lock clasp
+    const lockGeo = new THREE.BoxGeometry(0.24, 0.28, 0.12);
+    const lockMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9, roughness: 0.2 });
+    const lockMesh = new THREE.Mesh(lockGeo, lockMat);
+    lockMesh.position.set(0, 0.05, 1.04);
+    lidGroup.add(lockMesh);
 
-    // Left wall has passage opening to Sunken Vault (Z: 50..62 open)
-    this._addWall(-8, 46, 2, 8, wallMat);
-    this._addWall(-8, 66, 2, 8, wallMat);
+    chestGroup.add(lidGroup);
+    this.scene.add(chestGroup);
+    this._meshes.push(chestGroup);
 
-    // North wall has the LOCKED SHORTCUT PORTCULLIS at X: -2..2, Z: 68
-    this._addWall(-5, 68, 6, 2, wallMat);
-    this._addWall(5, 68, 6, 2, wallMat);
-
-    // Iron Gate in the center of north wall
-    const gateMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.9, roughness: 0.3 });
-    const { mesh, aabb } = this._addWall(0, 68, 4, 1.2, gateMat, true);
-    this.shortcutGateMesh = mesh;
-    this.shortcutGateWall = aabb;
-
-    this._addTorch(-6.8, 2.5, 52);
-    this._addTorch(6.8, 2.5, 52);
-    this._addTorch(0, 3.2, 66, 0xffaa33, 1.6); // Highlight locked gate
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // 4. SUNKEN VAULT (Skeleton archers & Secret Upgrade Chest)
-  // X: -32..-8, Z: 48..76
-  // ─────────────────────────────────────────────────────────────
-  _buildSunkenVault(wallMat, floorMat, ceilMat, player, audio, hud) {
-    this._addFloor(-20, 62, 26, 30, floorMat);
-    this._addCeiling(-20, 62, 26, 30, ceilMat);
-
-    this._addWall(-20, 48, 26, 2, wallMat); // South wall
-    this._addWall(-32, 62, 2, 30, wallMat); // West wall
-    // North wall with passage to Shrine of Ash (X: -24..-16 open)
-    this._addWall(-30, 76, 6, 2, wallMat);
-    this._addWall(-10, 76, 6, 2, wallMat);
-
-    // Secret chest alcove in northwest corner (X: -29, Z: 54)
-    const chestGeo = new THREE.BoxGeometry(1.2, 0.8, 0.9);
-    const chestMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, metalness: 0.3, roughness: 0.6 });
-    const chestMesh = new THREE.Mesh(chestGeo, chestMat);
-    chestMesh.position.set(-28, 0.4, 52);
-    this.scene.add(chestMesh);
-    this._meshes.push(chestMesh);
-
-    // Chest latch
-    const latchGeo = new THREE.BoxGeometry(0.2, 0.2, 0.1);
-    const latchMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9 });
-    const latch = new THREE.Mesh(latchGeo, latchMat);
-    latch.position.set(-28, 0.4, 52.46);
-    this.scene.add(latch);
-    this._meshes.push(latch);
-
-    // Chest Interactable
-    this.interactables.push({
-      position: new THREE.Vector3(-28, 1, 52),
-      radius: 2.8,
+    // Interactive Chest Definition
+    const chestItem = {
+      position: new THREE.Vector3(-14, 1.0, 36),
+      radius: 2.4,
       active: true,
       onInteract: () => {
         if (this.isChestOpened) return;
         this.isChestOpened = true;
-        audio.playSFX('chestOpen');
-        player.maxHealth += 30;
-        player.health = player.maxHealth;
-        player.maxStamina += 20;
-        player.stamina = player.maxStamina;
-        player.maxFlasks += 1;
-        player.flasks = player.maxFlasks;
-        chestMesh.rotation.x = -0.4; // opened lid effect
-        hud.showCheckpointBanner();
-        const bannerText = document.querySelector('#checkpoint-banner .banner-text');
-        const bannerSub  = document.querySelector('#checkpoint-banner .banner-sub');
-        if (bannerText) bannerText.textContent = 'CREST OF FORTITUDE';
-        if (bannerSub)  bannerSub.textContent  = '+30 HP · +20 Stamina · +1 Soul Flask';
-      }
-    });
+        chestItem.active = false; // Immediately dismiss prompt
 
-    this._addTorch(-28, 2.5, 62, 0x55bbff, 1.2); // Eerie blue light in vault
-    this._addTorch(-14, 2.5, 62);
+        audio.playSFX('chestOpen');
+
+        // Smoothly animate lid swing backwards
+        let angle = 0;
+        const openAnim = setInterval(() => {
+          angle += 0.08;
+          lidGroup.rotation.x = -Math.min(Math.PI * 0.55, angle);
+          if (angle >= Math.PI * 0.55) clearInterval(openAnim);
+        }, 16);
+
+        // Golden light erupts from chest
+        const lootLight = new THREE.PointLight(0xffea44, 3.0, 8);
+        lootLight.position.set(-14, 1.2, 36);
+        this.scene.add(lootLight);
+        this._meshes.push(lootLight);
+
+        if (player) {
+          player.maxHealth += 40;
+          player.health = player.maxHealth;
+          player.maxStamina += 25;
+          player.stamina = player.maxStamina;
+          player.maxFlasks += 1;
+          player.flasks = player.maxFlasks;
+        }
+
+        if (hud && typeof hud.showCheckpointBanner === 'function') {
+          hud.showCheckpointBanner();
+          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+          if (bTxt) bTxt.textContent = '👑 CREST OF FORTITUDE';
+          if (bSub) bSub.textContent = '+40 HP · +25 Stamina · +1 Soul Flask (All Restored)';
+        }
+      }
+    };
+    this.interactables.push(chestItem);
+
+    // Grand Staircase 1: Rising from Floor 1 (Y=0, Z=48) to Floor 2 (Y=4, Z=66)
+    this._addStaircase(0, 48, 66, 8, 0, 4, floorMat, wallMat);
+
+    this._addTorch(0, 2.5, 8);
+    this._addTorch(-4.2, 2.5, 26);
+    this._addTorch(4.2, 2.5, 26);
+    this._addTorch(-14, 2.5, 36, 0x44aaff);
   }
 
   // ─────────────────────────────────────────────────────────────
-  // 5. SHRINE OF ASH (Bonfire Checkpoint)
-  // X: -24..-8, Z: 76..102
+  // FLOOR 2: SUNKEN AQUEDUCTS (Y = 4)
+  // X: -25..25, Z: 66..116
+  // Water/Ice themed, Shrine of Ash at (-12, 4, 88)
   // ─────────────────────────────────────────────────────────────
-  _buildShrineOfAsh(wallMat, floorMat, ceilMat, player, audio, hud) {
-    this._addFloor(-16, 89, 18, 28, floorMat);
-    this._addCeiling(-16, 89, 18, 28, ceilMat);
+  _buildFloor2_Aqueducts(wallMat, floorMat, ceilMat, player, audio, hud) {
+    const THREE = window.THREE;
+    const floorY = 4;
 
-    this._addWall(-24, 89, 2, 28, wallMat); // West wall
-    // East wall has opening connecting to the High Ramparts (Z: 96..102 open)
-    this._addWall(-8, 83, 2, 16, wallMat);
-    this._addWall(-16, 102, 18, 2, wallMat); // North wall
+    // Floor 2 Main Hall (Z: 66..100)
+    this._addFloor(0, 83, 24, 34, floorMat, floorY);
+    this._addCeiling(0, 83, 24, 34, ceilMat, floorY);
+    this._addWall(-12, 83, 1, 34, wallMat, floorY);
+    this._addWall(12, 83, 1, 34, wallMat, floorY);
 
-    // Checkpoint Bonfire Brazier (center of shrine: X: -16, Z: 89)
-    const brazierGeo = new THREE.CylinderGeometry(0.8, 0.5, 0.7, 8);
-    const brazierMat = new THREE.MeshStandardMaterial({ color: 0x2a2420, metalness: 0.7, roughness: 0.4 });
-    const brazier = new THREE.Mesh(brazierGeo, brazierMat);
-    brazier.position.set(-16, 0.35, 89);
-    this.scene.add(brazier);
-    this._meshes.push(brazier);
+    // Central Water Basin
+    const basin = new THREE.Mesh(
+      new THREE.CylinderGeometry(3.5, 3.5, 0.4, 16),
+      new THREE.MeshStandardMaterial({ color: 0x113355, roughness: 0.1, metalness: 0.8 })
+    );
+    basin.position.set(0, floorY + 0.2, 83);
+    this.scene.add(basin);
+    this._meshes.push(basin);
 
-    // Golden flame light
-    const shrineLight = new THREE.PointLight(0xffb833, 2.2, 14);
-    shrineLight.position.set(-16, 1.2, 89);
+    // Shrine of Ash (Bonfire Checkpoint) at (-8, floorY, 88)
+    const shrineLight = new THREE.PointLight(0xffb833, 2.4, 14);
+    shrineLight.position.set(-8, floorY + 1.2, 88);
     this.scene.add(shrineLight);
     this._meshes.push(shrineLight);
 
-    // Bonfire flame mesh
-    const flameGeo = new THREE.SphereGeometry(0.25, 8, 8);
-    const flameMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
-    const flameMesh = new THREE.Mesh(flameGeo, flameMat);
-    flameMesh.position.set(-16, 0.9, 89);
+    const flameMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(0.28, 8, 8),
+      new THREE.MeshBasicMaterial({ color: 0xffdd44 })
+    );
+    flameMesh.position.set(-8, floorY + 0.9, 88);
     this.scene.add(flameMesh);
     this._meshes.push(flameMesh);
 
-    // Checkpoint Interactable
+    // Shrine Interactable
     this.interactables.push({
-      position: new THREE.Vector3(-16, 1, 89),
+      position: new THREE.Vector3(-8, floorY + 1.0, 88),
       radius: 3.2,
       active: true,
       onInteract: () => {
         this.isCheckpointActive = true;
-        player.restAtCheckpoint(new THREE.Vector3(-16, 1.7, 86));
-        hud.showCheckpointBanner();
-        const bannerText = document.querySelector('#checkpoint-banner .banner-text');
-        const bannerSub  = document.querySelector('#checkpoint-banner .banner-sub');
-        if (bannerText) bannerText.textContent = 'SHRINE OF ASH RESTED';
-        if (bannerSub)  bannerSub.textContent  = 'Health and Flasks Restored · Progress Saved';
+        if (player) {
+          player.restAtCheckpoint(new THREE.Vector3(-8, floorY + 1.7, 85));
+        }
+        audio.playSFX('bonfireRest');
+        if (hud && typeof hud.showCheckpointBanner === 'function') {
+          hud.showCheckpointBanner();
+          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+          if (bTxt) bTxt.textContent = '🔥 SHRINE OF ASH RESTED';
+          if (bSub) bSub.textContent = 'Party Restored · Enemies Respawned · Progress Saved';
+        }
       }
     });
 
-    this._addTorch(-22.5, 2.5, 82, 0xffaa33, 1.4);
-    this._addTorch(-22.5, 2.5, 96, 0xffaa33, 1.4);
+    // Grand Staircase 2: Rising from Floor 2 (Y=4, Z=100) to Floor 3 (Y=8, Z=118)
+    this._addStaircase(0, 100, 118, 8, 4, 8, floorMat, wallMat);
+
+    this._addTorch(-10, floorY + 2.5, 74, 0x33bbff);
+    this._addTorch(10, floorY + 2.5, 74, 0x33bbff);
+    this._addTorch(-8, floorY + 2.5, 88, 0xffaa33);
   }
 
   // ─────────────────────────────────────────────────────────────
-  // 6. HIGH RAMPARTS & SHORTCUT LEVER
-  // X: -8..18, Z: 92..124
-  // Stone Golem Elite encounter + Lever that opens the gate at (0, 68)
+  // FLOOR 3: SMOLDERING FORGES (Y = 8)
+  // X: -25..25, Z: 118..166
+  // Fire/Earth themed, Stone Golem Arena, Shortcut Lever
   // ─────────────────────────────────────────────────────────────
-  _buildHighRamparts(wallMat, floorMat, ceilMat, audio, hud) {
-    this._addFloor(5, 108, 28, 34, floorMat);
-    this._addCeiling(5, 108, 28, 34, ceilMat);
+  _buildFloor3_Forges(wallMat, floorMat, ceilMat, audio, hud) {
+    const floorY = 8;
 
-    this._addWall(18, 108, 2, 34, wallMat); // East wall
-    this._addWall(-8, 114, 2, 22, wallMat); // West wall
+    // Forge Arena (Z: 118..150)
+    this._addFloor(0, 134, 28, 32, floorMat, floorY);
+    this._addCeiling(0, 134, 28, 32, ceilMat, floorY);
+    this._addWall(-14, 134, 1, 32, wallMat, floorY);
+    this._addWall(14, 134, 1, 32, wallMat, floorY);
 
-    // Corridor running south back towards the shortcut gate (X: 0, Z: 70..92)
-    this._addFloor(0, 80, 8, 24, floorMat);
-    this._addCeiling(0, 80, 8, 24, ceilMat);
-    this._addWall(-4, 80, 2, 24, wallMat);
-    this._addWall(4, 80, 2, 24, wallMat);
-
-    // Shortcut Lever situated at (X: 3, Z: 74)
-    const leverBaseGeo = new THREE.BoxGeometry(0.5, 0.7, 0.5);
-    const leverBaseMat = new THREE.MeshStandardMaterial({ color: 0x332211 });
-    const leverBase = new THREE.Mesh(leverBaseGeo, leverBaseMat);
-    leverBase.position.set(2.8, 0.35, 73);
-    this.scene.add(leverBase);
-    this._meshes.push(leverBase);
-
-    const leverHandleGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.6, 6);
-    const leverHandleMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.9 });
-    const leverHandle = new THREE.Mesh(leverHandleGeo, leverHandleMat);
-    leverHandle.position.set(2.8, 0.75, 73);
-    leverHandle.rotation.z = 0.4;
-    this.scene.add(leverHandle);
-    this._meshes.push(leverHandle);
-
-    // Lever Interactable
+    // Shortcut Lever on West Wall (X: -12, Z: 135)
     this.interactables.push({
-      position: new THREE.Vector3(2.8, 1, 73),
+      position: new window.THREE.Vector3(-12, floorY + 1.0, 135),
       radius: 2.8,
       active: true,
       onInteract: () => {
         if (this.isShortcutUnlocked) return;
-        this.unlockShortcut(audio, hud);
-        leverHandle.rotation.z = -0.4;
+        this.isShortcutUnlocked = true;
+        audio.playSFX('leverPull');
+        if (hud && typeof hud.showCheckpointBanner === 'function') {
+          hud.showCheckpointBanner();
+          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+          if (bTxt) bTxt.textContent = '⚙️ IRON PORTCULLIS OPENED';
+          if (bSub) bSub.textContent = 'Shortcut to Lower Catacombs is now unsealed!';
+        }
       }
     });
 
-    this._addTorch(16.5, 2.6, 98, 0xff8833, 1.4);
-    this._addTorch(16.5, 2.6, 118, 0xff8833, 1.4);
-    this._addTorch(2.8, 2.4, 76, 0xffaa33, 1.3);
+    // Grand Staircase 3: Rising from Floor 3 (Y=8, Z=150) to Floor 4 (Y=12, Z=168)
+    this._addStaircase(0, 150, 168, 8, 8, 12, floorMat, wallMat);
+
+    this._addTorch(-12, floorY + 2.5, 126, 0xff4411);
+    this._addTorch(12, floorY + 2.5, 126, 0xff4411);
+    this._addTorch(-12, floorY + 2.5, 142, 0xff4411);
   }
 
-  unlockShortcut(audio, hud) {
-    this.isShortcutUnlocked = true;
-    audio.playSFX('leverPull');
+  // ─────────────────────────────────────────────────────────────
+  // FLOOR 4: GALE SPIRE (Y = 12)
+  // X: -25..25, Z: 168..214
+  // Wind/Thunder themed, High Battlement, Shrine 2
+  // ─────────────────────────────────────────────────────────────
+  _buildFloor4_GaleSpire(wallMat, floorMat, ceilMat, player, audio, hud) {
+    const floorY = 12;
 
-    // Animate gate lifting up
-    if (this.shortcutGateMesh) {
-      let step = 0;
-      const lift = setInterval(() => {
-        step += 0.05;
-        this.shortcutGateMesh.position.y += 0.18;
-        if (step >= 1.0) {
-          clearInterval(lift);
-          this.scene.remove(this.shortcutGateMesh);
+    this._addFloor(0, 186, 26, 36, floorMat, floorY);
+    this._addCeiling(0, 186, 26, 36, ceilMat, floorY);
+    this._addWall(-13, 186, 1, 36, wallMat, floorY);
+    this._addWall(13, 186, 1, 36, wallMat, floorY);
+
+    // Shrine 2 (High Sanctum Bonfire) at (8, floorY, 192)
+    const shrineLight2 = new window.THREE.PointLight(0xffb833, 2.4, 14);
+    shrineLight2.position.set(8, floorY + 1.2, 192);
+    this.scene.add(shrineLight2);
+    this._meshes.push(shrineLight2);
+
+    this.interactables.push({
+      position: new window.THREE.Vector3(8, floorY + 1.0, 192),
+      radius: 3.2,
+      active: true,
+      onInteract: () => {
+        this.isCheckpointActive = true;
+        if (player) player.restAtCheckpoint(new window.THREE.Vector3(8, floorY + 1.7, 189));
+        audio.playSFX('bonfireRest');
+        if (hud && typeof hud.showCheckpointBanner === 'function') {
+          hud.showCheckpointBanner();
+          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+          if (bTxt) bTxt.textContent = '⚡ HIGH SANCTUM SHRINE';
+          if (bSub) bSub.textContent = 'Party Restored · Enemies Respawned · Progress Saved';
         }
-      }, 30);
-    }
+      }
+    });
 
-    // Remove gate collision AABB
-    if (this.shortcutGateWall) {
-      const idx = this.walls.indexOf(this.shortcutGateWall);
-      if (idx !== -1) this.walls.splice(idx, 1);
-      const mIdx = this.miniWalls.indexOf(this.shortcutGateWall);
-      if (mIdx !== -1) this.miniWalls.splice(mIdx, 1);
-    }
+    // Grand Staircase 4: Rising from Floor 4 (Y=12, Z=204) to Floor 5 (Y=16, Z=222)
+    this._addStaircase(0, 204, 222, 10, 12, 16, floorMat, wallMat);
 
-    if (hud) {
-      hud.showCheckpointBanner();
-      const bannerText = document.querySelector('#checkpoint-banner .banner-text');
-      const bannerSub  = document.querySelector('#checkpoint-banner .banner-sub');
-      if (bannerText) bannerText.textContent = 'SHORTCUT UNLOCKED';
-      if (bannerSub)  bannerSub.textContent  = 'The Iron Portcullis to Catacomb Junction is Open';
-    }
+    this._addTorch(-11, floorY + 2.5, 178, 0xffdd22);
+    this._addTorch(11, floorY + 2.5, 178, 0xffdd22);
+    this._addTorch(8, floorY + 2.5, 192, 0xffaa33);
   }
 
   // ─────────────────────────────────────────────────────────────
-  // 7. BLOOD CLOISTER (Final approach with Death Bats)
-  // X: -6..16, Z: 124..155
+  // FLOOR 5: THRONE OF THE WIZARD KING (Y = 16)
+  // X: -25..25, Z: 222..265
+  // Final Boss Cathedral & Rescue the Queen
   // ─────────────────────────────────────────────────────────────
-  _buildBloodCloister(wallMat, floorMat, ceilMat) {
-    this._addFloor(5, 139, 24, 32, floorMat);
-    this._addCeiling(5, 139, 24, 32, ceilMat);
+  _buildFloor5_Throne(wallMat, floorMat, ceilMat) {
+    const floorY = 16;
 
-    this._addWall(-6, 139, 2, 32, wallMat); // West wall
-    this._addWall(16, 139, 2, 32, wallMat); // East wall
+    // Vast Cathedral Arena
+    this._addFloor(0, 244, 34, 44, floorMat, floorY);
+    this._addCeiling(0, 244, 34, 44, ceilMat, floorY);
 
-    // Grand archway leading to boss room at Z: 155
-    this._addWall(-2, 155, 8, 2, wallMat);
-    this._addWall(12, 155, 8, 2, wallMat);
-    // Opening at X: 3..7, Z: 155
+    this._addWall(-17, 244, 1, 44, wallMat, floorY); // West
+    this._addWall(17, 244, 1, 44, wallMat, floorY);  // East
+    this._addWall(0, 266, 34, 1, wallMat, floorY);   // North (Back of throne)
 
-    this._addTorch(-4.8, 2.5, 130, 0xaa2266, 1.4);
-    this._addTorch(14.8, 2.5, 130, 0xaa2266, 1.4);
-    this._addTorch(-4.8, 2.5, 148, 0xaa2266, 1.4);
-    this._addTorch(14.8, 2.5, 148, 0xaa2266, 1.4);
-  }
+    // Boss Pillars
+    this._addWall(-8, 238, 2.5, 2.5, wallMat, floorY);
+    this._addWall(8, 238, 2.5, 2.5, wallMat, floorY);
+    this._addWall(-8, 252, 2.5, 2.5, wallMat, floorY);
+    this._addWall(8, 252, 2.5, 2.5, wallMat, floorY);
 
-  // ─────────────────────────────────────────────────────────────
-  // 8. THRONE OF THE DEATH KNIGHT (Boss Arena)
-  // X: -10..20, Z: 155..205
-  // ─────────────────────────────────────────────────────────────
-  _buildBossArena(wallMat, floorMat, ceilMat) {
-    this._addFloor(5, 180, 32, 52, floorMat);
-    this._addCeiling(5, 180, 32, 52, ceilMat);
-
-    this._addWall(-10, 180, 2, 52, wallMat); // West wall
-    this._addWall(20, 180, 2, 52, wallMat);  // East wall
-    this._addWall(5, 205, 32, 2, wallMat);   // North wall behind throne
-
-    // Grand Arena Pillars
-    this._addWall(-3, 172, 2.2, 2.2, wallMat);
-    this._addWall(13, 172, 2.2, 2.2, wallMat);
-    this._addWall(-3, 192, 2.2, 2.2, wallMat);
-    this._addWall(13, 192, 2.2, 2.2, wallMat);
-
-    // Stone Throne at north wall (X: 5, Z: 202)
-    const throneBaseGeo = new THREE.BoxGeometry(3.6, 1.0, 2.2);
-    const throneBaseMat = new THREE.MeshStandardMaterial({ color: 0x1f1822, metalness: 0.4, roughness: 0.6 });
-    const throne = new THREE.Mesh(throneBaseGeo, throneBaseMat);
-    throne.position.set(5, 0.5, 201);
-    this.scene.add(throne);
-    this._meshes.push(throne);
-
-    const throneBackGeo = new THREE.BoxGeometry(3.6, 3.2, 0.6);
-    const throneBack = new THREE.Mesh(throneBackGeo, throneBaseMat);
-    throneBack.position.set(5, 2.4, 202);
-    this.scene.add(throneBack);
-    this._meshes.push(throneBack);
-
-    // Boss arena torches (Ominous dark purple / crimson)
-    this._addTorch(-8.5, 2.8, 165, 0x9922cc, 1.8, 14);
-    this._addTorch(18.5, 2.8, 165, 0x9922cc, 1.8, 14);
-    this._addTorch(-8.5, 2.8, 195, 0xcc2244, 1.8, 14);
-    this._addTorch(18.5, 2.8, 195, 0xcc2244, 1.8, 14);
-    this._addTorch(5, 3.8, 199, 0x9911ee, 2.2, 16);
+    // Dark Purple Torches
+    this._addTorch(-15, floorY + 3.0, 232, 0xaa22ff, 1.8);
+    this._addTorch(15, floorY + 3.0, 232, 0xaa22ff, 1.8);
+    this._addTorch(-15, floorY + 3.0, 256, 0xaa22ff, 1.8);
+    this._addTorch(15, floorY + 3.0, 256, 0xaa22ff, 1.8);
   }
 
   sealBossArena() {
     if (this.bossFogMesh) return;
-    // Seal the entrance at X: 5, Z: 155 with a dark purple mist barrier
-    const fogGeo = new THREE.BoxGeometry(6, WALL_H, 1.5);
-    const fogMat = new THREE.MeshStandardMaterial({
-      color: 0x6611aa,
-      emissive: 0x440088,
-      emissiveIntensity: 1.2,
-      transparent: true,
-      opacity: 0.85,
-    });
-    this.bossFogMesh = new THREE.Mesh(fogGeo, fogMat);
-    this.bossFogMesh.position.set(5, WALL_H / 2, 155);
+    const THREE = window.THREE;
+    const geo = new THREE.PlaneGeometry(10, WALL_H);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xaa22ff, transparent: true, opacity: 0.65, side: THREE.DoubleSide });
+    this.bossFogMesh = new THREE.Mesh(geo, mat);
+    this.bossFogMesh.position.set(0, 16 + WALL_H / 2, 222);
     this.scene.add(this.bossFogMesh);
     this._meshes.push(this.bossFogMesh);
 
-    this.bossFogWall = { x: 5, z: 155, w: 6, d: 1.5 };
-    this.walls.push(this.bossFogWall);
+    const aabb = { x: 0, z: 222, w: 10, d: 1.0, isFogWall: true };
+    this.walls.push(aabb);
+    this.bossFogWall = aabb;
   }
 
   clear() {
     for (const m of this._meshes) {
+      this.scene.remove(m);
       if (m.geometry) m.geometry.dispose();
       if (m.material) {
-        if (m.material.map) m.material.map.dispose();
-        m.material.dispose();
+        if (Array.isArray(m.material)) m.material.forEach(mat => mat.dispose());
+        else m.material.dispose();
       }
-      this.scene.remove(m);
     }
     this._meshes = [];
     this.walls = [];
     this.miniWalls = [];
     this.interactables = [];
-    this.shortcutGateMesh = null;
-    this.shortcutGateWall = null;
+    this.floorRamps = [];
     this.bossFogMesh = null;
     this.bossFogWall = null;
-    this.isShortcutUnlocked = false;
+    this.isChestOpened = false;
+    this.isCheckpointActive = false;
   }
 }

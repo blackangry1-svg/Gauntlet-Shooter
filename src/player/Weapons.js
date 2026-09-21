@@ -29,6 +29,8 @@ export class Weapons {
     this.projectiles = [];
     this.enemies = null;
     this.particles = null;
+    this.onMeleeHit = null;
+    this.onRangedHit = null;
 
     this._cooldown = 0;
     this._swingT = 0;
@@ -361,6 +363,7 @@ export class Weapons {
         // Forward arc (cos >= 0.45, ~63 degrees)
         if (dot >= 0.45) {
           this._hitEnemiesThisSwing.add(enemy);
+          if (this.onMeleeHit) { this.onMeleeHit(enemy); break; }
           enemy.takeDamage(damage, this._isHeavy);
           this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordHit');
           if (this.particles) {
@@ -377,7 +380,7 @@ export class Weapons {
   _spawnProjectile(type, damage, maxRange, speed, color) {
     const proj = new Projectile(
       this.scene, this.camera, type, damage, maxRange, speed, color,
-      this.enemies, this.particles, this.audio, this.walls
+      this.enemies, this.particles, this.audio, this.walls, (hitEnemy) => { if (this.onRangedHit) this.onRangedHit(hitEnemy); }
     );
     this.projectiles.push(proj);
   }
@@ -400,7 +403,8 @@ export class Weapons {
 }
 
 class Projectile {
-  constructor(scene, camera, type, damage, maxRange, speed, color, enemies, particles, audio, walls = []) {
+  constructor(scene, camera, type, damage, maxRange, speed, color, enemies, particles, audio, walls = [], onHitEnemy = null) {
+    this.onHitEnemy = onHitEnemy;
     this.scene    = scene;
     this.camera   = camera;
     this.damage   = damage;
@@ -487,6 +491,7 @@ class Projectile {
       if (hits.length > 0) {
         const enemy = this.enemies.getEnemyByObject(hits[0].object);
         if (enemy && !enemy.dead) {
+          if (this.onHitEnemy) { this.onHitEnemy(enemy); this.dead = true; return; }
           enemy.takeDamage(this.damage);
           this.audio.playSFX(this.damage > 30 ? 'fireballExplode' : 'arrowHit');
           if (this.particles) this.particles.spawnHit(hits[0].point, 'blood');

@@ -19,6 +19,11 @@ export class HUD {
     this._minimapCtx  = this._minimap.getContext('2d');
     this._roomNum     = document.getElementById('room-num');
     this._scoreEl     = document.getElementById('score-value');
+    this._xpBar       = document.getElementById('xp-bar');
+    this._xpText      = document.getElementById('xp-text');
+    this._levelBadge  = document.getElementById('portrait-level');
+    this._levelUpBanner = document.getElementById('levelup-banner');
+    this._levelUpSub    = document.getElementById('levelup-sub');
   }
 
   update(player) {
@@ -35,6 +40,18 @@ export class HUD {
     if (this._healthText)  this._healthText.textContent  = Math.ceil(player.health);
     if (this._staminaText) this._staminaText.textContent = Math.ceil(player.stamina);
     if (this._manaText)    this._manaText.textContent    = Math.ceil(player.mana);
+
+    // XP and Level
+    if (this._xpBar && player.xpToNextLevel) {
+      const xpPct = Math.min(1.0, Math.max(0, (player.xp || 0) / player.xpToNextLevel));
+      this._xpBar.style.width = (xpPct * 100) + '%';
+    }
+    if (this._xpText && player.xpToNextLevel) {
+      this._xpText.textContent = `${player.xp || 0}/${player.xpToNextLevel} XP`;
+    }
+    if (this._levelBadge && player.level) {
+      this._levelBadge.textContent = `Lv.${player.level}`;
+    }
 
     if (this._flaskText && player.flasks !== undefined) {
       this._flaskText.textContent = `Flasks: ${player.flasks}/${player.maxFlasks} [Q]`;
@@ -65,6 +82,19 @@ export class HUD {
     if (this._checkpointBanner) {
       this._checkpointBanner.classList.remove('hidden');
       setTimeout(() => this._checkpointBanner?.classList.add('hidden'), 2800);
+    }
+  }
+
+  showLevelUpBanner(level, damageMultiplier, hp, stam) {
+    if (this._levelUpBanner) {
+      if (this._levelUpSub) {
+        const bonusPct = Math.round(((damageMultiplier || 1.0) - 1.0) * 100);
+        this._levelUpSub.textContent = `LEVEL ${level} REACHED · HP & Stamina Restored · Damage +${bonusPct}%`;
+      }
+      this._levelUpBanner.classList.remove('hidden');
+      setTimeout(() => {
+        if (this._levelUpBanner) this._levelUpBanner.classList.add('hidden');
+      }, 3200);
     }
   }
 

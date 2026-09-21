@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-09-21T15:39:04.832Z",
+  "timestamp": "2026-09-21T22:47:27.157Z",
   "iteration": 1,
   "milestone": 22,
   "mean_fps": 60,
   "mean_frametime_ms": 16.67,
   "p50_frametime_ms": 16.7,
-  "p95_frametime_ms": 17.2,
-  "p99_frametime_ms": 17.7,
+  "p95_frametime_ms": 16.8,
+  "p99_frametime_ms": 16.9,
   "frames_over_20ms": 0,
   "frames_over_33ms": 0,
   "test_results": {
@@ -27,17 +27,17 @@
           "z": 2
         },
         "posMoved": {
-          "x": -3.2330675497490107e-16,
-          "z": 4.640000000000002
+          "x": -3.1350958058172227e-16,
+          "z": 4.560000000000002
         },
-        "distMoved": 2.6400000000000023,
+        "distMoved": 2.5600000000000023,
         "movedForward": true
       }
     },
     "COLLISION_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 35,
+        "wallCount": 48,
         "posAfterWall": -4.640000000000001
       }
     },
@@ -51,17 +51,17 @@
     "DAMAGE_TEST": {
       "pass": true,
       "details": {
-        "playerHpBefore": 144,
-        "playerHpAfter": 119
+        "playerHpBefore": 114,
+        "playerHpAfter": 89
       }
     },
     "DODGE_TEST": {
       "pass": true,
       "details": {
         "isDodging": true,
-        "iframes": 0.21333333333333337,
-        "stamBefore": 99.70000000000006,
-        "stamAfter": 77.70000000000006
+        "iframes": 0.2466666666666667,
+        "stamBefore": 96.53333333333336,
+        "stamAfter": 74.53333333333336
       }
     },
     "RESPAWN_TEST": {
@@ -81,7 +81,7 @@
     "AI_TEST": {
       "pass": true,
       "details": {
-        "state": "windup",
+        "state": "idle",
         "hp": 240,
         "hasTelegraph": true
       }
@@ -144,14 +144,14 @@
     "PROJECTILE_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 35,
+        "wallCount": 48,
         "diedAtWall": true
       }
     },
     "ENEMY_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 35,
+        "wallCount": 48,
         "finalX": -5.560000000000001
       }
     },
@@ -180,7 +180,7 @@
           ]
         },
         "elfSpeedResult": {
-          "dist": 2.1466666666666754,
+          "dist": 1.960000000000008,
           "speed": 5.6
         },
         "elfCombatResult": {
@@ -193,7 +193,7 @@
         },
         "elfKiteResult": {
           "hpBeforeKite": 36,
-          "enemyDead": false,
+          "enemyDead": true,
           "playerHp": 100,
           "playerMaxHp": 100,
           "secondary": "sword",
@@ -235,11 +235,11 @@
           "projCountAfter": 2
         },
         "wizRecovery": {
-          "manaBeforeRegen": 5,
-          "manaRegened": 16.99999999999998,
-          "regenGain": 11.999999999999979,
+          "manaBeforeRegen": 5.400000000000001,
+          "manaRegened": 17.399999999999977,
+          "regenGain": 11.999999999999975,
           "resumed": true,
-          "finalMana": 1.9999999999999787
+          "finalMana": 2.3999999999999773
         },
         "wizPersistence": {
           "maxMana": 140,

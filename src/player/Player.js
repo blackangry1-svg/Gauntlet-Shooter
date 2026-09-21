@@ -76,7 +76,6 @@ export class Player {
     // Weapons subsystem
     this.weapons = new Weapons(scene, camera, input, audio, stats.weapons, charType);
     this.onRest = null;
-    this.onAttacked = null;
     this.weapons.player = this;
 
     // Invulnerability frames (iframes)
@@ -86,10 +85,77 @@ export class Player {
     this._hitFlash = document.getElementById('hit-flash');
     this._damageVignette = document.getElementById('damage-vignette');
 
-    // Wall collision list
+    // Wall collision & floor elevation lists
     this.walls = [];
     this.interactables = [];
+    this.floorRamps = [];
+    this.currentGroundY = 0;
     this.checkpointPos = new THREE.Vector3(0, PLAYER_HEIGHT, 2);
+
+    // Progression & Experience System
+    this.level = 1;
+    this.xp = 0;
+    this.xpToNextLevel = 100;
+    this.damageMultiplier = 1.0;
+    this.hud = null;
+  }
+
+  setHUD(hud) {
+    this.hud = hud;
+  }
+
+  setFloorRamps(ramps) {
+    this.floorRamps = Array.isArray(ramps) ? ramps : [];
+  }
+
+  getGroundY(x, z) {
+    let bestY = 0;
+    let found = false;
+    for (const r of this.floorRamps) {
+      if (x >= r.minX - 0.6 && x <= r.maxX + 0.6 && z >= r.minZ - 0.6 && z <= r.maxZ + 0.6) {
+        let groundY = r.y !== undefined ? r.y : 0;
+        if (r.isSlope) {
+          const factor = Math.max(0, Math.min(1, (z - r.startZ) / (r.endZ - r.startZ)));
+          groundY = r.startY + factor * (r.endY - r.startY);
+        }
+        if (!found || Math.abs(groundY - this.currentGroundY) < Math.abs(bestY - this.currentGroundY)) {
+          bestY = groundY;
+          found = true;
+        }
+      }
+    }
+    return found ? bestY : this.currentGroundY;
+  }
+
+  addXP(amount) {
+    this.xp += amount;
+    let leveledUp = false;
+    const MAX_LEVEL = 25;
+    while (this.xp >= this.xpToNextLevel && this.level < MAX_LEVEL) {
+      this.xp -= this.xpToNextLevel;
+      this.level++;
+      this.xpToNextLevel = Math.floor(100 * Math.pow(1.35, this.level - 1));
+      this.maxHealth += 25;
+      this.health = this.maxHealth;
+      this.maxStamina += 15;
+      this.stamina = this.maxStamina;
+      this.maxMana += 15;
+      this.mana = this.maxMana;
+      this.damageMultiplier = 1.0 + (this.level - 1) * 0.12;
+      leveledUp = true;
+    }
+    if (this.level >= MAX_LEVEL) {
+      this.xp = Math.min(this.xp, this.xpToNextLevel);
+    }
+    if (leveledUp) {
+      this.audio.playSFX('levelUp');
+      if (this.hud && typeof this.hud.showLevelUpBanner === 'function') {
+        this.hud.showLevelUpBanner(this.level, this.damageMultiplier, this.maxHealth, this.maxStamina);
+      }
+    }
+    if (this.hud && typeof this.hud.update === 'function') {
+      this.hud.update(this);
+    }
   }
 
   setWalls(walls) {
@@ -126,6 +192,9 @@ export class Player {
   setBlocking(active) {
     this._manualBlock = !!active;
     this.isBlocking = this._manualBlock && !this.isStunned && !this.isDodging && this.stamina > 5;
+    if (this.isBlocking) {
+      this._iframes = 0;
+    }
   }
 
   hasStamina(amount) {
@@ -133,7 +202,6 @@ export class Player {
   }
 
   takeDamage(amount, sourcePos = null) {
-    if (this.onAttacked) { this.onAttacked(sourcePos); return; }
     if (this._iframes > 0) return; // Perfect dodge or iframe
 
     // Check block
@@ -216,6 +284,7 @@ export class Player {
 
   respawn() {
     this.camera.position.copy(this.checkpointPos);
+    this.currentGroundY = Math.max(0, this.checkpointPos.y - PLAYER_HEIGHT);
     this.health  = this.maxHealth;
     this.stamina = this.maxStamina;
     this.mana    = this.maxMana;
@@ -322,13 +391,17 @@ export class Player {
     // Wall collision resolution (sliding against AABB walls)
     newPos.x = this._resolveX(this.camera.position, newPos);
     newPos.z = this._resolveZ(this.camera.position, newPos);
-    this.camera.position.copy(newPos);
-    this.camera.position.y = PLAYER_HEIGHT;
+    this.camera.position.x = newPos.x;
+    this.camera.position.z = newPos.z;
+
+    // Vertical Elevation & Ramp Physics across the 5 Citadel Floors
+    const targetGroundY = this.getGroundY(newPos.x, newPos.z);
+    this.currentGroundY = THREE.MathUtils.lerp(this.currentGroundY, targetGroundY, 0.35);
 
     // Head bob & footsteps
     if (isTryingMove && !this.isDodging) {
       this._bobT += dt * (this.input.sprint ? 14 : 9);
-      this.camera.position.y = PLAYER_HEIGHT + Math.sin(this._bobT) * 0.04;
+      this.camera.position.y = this.currentGroundY + PLAYER_HEIGHT + Math.sin(this._bobT) * 0.04;
 
       this._footstepT -= dt;
       if (this._footstepT <= 0) {
@@ -336,6 +409,7 @@ export class Player {
         this._footstepT = this._footstepInterval / (this.input.sprint ? 1.5 : 1.0);
       }
     } else {
+      this.camera.position.y = this.currentGroundY + PLAYER_HEIGHT;
       this._footstepT = 0;
     }
 
@@ -359,8 +433,11 @@ export class Player {
     const playerPos = this.camera.position;
     for (const item of this.interactables) {
       if (item.active && item.position) {
-        const dist = playerPos.distanceTo(item.position);
-        if (dist <= (item.radius || 2.5)) {
+        const dx = playerPos.x - item.position.x;
+        const dz = playerPos.z - item.position.z;
+        const dy = Math.abs(playerPos.y - item.position.y);
+        const dist2D = Math.hypot(dx, dz);
+        if (dist2D <= (item.radius || 2.5) && dy <= 5.0) {
           item.onInteract(this);
           break;
         }
@@ -370,7 +447,12 @@ export class Player {
 
   _resolveX(oldPos, newPos) {
     const r = 0.35; // collision radius
+    const feetY = oldPos.y - 1.7;
     for (const wall of this.walls) {
+      if (wall.floorY !== undefined) {
+        const wallH = wall.wallH || 4.2;
+        if (feetY < wall.floorY - 0.5 || feetY > wall.floorY + wallH - 0.2) continue;
+      }
       const minX = wall.x - wall.w / 2 - r;
       const maxX = wall.x + wall.w / 2 + r;
       const minZ = wall.z - wall.d / 2 - r;
@@ -384,7 +466,12 @@ export class Player {
 
   _resolveZ(oldPos, newPos) {
     const r = 0.35;
+    const feetY = oldPos.y - 1.7;
     for (const wall of this.walls) {
+      if (wall.floorY !== undefined) {
+        const wallH = wall.wallH || 4.2;
+        if (feetY < wall.floorY - 0.5 || feetY > wall.floorY + wallH - 0.2) continue;
+      }
       const minX = wall.x - wall.w / 2 - r;
       const maxX = wall.x + wall.w / 2 + r;
       const minZ = wall.z - wall.d / 2 - r;

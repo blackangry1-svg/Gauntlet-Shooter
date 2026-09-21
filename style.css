@@ -289,6 +289,11 @@ html, body {
   box-shadow: 0 0 6px rgba(46, 204, 113, 0.5);
   width: 100%;
 }
+.bar-fill.gold {
+  background: linear-gradient(90deg, #b8860b, #ffd700);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+  width: 0%;
+}
 .bar-text { font-size: 0.7rem; color: var(--text); width: 30px; }
 
 .hud-flask-row {
@@ -342,6 +347,33 @@ html, body {
   z-index: 120;
   pointer-events: none;
   animation: fadeInOut 2.8s ease forwards;
+}
+
+/* Level Up Banner */
+#levelup-banner {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, rgba(30, 20, 5, 0.96), rgba(15, 10, 5, 0.96));
+  border: 2px solid #ffd700;
+  padding: 22px 48px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 45px rgba(255, 215, 0, 0.75);
+  z-index: 120;
+  pointer-events: none;
+  animation: fadeInOut 3.2s ease forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.banner-crest {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
 }
 
 /* Center HUD */

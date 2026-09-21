@@ -29,7 +29,7 @@ export class PickupSystem {
   _loadTex() {
     const THREE = window.THREE;
     const loader = new THREE.TextureLoader();
-    this._tex = loader.load('/assets/sprites/pickups.jpg');
+    this._tex = loader.load('/assets/sprites/pickups.png');
   }
 
   /**
@@ -37,9 +37,9 @@ export class PickupSystem {
    */
   dropFromEnemy(pos, enemyType) {
     const rand = Math.random();
-    if (rand < 0.55)      this.spawnPickup(pos.clone(), 'health');
-    else if (rand < 0.75) this.spawnPickup(pos.clone(), 'mana');
-    else if (rand < 0.90) this.spawnPickup(pos.clone(), 'gold');
+    if (rand < 0.50)      this.spawnPickup(pos.clone(), 'health');
+    else if (rand < 0.70) this.spawnPickup(pos.clone(), 'mana');
+    else if (rand < 0.85) this.spawnPickup(pos.clone(), 'gold');
     else                  this.spawnPickup(pos.clone(), 'gem');
   }
 
@@ -57,16 +57,17 @@ export class PickupSystem {
     const mat = new THREE.MeshLambertMaterial({
       map: tex,
       transparent: true,
-      alphaTest: 0.15,
+      alphaTest: 0.2,
       side: THREE.DoubleSide,
       emissive: new THREE.Color(def.glow),
-      emissiveIntensity: 0.4,
+      emissiveIntensity: 0.5,
     });
 
     const geo  = new THREE.PlaneGeometry(0.6, 0.6);
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.copy(pos);
-    mesh.position.y = 0.3;
+    const baseY = pos.y !== undefined ? pos.y : 0;
+    mesh.position.y = baseY + 0.35;
 
     // Point light for glow
     const light = new THREE.PointLight(def.glow, 0.8, 2.5);
@@ -75,7 +76,7 @@ export class PickupSystem {
 
     this.scene.add(mesh);
 
-    const item = { mesh, type, pos: mesh.position, bobT: Math.random() * Math.PI * 2, alive: true };
+    const item = { mesh, type, pos: mesh.position, baseY, bobT: Math.random() * Math.PI * 2, alive: true };
     this._items.push(item);
     return item;
   }
@@ -90,7 +91,7 @@ export class PickupSystem {
 
       // Bob
       item.bobT += dt * 2.5;
-      item.mesh.position.y = 0.3 + Math.sin(item.bobT) * 0.12;
+      item.mesh.position.y = item.baseY + 0.35 + Math.sin(item.bobT) * 0.12;
 
       // Spin to face camera
       item.mesh.rotation.y += dt * 1.5;
@@ -119,7 +120,9 @@ export class PickupSystem {
       case 'mana':   player.mana = Math.min(player.maxMana, player.mana + 40);
                                                          this.audio.playSFX('pickupMana');    break;
       case 'gold':   if (onScore) onScore(500);          this.audio.playSFX('pickupGold');    break;
-      case 'gem':    if (onScore) onScore(1000);         this.audio.playSFX('pickupGold');    break;
+      case 'gem':    if (onScore) onScore(1000);
+                     if (player.addXP) player.addXP(50);
+                     this.audio.playSFX('pickupGold');    break;
     }
     this._showPickupText(item.type);
   }

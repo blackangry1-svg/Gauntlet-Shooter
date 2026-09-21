@@ -62,6 +62,9 @@ export class AudioManager {
       roomClear:   { gen: 'chord', freqs: [523, 659, 784], duration: 0.8, attack: 0.05, decay: 0.75 },
       // Pickup — coin jingle
       pickup:      { gen: 'tone', type: 'sine', freq: 880, duration: 0.12, attack: 0.01, decay: 0.11 },
+      pickupHealth:{ gen: 'chord', freqs: [523, 659, 784], duration: 0.25, attack: 0.01, decay: 0.24 },
+      pickupMana:  { gen: 'chord', freqs: [587, 740, 880], duration: 0.25, attack: 0.01, decay: 0.24 },
+      pickupGold:  { gen: 'tone', type: 'triangle', freq: 987, duration: 0.18, attack: 0.005, decay: 0.175, slide: 1318 },
       // Bonfire / Checkpoint rest
       bonfireRest: { gen: 'chord', freqs: [440, 554, 659, 880], duration: 1.4, attack: 0.1, decay: 1.3 },
       // Lever pull / door opening
@@ -77,6 +80,8 @@ export class AudioManager {
       footstep:    { gen: 'hit', freq: 80, duration: 0.08, attack: 0.005, decay: 0.075 },
       // UI click
       uiClick:     { gen: 'tone', type: 'sine', freq: 440, duration: 0.06, attack: 0.005, decay: 0.055 },
+      // Level up triumphant chord
+      levelUp:     { gen: 'chord', freqs: [440, 554, 659, 880, 1108], duration: 1.8, attack: 0.05, decay: 1.75 },
     };
   }
 

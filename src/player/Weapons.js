@@ -95,9 +95,10 @@ export class Weapons {
     if (idx >= this.available.length || idx === this.currentIdx) return;
     this.currentIdx = idx;
 
-    // Cleanly cancel any in-flight swing animation
+    // Cleanly cancel any in-flight swing animation and ready new weapon
     this._swinging = false;
     this._swingT = 0;
+    this._cooldown = 0;
     this._hitEnemiesThisSwing.clear();
 
     if (this._weaponMesh) {
@@ -329,7 +330,8 @@ export class Weapons {
     this._currentAttackId++;
     this._hitEnemiesThisSwing.clear();
 
-    const dmg = this._isHeavy ? weapon.heavyDamage : weapon.damage;
+    const mult = this.player ? (this.player.damageMultiplier || 1.0) : 1.0;
+    const dmg = Math.round((this._isHeavy ? weapon.heavyDamage : weapon.damage) * mult);
     if (weapon.type === 'melee') {
       this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordSwing');
     } else if (weapon.type === 'projectile') {
@@ -345,13 +347,19 @@ export class Weapons {
     if (!this.enemies) return;
 
     const weapon = this.current;
-    const damage = this._isHeavy ? weapon.heavyDamage : weapon.damage;
+    const mult = this.player ? (this.player.damageMultiplier || 1.0) : 1.0;
+    const damage = Math.round((this._isHeavy ? weapon.heavyDamage : weapon.damage) * mult);
     const playerPos = this.camera.position;
     const forward = new THREE.Vector3();
     this.camera.getWorldDirection(forward);
 
     for (const enemy of this.enemies.getAll()) {
       if (enemy.dead || this._hitEnemiesThisSwing.has(enemy)) continue;
+
+      // Vertical elevation separation check (prevents hitting enemies through floors/ceilings)
+      const enemyFeetY = enemy.mesh.position.y;
+      const playerFeetY = playerPos.y - 1.7;
+      if (Math.abs(enemyFeetY - playerFeetY) > 2.2) continue;
 
       const toEnemy = new THREE.Vector3().subVectors(enemy.mesh.position, playerPos);
       toEnemy.y = 0; // horizontal plane
@@ -363,7 +371,7 @@ export class Weapons {
         // Forward arc (cos >= 0.45, ~63 degrees)
         if (dot >= 0.45) {
           this._hitEnemiesThisSwing.add(enemy);
-          if (this.onMeleeHit) { this.onMeleeHit(enemy); break; }
+          if (this.onMeleeHit) this.onMeleeHit(enemy);
           enemy.takeDamage(damage, this._isHeavy);
           this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordHit');
           if (this.particles) {
@@ -491,7 +499,7 @@ class Projectile {
       if (hits.length > 0) {
         const enemy = this.enemies.getEnemyByObject(hits[0].object);
         if (enemy && !enemy.dead) {
-          if (this.onHitEnemy) { this.onHitEnemy(enemy); this.dead = true; return; }
+          if (this.onHitEnemy) this.onHitEnemy(enemy);
           enemy.takeDamage(this.damage);
           this.audio.playSFX(this.damage > 30 ? 'fireballExplode' : 'arrowHit');
           if (this.particles) this.particles.spawnHit(hits[0].point, 'blood');

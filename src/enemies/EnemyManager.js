@@ -12,8 +12,10 @@ export class EnemyManager {
     this._hitboxes = [];
     this.enemyProjectiles = [];
     this.walls = [];
+    this.floorRamps = [];
     this.onBossHealthChange = null;
     this.onScore = null;
+    this.onKill = null;
     this.boss = null;
   }
 
@@ -24,12 +26,20 @@ export class EnemyManager {
     }
   }
 
+  setFloorRamps(ramps) {
+    this.floorRamps = Array.isArray(ramps) ? ramps : [];
+    for (const e of this._enemies) {
+      e.setFloorRamps(this.floorRamps);
+    }
+  }
+
   spawnEnemy(TypeClass, position, player, camera) {
     const enemy = new TypeClass(this.scene, this.audio, this);
     enemy.mesh.position.copy(position);
     enemy.player = player;
     enemy.camera = camera;
     enemy.setWalls(this.walls);
+    enemy.setFloorRamps(this.floorRamps);
     this._addEnemy(enemy);
     if (enemy.isBoss) this.boss = enemy;
     return enemy;
@@ -53,10 +63,15 @@ export class EnemyManager {
   _onEnemyDied(enemy) {
     this.audio.playSFX('enemyDeath');
     if (this.onScore) this.onScore(enemy.scoreValue);
+    if (this.onKill) this.onKill(enemy);
 
     const alive = this._enemies.filter(e => !e.dead).length;
     const countEl = document.getElementById('enemy-count');
     if (countEl) countEl.textContent = alive;
+
+    if (enemy.isBoss && this.onBossHealthChange) {
+      this.onBossHealthChange(false, 0);
+    }
   }
 
   spawnProjectile(proj) {

@@ -62,6 +62,7 @@ export class Enemy {
     this.recoverTime    = config.recover || 0.6;
     this.attackCooldown = config.atkCD   || 1.5;
     this.scoreValue     = config.score   || 100;
+    this.xpValue        = config.xp      || Math.round(this.scoreValue * 0.4) || 35;
     this.isBoss         = false;
     this.walls          = [];
     this.enemyRadius    = (config.size || 1.6) * 0.35;
@@ -100,9 +101,38 @@ export class Enemy {
     this.walls = Array.isArray(walls) ? walls : [];
   }
 
+  setFloorRamps(ramps) {
+    this.floorRamps = Array.isArray(ramps) ? ramps : [];
+  }
+
+  getGroundY(x, z) {
+    if (!this.floorRamps || this.floorRamps.length === 0) return this.mesh.position.y;
+    let bestY = 0;
+    let found = false;
+    for (const r of this.floorRamps) {
+      if (x >= r.minX - 0.6 && x <= r.maxX + 0.6 && z >= r.minZ - 0.6 && z <= r.maxZ + 0.6) {
+        let groundY = r.y !== undefined ? r.y : 0;
+        if (r.isSlope) {
+          const factor = Math.max(0, Math.min(1, (z - r.startZ) / (r.endZ - r.startZ)));
+          groundY = r.startY + factor * (r.endY - r.startY);
+        }
+        if (!found || Math.abs(groundY - this.mesh.position.y) < Math.abs(bestY - this.mesh.position.y)) {
+          bestY = groundY;
+          found = true;
+        }
+      }
+    }
+    return found ? bestY : this.mesh.position.y;
+  }
+
   _resolveX(oldPos, newPos) {
     const r = this.enemyRadius || 0.4;
+    const enemyY = this.mesh.position.y;
     for (const wall of this.walls) {
+      if (wall.floorY !== undefined) {
+        const wallH = wall.wallH || 4.2;
+        if (enemyY < wall.floorY - 0.5 || enemyY > wall.floorY + wallH - 0.2) continue;
+      }
       const minX = wall.x - wall.w / 2 - r;
       const maxX = wall.x + wall.w / 2 + r;
       const minZ = wall.z - wall.d / 2 - r;
@@ -116,7 +146,12 @@ export class Enemy {
 
   _resolveZ(oldPos, newPos) {
     const r = this.enemyRadius || 0.4;
+    const enemyY = this.mesh.position.y;
     for (const wall of this.walls) {
+      if (wall.floorY !== undefined) {
+        const wallH = wall.wallH || 4.2;
+        if (enemyY < wall.floorY - 0.5 || enemyY > wall.floorY + wallH - 0.2) continue;
+      }
       const minX = wall.x - wall.w / 2 - r;
       const maxX = wall.x + wall.w / 2 + r;
       const minZ = wall.z - wall.d / 2 - r;
@@ -372,6 +407,11 @@ export class Enemy {
 
             newPos.x = this._resolveX(oldPos, newPos);
             newPos.z = this._resolveZ(oldPos, newPos);
+            if (this.enemyType === 'bat') {
+              newPos.y = this.getGroundY(newPos.x, newPos.z) + 1.3;
+            } else {
+              newPos.y = this.getGroundY(newPos.x, newPos.z);
+            }
             this.mesh.position.copy(newPos);
           }
         }
@@ -558,17 +598,18 @@ export class OrcGrunt extends Enemy {
       recover: 0.55,
       atkCD: 1.4,
       score: 100,
+      xp: 40,
       size: 1.7,
       spritePath: '/assets/sprites/orc_grunt.png',
-      rows: 5,
+      rows: 6,
       cols: 6,
       anims: {
         idle:    { row: 0, count: 6, speed: 5 },
-        chase:   { row: 2, count: 6, speed: 8 },
-        windup:  { row: 3, count: 4, speed: 8 },
-        attack:  { row: 4, count: 6, speed: 14 },
+        chase:   { row: 1, count: 6, speed: 8 },
+        windup:  { row: 2, count: 4, speed: 8 },
+        attack:  { row: 3, count: 6, speed: 14 },
         recover: { row: 0, count: 1, speed: 1 },
-        dead:    { row: 3, count: 6, speed: 6 },
+        dead:    { row: 5, count: 6, speed: 6 },
       }
     }, manager);
   }
@@ -587,6 +628,7 @@ export class SkeletonArcher extends Enemy {
       recover: 0.85,
       atkCD: 2.2,
       score: 150,
+      xp: 50,
       size: 1.6,
       spritePath: '/assets/sprites/skeleton_archer.png',
       rows: 6,
@@ -635,17 +677,18 @@ export class DeathBat extends Enemy {
       recover: 0.45,
       atkCD: 1.2,
       score: 80,
+      xp: 30,
       size: 1.3,
       spritePath: '/assets/sprites/death_bat.png',
-      rows: 5,
+      rows: 6,
       cols: 4,
       anims: {
         idle:    { row: 0, count: 4, speed: 8 },
-        chase:   { row: 2, count: 4, speed: 12 },
-        windup:  { row: 1, count: 4, speed: 10 },
+        chase:   { row: 1, count: 4, speed: 12 },
+        windup:  { row: 2, count: 4, speed: 10 },
         attack:  { row: 3, count: 4, speed: 14 },
         recover: { row: 0, count: 1, speed: 1 },
-        dead:    { row: 4, count: 4, speed: 8 },
+        dead:    { row: 5, count: 4, speed: 8 },
       }
     }, manager);
     this.mesh.position.y = 1.2; // flying
@@ -665,6 +708,7 @@ export class StoneGolem extends Enemy {
       recover: 1.10,
       atkCD: 2.4,
       score: 400,
+      xp: 120,
       size: 2.4,
       spritePath: '/assets/sprites/stone_golem.png',
       rows: 4,
@@ -699,6 +743,7 @@ export class DeathKnight extends Enemy {
       recover: 0.80,
       atkCD: 1.8,
       score: 2500,
+      xp: 600,
       size: 2.6,
       spritePath: '/assets/sprites/death_knight.png',
       rows: 3,

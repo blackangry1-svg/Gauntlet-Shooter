@@ -4,7 +4,7 @@
 export class MainMenu {
   constructor(save) {
     this.save = save;
-    this.selectedChar = null;
+    this.selectedChar = 'warrior';
     this.onStartGame = null;
     this.onContinue  = null;
 
@@ -16,15 +16,20 @@ export class MainMenu {
   _setupCharCards() {
     const cards = document.querySelectorAll('.char-card');
     cards.forEach(card => {
+      if (card.dataset.char === this.selectedChar) {
+        card.classList.add('selected');
+      }
       card.addEventListener('click', () => {
         cards.forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         this.selectedChar = card.dataset.char;
-        document.getElementById('btn-new-game').disabled = false;
+        const btn = document.getElementById('btn-new-game');
+        if (btn) btn.disabled = false;
       });
-
-      // Hover sound (no audio yet at menu, skip)
     });
+
+    const newGameBtn = document.getElementById('btn-new-game');
+    if (newGameBtn) newGameBtn.disabled = false;
   }
 
   _setupButtons() {

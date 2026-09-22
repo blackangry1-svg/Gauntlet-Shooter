@@ -185,4 +185,29 @@ export class HUD {
     ctx.lineWidth = 1;
     ctx.strokeRect(0, 0, W, H);
   }
+
+  updateKeys(count) {
+    const el = document.getElementById('key-count');
+    if (el) el.textContent = count;
+  }
+
+  showKeyPickupBanner() {
+    const el = document.getElementById('key-banner');
+    if (el) {
+      el.classList.remove('hidden');
+      setTimeout(() => el?.classList.add('hidden'), 2200);
+    }
+  }
+
+  showFloorBanner(floorNum, floorName) {
+    const el = document.getElementById('floor-banner');
+    const txt = document.getElementById('floor-banner-text');
+    const sub = document.getElementById('floor-banner-sub');
+    if (el && txt) {
+      txt.textContent = floorName || `FLOOR ${floorNum}`;
+      if (sub) sub.textContent = `— Ascend and Survive —`;
+      el.classList.remove('hidden');
+      setTimeout(() => el?.classList.add('hidden'), 3800);
+    }
+  }
 }

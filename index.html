@@ -223,7 +223,53 @@
       <div id="boss-fill"></div>
     </div>
   </div>
+
+  <!-- Key Counter (HUD top-right corner) -->
+  <div id="key-hud" style="
+    position:absolute;top:14px;right:180px;
+    display:flex;align-items:center;gap:6px;
+    font-family:'MedievalSharp',serif;color:#f0c040;
+    font-size:0.88em;text-shadow:0 0 6px #000;
+    pointer-events:none;
+  ">
+    <img src="/assets/ui/key_icon.jpg" alt="Key" style="width:22px;height:22px;border-radius:3px;opacity:0.9;">
+    <span>×</span><span id="key-count">0</span>
+  </div>
 </div>
+
+<!-- ===== FLOOR ENTRY BANNER ===== -->
+<div id="floor-banner" class="hidden" style="
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;z-index:800;
+  background:rgba(0,0,0,0.55);
+  animation:fadeInOut 3.8s ease;
+">
+  <div id="floor-banner-text" style="
+    font-family:'MedievalSharp',serif;
+    font-size:3.2em;color:#c8a84b;
+    text-shadow:0 0 30px #c8a84b,0 0 60px #8a5a00,2px 2px 6px #000;
+    letter-spacing:0.14em;text-transform:uppercase;
+    animation:bannerPulse 3.8s ease;
+  ">FLOOR 2: SUNKEN AQUEDUCTS</div>
+  <div id="floor-banner-sub" style="
+    font-family:'MedievalSharp',serif;
+    font-size:1.15em;color:#a08860;margin-top:10px;
+    text-shadow:0 0 12px #000;letter-spacing:0.2em;
+  ">— Ascend and Survive —</div>
+</div>
+
+<!-- ===== KEY PICKUP BANNER ===== -->
+<div id="key-banner" class="hidden" style="
+  position:fixed;bottom:220px;left:50%;transform:translateX(-50%);
+  font-family:'MedievalSharp',serif;font-size:1.4em;
+  color:#f0d060;text-shadow:0 0 20px #c8a84b,2px 2px 4px #000;
+  letter-spacing:0.12em;pointer-events:none;z-index:820;
+  background:rgba(0,0,0,0.65);
+  padding:8px 28px;border:1px solid rgba(200,168,75,0.5);
+  border-radius:4px;
+">🗝 DUNGEON KEY FOUND!</div>
+
 
 <!-- ===== PAUSE MENU ===== -->
 <div id="pause-menu" class="hidden">
@@ -266,12 +312,63 @@
           <span>R</span><span>Heavy Attack</span>
           <span>E / F</span><span>Interact</span>
           <span>1 - 3</span><span>Weapon</span>
-          <span>ESC</span><span>Pause / Resume</span>
+      <span>ESC</span><span>Pause / Resume</span>
+          <span>Tab / I</span><span>Character Stats</span>
         </div>
       </details>
     </div>
   </div>
 </div>
+
+<!-- ===== STAT PANEL (Tab / I) ===== -->
+<div id="stat-panel" class="hidden" style="
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.82);
+  display:flex;align-items:center;justify-content:center;
+  z-index:900;
+  font-family:'MedievalSharp',serif;
+">
+  <div style="
+    background:linear-gradient(160deg,#1a1208,#0d0a04);
+    border:2px solid #c8a84b;border-radius:8px;
+    padding:32px 42px;min-width:420px;max-width:520px;
+    color:#e8d090;box-shadow:0 0 60px rgba(200,150,20,0.25);
+  ">
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="font-size:1.7em;color:#c8a84b;letter-spacing:0.12em;text-transform:uppercase;">CHARACTER</div>
+      <div style="font-size:2.2em;color:#ffd060;margin-top:4px;" id="sp-class">WARRIOR</div>
+      <div style="font-size:1.0em;color:#a08840;margin-top:2px;">LEVEL <span id="sp-level">1</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;">
+      <div style="color:#a08840;">❤ HP</div>
+      <div id="sp-hp" style="color:#ff5555;text-align:right;">160 / 160</div>
+
+      <div style="color:#a08840;">⚡ Stamina</div>
+      <div id="sp-stamina" style="color:#44cc44;text-align:right;">110 / 110</div>
+
+      <div style="color:#a08840;">✦ Mana</div>
+      <div id="sp-mana" style="color:#5599ff;text-align:right;">50 / 50</div>
+
+      <div style="color:#a08840;">⚔ Damage Bonus</div>
+      <div id="sp-damage" style="color:#ffaa22;text-align:right;">+0%</div>
+
+      <div style="color:#a08840;">✦ Experience</div>
+      <div id="sp-xp" style="color:#cc88ff;text-align:right;">0 / 100</div>
+
+      <div style="color:#a08840;">🗝 Keys Held</div>
+      <div id="sp-keys" style="color:#f0d060;text-align:right;">0</div>
+
+      <div style="color:#a08840;">⭐ Score</div>
+      <div id="sp-score" style="color:#f0c840;text-align:right;">0</div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;color:#705030;font-size:0.78em;letter-spacing:0.12em;">
+      [ TAB or I ] CLOSE STATS
+    </div>
+  </div>
+</div>
+
 
 <!-- ===== GAME OVER ===== -->
 <div id="game-over" class="hidden">

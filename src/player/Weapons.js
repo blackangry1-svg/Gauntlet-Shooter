@@ -6,11 +6,11 @@
 import { spawnDamageNumber } from '../combat/HitDetection.js';
 
 const WEAPON_DEFS = {
-  sword:  { damage: 32, heavyDamage: 55, range: 2.8,  cooldown: 0.45, staminaCost: 16, type: 'melee',    manaCost: 0 },
-  spear:  { damage: 26, heavyDamage: 46, range: 3.6,  cooldown: 0.42, staminaCost: 14, type: 'melee',    manaCost: 0 },
-  bow:    { damage: 24, heavyDamage: 40, range: 45,   cooldown: 0.75, staminaCost: 12, type: 'projectile',manaCost: 0 },
-  staff:  { damage: 45, heavyDamage: 75, range: 35,   cooldown: 1.10, staminaCost: 18, type: 'magic',    manaCost: 15 },
-  shield: { damage: 18, heavyDamage: 30, range: 2.0,  cooldown: 0.35, staminaCost: 10, type: 'melee',    manaCost: 0 },
+  sword:  { damage: 26, heavyDamage: 44, range: 2.8,  cooldown: 0.45, staminaCost: 16, type: 'melee',    manaCost: 0 },
+  spear:  { damage: 22, heavyDamage: 38, range: 3.6,  cooldown: 0.42, staminaCost: 14, type: 'melee',    manaCost: 0 },
+  bow:    { damage: 12, heavyDamage: 20, range: 45,   cooldown: 0.75, staminaCost: 12, type: 'projectile',manaCost: 0 },
+  staff:  { damage: 22, heavyDamage: 36, range: 35,   cooldown: 1.10, staminaCost: 18, type: 'magic',    manaCost: 15 },
+  shield: { damage: 14, heavyDamage: 24, range: 2.0,  cooldown: 0.35, staminaCost: 10, type: 'melee',    manaCost: 0 },
 };
 
 const SWING_DURATION = 0.28;

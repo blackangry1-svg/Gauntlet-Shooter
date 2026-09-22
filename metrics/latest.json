@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-09-21T22:47:27.157Z",
+  "timestamp": "2026-09-22T22:49:53.543Z",
   "iteration": 1,
   "milestone": 22,
-  "mean_fps": 60,
-  "mean_frametime_ms": 16.67,
-  "p50_frametime_ms": 16.7,
-  "p95_frametime_ms": 16.8,
-  "p99_frametime_ms": 16.9,
-  "frames_over_20ms": 0,
-  "frames_over_33ms": 0,
+  "mean_fps": 55,
+  "mean_frametime_ms": 18.24,
+  "p50_frametime_ms": 17.3,
+  "p95_frametime_ms": 34.2,
+  "p99_frametime_ms": 35.1,
+  "frames_over_20ms": 6,
+  "frames_over_33ms": 6,
   "test_results": {
     "BOOT_TEST": {
       "pass": true,
@@ -51,17 +51,17 @@
     "DAMAGE_TEST": {
       "pass": true,
       "details": {
-        "playerHpBefore": 114,
-        "playerHpAfter": 89
+        "playerHpBefore": 132,
+        "playerHpAfter": 107
       }
     },
     "DODGE_TEST": {
       "pass": true,
       "details": {
         "isDodging": true,
-        "iframes": 0.2466666666666667,
-        "stamBefore": 96.53333333333336,
-        "stamAfter": 74.53333333333336
+        "iframes": 0.26333333333333336,
+        "stamBefore": 107.93333333333348,
+        "stamAfter": 86.56666666666682
       }
     },
     "RESPAWN_TEST": {
@@ -180,7 +180,7 @@
           ]
         },
         "elfSpeedResult": {
-          "dist": 1.960000000000008,
+          "dist": 2.1466666666666754,
           "speed": 5.6
         },
         "elfCombatResult": {
@@ -193,7 +193,7 @@
         },
         "elfKiteResult": {
           "hpBeforeKite": 36,
-          "enemyDead": true,
+          "enemyDead": false,
           "playerHp": 100,
           "playerMaxHp": 100,
           "secondary": "sword",
@@ -235,11 +235,11 @@
           "projCountAfter": 2
         },
         "wizRecovery": {
-          "manaBeforeRegen": 5.400000000000001,
-          "manaRegened": 17.399999999999977,
-          "regenGain": 11.999999999999975,
+          "manaBeforeRegen": 5.133333333333334,
+          "manaRegened": 17.13333333333331,
+          "regenGain": 11.999999999999979,
           "resumed": true,
-          "finalMana": 2.3999999999999773
+          "finalMana": 2.1333333333333115
         },
         "wizPersistence": {
           "maxMana": 140,

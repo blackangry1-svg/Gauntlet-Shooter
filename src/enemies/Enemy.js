@@ -41,6 +41,10 @@ export function preloadEnemyTextures() {
     '/assets/sprites/death_bat.png',
     '/assets/sprites/stone_golem.png',
     '/assets/sprites/death_knight.png',
+    '/assets/sprites/lava_golem.png',
+    '/assets/sprites/storm_harpy.png',
+    '/assets/sprites/dark_acolyte.png',
+    '/assets/sprites/champion_orc.png',
   ];
   paths.forEach(p => getSharedSpriteImage(p, () => {}));
 }
@@ -840,3 +844,210 @@ export class DeathKnight extends Enemy {
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+// NEW ENEMY ARCHETYPES — Floor-specific Elite Variants
+// ─────────────────────────────────────────────────────────────
+
+export class LavaGolem extends Enemy {
+  constructor(scene, audio, manager = null) {
+    super(scene, audio, {
+      type: 'lava_golem',
+      hp: 320,
+      speed: 1.4,
+      damage: 38,
+      range: 3.0,
+      detect: 18,
+      telegraph: 0.90,
+      recover: 1.20,
+      atkCD: 2.8,
+      score: 550,
+      xp: 160,
+      size: 2.5,
+      spritePath: '/assets/sprites/lava_golem.png',
+      rows: 4,
+      cols: 4,
+      anims: {
+        idle:    { row: 0, count: 4, speed: 3 },
+        chase:   { row: 1, count: 4, speed: 5 },
+        windup:  { row: 2, count: 3, speed: 4 },
+        attack:  { row: 2, count: 4, speed: 8 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 3, count: 4, speed: 5 },
+      }
+    }, manager);
+    this.dropKey = true;
+  }
+
+  _executeAttack(playerPos, dist) {
+    this.audio.playSFX('boom', 1.2);
+    if (this.manager && this.player) {
+      const proj = new EnemyProjectile(
+        this.scene, this.mesh.position, this.player.camera.position,
+        this.damage, 7, 0xff4400, this.player, this.audio, this.walls
+      );
+      this.manager.spawnProjectile(proj);
+    }
+    if (dist <= 3.5 && this.player) {
+      this.player.takeDamage(Math.round(this.damage * 0.7), this.mesh.position);
+    }
+  }
+}
+
+export class StormHarpy extends Enemy {
+  constructor(scene, audio, manager = null) {
+    super(scene, audio, {
+      type: 'storm_harpy',
+      hp: 55,
+      speed: 5.0,
+      damage: 22,
+      range: 2.4,
+      detect: 24,
+      telegraph: 0.30,
+      recover: 0.40,
+      atkCD: 1.1,
+      score: 200,
+      xp: 70,
+      size: 1.5,
+      spritePath: '/assets/sprites/storm_harpy.png',
+      rows: 4,
+      cols: 4,
+      anims: {
+        idle:    { row: 0, count: 4, speed: 8 },
+        chase:   { row: 1, count: 4, speed: 14 },
+        windup:  { row: 2, count: 4, speed: 10 },
+        attack:  { row: 2, count: 4, speed: 16 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 3, count: 4, speed: 8 },
+      }
+    }, manager);
+    this.mesh.position.y = 1.8;
+    this.dropKey = false;
+  }
+
+  update(dt, playerPos) {
+    if (this.dead) return;
+    if (this.state === 'chase' && this.material) {
+      const pulse = Math.sin(Date.now() * 0.012) * 0.3 + 0.7;
+      this.material.emissive.setRGB(0.3 * pulse, 0.5 * pulse, 1.0 * pulse);
+      this.material.emissiveIntensity = 0.9;
+    }
+    super.update(dt, playerPos);
+    if (this.mesh && !this.dead) {
+      const groundY = this.getGroundY(this.mesh.position.x, this.mesh.position.z);
+      this.mesh.position.y = groundY + 1.8;
+    }
+  }
+
+  _executeAttack(playerPos, dist) {
+    this.audio.playSFX('heavySwing', 0.9);
+    if (this.player) {
+      const lunge = new THREE.Vector3().subVectors(playerPos, this.mesh.position);
+      lunge.y = 0;
+      if (lunge.lengthSq() > 0.01) lunge.normalize();
+      this.mesh.position.addScaledVector(lunge, 2.0);
+      if (this.mesh.position.distanceTo(playerPos) <= 2.8) {
+        this.player.takeDamage(this.damage, this.mesh.position);
+      }
+    }
+  }
+}
+
+export class DarkAcolyte extends Enemy {
+  constructor(scene, audio, manager = null) {
+    super(scene, audio, {
+      type: 'dark_acolyte',
+      hp: 65,
+      speed: 2.2,
+      damage: 24,
+      range: 18.0,
+      detect: 26,
+      telegraph: 0.75,
+      recover: 0.90,
+      atkCD: 2.5,
+      score: 280,
+      xp: 90,
+      size: 1.7,
+      spritePath: '/assets/sprites/dark_acolyte.png',
+      rows: 4,
+      cols: 6,
+      anims: {
+        idle:    { row: 0, count: 6, speed: 4 },
+        chase:   { row: 1, count: 6, speed: 6 },
+        windup:  { row: 1, count: 4, speed: 6 },
+        attack:  { row: 2, count: 6, speed: 10 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 3, count: 6, speed: 7 },
+      }
+    }, manager);
+    this.dropKey = true;
+  }
+
+  update(dt, playerPos) {
+    if (this.dead) return;
+    if (this.state !== 'windup' && this.state !== 'stagger' && this.material) {
+      const flicker = Math.sin(Date.now() * 0.009) * 0.2 + 0.5;
+      this.material.emissive.setRGB(0.5 * flicker, 0.1 * flicker, 0.9 * flicker);
+      this.material.emissiveIntensity = 0.7;
+    }
+    super.update(dt, playerPos);
+  }
+
+  _executeAttack(playerPos, dist) {
+    this.audio.playSFX('arrowFire', 0.6);
+    if (this.manager && this.player) {
+      const proj = new EnemyProjectile(
+        this.scene, this.mesh.position, this.player.camera.position,
+        this.damage, 14, 0x8800ff, this.player, this.audio, this.walls
+      );
+      this.manager.spawnProjectile(proj);
+    }
+  }
+}
+
+export class ChampionOrc extends Enemy {
+  constructor(scene, audio, manager = null) {
+    super(scene, audio, {
+      type: 'champion_orc',
+      hp: 160,
+      speed: 2.2,
+      damage: 30,
+      range: 2.6,
+      detect: 18,
+      telegraph: 0.60,
+      recover: 0.80,
+      atkCD: 1.8,
+      score: 350,
+      xp: 110,
+      size: 2.1,
+      spritePath: '/assets/sprites/champion_orc.png',
+      rows: 6,
+      cols: 6,
+      anims: {
+        idle:    { row: 0, count: 6, speed: 5 },
+        chase:   { row: 1, count: 6, speed: 7 },
+        windup:  { row: 2, count: 4, speed: 6 },
+        attack:  { row: 3, count: 6, speed: 11 },
+        recover: { row: 4, count: 3, speed: 4 },
+        dead:    { row: 5, count: 6, speed: 5 },
+      }
+    }, manager);
+    this.dropKey = Math.random() < 0.35;
+  }
+
+  update(dt, playerPos) {
+    if (this.dead) return;
+    if (this.state === 'chase' && this.material) {
+      const pulse = Math.sin(Date.now() * 0.006) * 0.2 + 0.6;
+      this.material.emissive.setRGB(0.8 * pulse, 0.15 * pulse, 0.05 * pulse);
+      this.material.emissiveIntensity = 0.8;
+    }
+    super.update(dt, playerPos);
+  }
+
+  _executeAttack(playerPos, dist) {
+    this.audio.playSFX('heavySwing', 1.0);
+    if (dist <= this.attackRange * 1.3 && this.player) {
+      this.player.takeDamage(this.damage, this.mesh.position);
+    }
+  }
+}

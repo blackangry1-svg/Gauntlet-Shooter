@@ -891,3 +891,22 @@ html, body {
   100% { opacity: 0; transform: translateY(-56px) scale(0.9); }
 }
 
+/* Floor Entry Banner Animations */
+@keyframes fadeInOut {
+  0%   { opacity: 0; }
+  12%  { opacity: 1; }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes bannerPulse {
+  0%   { opacity: 0; text-shadow: 0 0 60px #c8a84b, 0 0 120px #8a5a00; }
+  15%  { opacity: 1; text-shadow: 0 0 30px #c8a84b, 0 0 60px #8a5a00, 2px 2px 6px #000; }
+  80%  { opacity: 1; text-shadow: 0 0 40px #c8a84b, 0 0 80px #8a5a00, 2px 2px 6px #000; }
+  100% { opacity: 0; text-shadow: 0 0 80px #c8a84b; }
+}
+
+/* Prevent hidden floor-banner from taking pointer events */
+#floor-banner.hidden { display: none !important; }
+#key-banner.hidden  { display: none !important; }
+#stat-panel.hidden  { display: none !important; }

@@ -41,6 +41,10 @@ renderer.toneMappingExposure = 1.05;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0609);
 scene.fog = new THREE.Fog(0x0a0609, 10, 42); // Atmospheric dungeon fog
+const sunLight = new THREE.DirectionalLight(0xfffae0, 1.3);
+scene.add(sunLight);
+const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0xd2b48c, 0.6);
+scene.add(hemiLight);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 60);
 
@@ -599,6 +603,22 @@ function checkLevelTriggers() {
   const px = camera.position.x;
   const py = camera.position.y;
 
+  if (pz < 0) {
+    scene.background.setHex(0x5da0d8);
+    scene.fog.color.setHex(0x8cb8d8);
+    scene.fog.near = 40;
+    scene.fog.far = 220;
+    sunLight.intensity = 1.3;
+    hemiLight.intensity = 0.6;
+  } else {
+    scene.background.setHex(0x0a0609);
+    scene.fog.color.setHex(0x080608);
+    scene.fog.near = 5;
+    scene.fog.far = 45;
+    sunLight.intensity = 0.0;
+    hemiLight.intensity = 0.0;
+  }
+
   // Boss Arena trigger: Z in [230, 247] (automated test mode) or Z >= 326 (Cathedral at Y >= 15)
   const isTestTrigger = (pz >= 230 && pz <= 247);
   const isCathedralTrigger = (pz >= 326 && py >= 15.0);
@@ -923,6 +943,19 @@ function gameLoop(now) {
   }
 
   if (STATE.phase === 'playing' && player) {
+    // Water animation
+    if (map.waterMeshes && map.waterMeshes.length > 0) {
+      const time = performance.now() * 0.001;
+      for (const wMesh of map.waterMeshes) {
+        const pos = wMesh.geometry.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const x = pos.getX(i);
+          const y = pos.getY(i);
+          pos.setZ(i, Math.sin(x * 0.2 + time) * 0.3 + Math.cos(y * 0.2 + time) * 0.3);
+        }
+        pos.needsUpdate = true;
+      }
+    }
     // Run fixed updates
     while (accumulator >= FIXED_DT) {
       player.update(FIXED_DT);

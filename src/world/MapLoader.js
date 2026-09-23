@@ -16,6 +16,7 @@ export class MapLoader {
   constructor(scene) {
     this.scene = scene;
     this._meshes = [];
+    this.waterMeshes = [];
     this.walls = [];
     this.miniWalls = [];
     this.interactables = [];
@@ -171,27 +172,174 @@ export class MapLoader {
   _buildBeach(wallMat, floorMat) {
     const THREE = window.THREE;
     const sandMat = new THREE.MeshLambertMaterial({ color: 0xc2b280 });
-    const waterMat = new THREE.MeshBasicMaterial({ color: 0x2266cc, transparent: true, opacity: 0.65 });
+    const waterMat = new THREE.MeshStandardMaterial({ color: 0x0077be, transparent: true, opacity: 0.85, roughness: 0.1, metalness: 0.8 });
     
-    // Beach zone spans Z: -180 to 0, Y = 0 (sea level)
-    this._addFloor(0, -90, 120, 180, sandMat, 0); // Z: -180 to 0
+    // Beach zone spans Z: -150 to 0, Y = 0 (sea level)
+    this._addFloor(0, -75, 120, 150, sandMat, 0); // Z: -150 to 0
 
-    // Ocean water plane at Z: -180 to -120, Y = -0.3
-    const waterGeo = new THREE.PlaneGeometry(200, 60);
+    // Ocean water plane at Z: -120 to -300, Y = -0.3
+    const waterGeo = new THREE.PlaneGeometry(300, 180, 32, 32);
     const wMesh = new THREE.Mesh(waterGeo, waterMat);
     wMesh.rotation.x = -Math.PI / 2;
-    wMesh.position.set(0, -0.3, -150);
+    wMesh.position.set(0, -0.3, -210);
     this.scene.add(wMesh);
     this._meshes.push(wMesh);
+    this.waterMeshes = [wMesh];
 
-    // Coastal cliffs/walls along the X edges from Z: -60 to 0
-    this._addWall(-60, -30, 2, 60, wallMat, 0, false, 20);
-    this._addWall(60, -30, 2, 60, wallMat, 0, false, 20);
+    // Coastal cliffs/walls
+    this._addWall(-50, -75, 20, 150, wallMat, 0, false, 20);
+    this._addWall(50, -75, 20, 150, wallMat, 0, false, 20);
 
     // The Labyrinth Portal: A grand archway entrance at Z = 0
-    this._addWall(-35, 0, 50, 4, wallMat, 0, false, 20);
-    this._addWall(35, 0, 50, 4, wallMat, 0, false, 20);
-    this._addWall(0, 0, 20, 4, wallMat, 8, false, 12); // Arch over top
+    this._addWall(-35, 0, 58, 4, wallMat, 0, false, 20);
+    this._addWall(35, 0, 58, 4, wallMat, 0, false, 20);
+    this._addWall(0, 0, 12, 4, wallMat, 8, false, 12); 
+
+    this._addWall(-6, 0, 2, 4, wallMat, 0, false, 8);
+    this._addWall(6, 0, 2, 4, wallMat, 0, false, 8);
+
+    this._addTorch(-5, 2, 2, 0xff6600, 2.0, 20);
+    this._addTorch(5, 2, 2, 0xff6600, 2.0, 20);
+
+    // Icarus NPC
+    const icarusMat = new THREE.MeshBasicMaterial({ color: 0xddaa77 }); 
+    const icarusMesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.8, 0.8), icarusMat);
+    icarusMesh.position.set(5, 0.9, -100);
+    this.scene.add(icarusMesh);
+    this._meshes.push(icarusMesh);
+
+    this.interactables.push({
+      position: new THREE.Vector3(5, 0.9, -100),
+      radius: 4.0,
+      active: true,
+      prompt: 'TALK TO ICARUS [E]',
+      onInteract: () => {
+        const hudEl = document.querySelector('#checkpoint-banner');
+        if (hudEl) {
+          hudEl.classList.remove('hidden');
+          const bTxt = hudEl.querySelector('.banner-text');
+          const bSub = hudEl.querySelector('.banner-sub');
+          if (bTxt) bTxt.textContent = 'ICARUS';
+          if (bSub) bSub.textContent = '"Father, the sun is high. We must find feathers and bronze spars within Minos\'s maze before we can craft our wings and escape this island!"';
+          setTimeout(() => hudEl.classList.add('hidden'), 5000);
+        }
+      }
+    });
+
+    // Campfire & Resting Mat
+    this._addTorch(-5, 0.5, -100, 0xffaa33, 1.5, 10);
+    
+    this.shelterInteractable = {
+      position: new THREE.Vector3(-5, 0.5, -100),
+      radius: 4.0,
+      active: true,
+      prompt: 'BUILD SHELTER (REQUIRES 10 WOOD) [E]',
+      isBuilt: false,
+      onInteract: () => {
+        if (!this.shelterInteractable.isBuilt) {
+          const w = window.GAME && window.GAME.player ? window.GAME.player.woodCount || 0 : 0;
+          if (w >= 10) {
+             window.GAME.player.woodCount -= 10;
+             this.shelterInteractable.isBuilt = true;
+             this.shelterInteractable.prompt = 'REST AT SHELTER [E]';
+             const tent = new THREE.Mesh(new THREE.ConeGeometry(2, 2.5, 4), new THREE.MeshLambertMaterial({color: 0x8b4513}));
+             tent.position.set(-8, 1.25, -100);
+             this.scene.add(tent);
+             this._meshes.push(tent);
+             if (window.GAME && window.GAME.audio) window.GAME.audio.playSFX('chestOpen');
+          }
+        } else {
+          this.isCheckpointActive = true;
+          if (window.GAME && window.GAME.player) window.GAME.player.restAtCheckpoint(new THREE.Vector3(-5, 1.7, -98));
+          if (window.GAME && window.GAME.audio) window.GAME.audio.playSFX('bonfireRest');
+          if (window.GAME && window.GAME.hud && typeof window.GAME.hud.showCheckpointBanner === 'function') {
+            window.GAME.hud.showCheckpointBanner();
+            const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+            const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+            if (bTxt) bTxt.textContent = '⛺ SHELTER RESTED';
+            if (bSub) bSub.textContent = 'Health & Flasks Restored · Progress Saved';
+          }
+        }
+      }
+    };
+    this.interactables.push(this.shelterInteractable);
+
+    // Driftwood logs
+    for (let i = 0; i < 5; i++) {
+       const lx = -20 + Math.random() * 40;
+       const lz = -130 + Math.random() * 60;
+       const log = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 1.5, 8), new THREE.MeshLambertMaterial({color: 0x5c4033}));
+       log.rotation.z = Math.PI / 2;
+       log.rotation.y = Math.random() * Math.PI;
+       log.position.set(lx, 0.2, lz);
+       this.scene.add(log);
+       this._meshes.push(log);
+
+       const interactObj = {
+         position: new THREE.Vector3(lx, 0.2, lz),
+         radius: 3.0,
+         active: true,
+         prompt: 'GATHER DRIFTWOOD [E]',
+         onInteract: () => {
+            if (!interactObj.active) return;
+            interactObj.active = false;
+            log.visible = false;
+            if (window.GAME && window.GAME.player) {
+              if (!window.GAME.player.woodCount) window.GAME.player.woodCount = 0;
+              window.GAME.player.woodCount++;
+            }
+            // if (window.GAME && window.GAME.audio) window.GAME.audio.playSFX('woodChop'); // optional sound if not throwing error
+            const hudEl = document.querySelector('#checkpoint-banner'); 
+            if (hudEl) {
+              hudEl.classList.remove('hidden');
+              const bTxt = hudEl.querySelector('.banner-text');
+              const bSub = hudEl.querySelector('.banner-sub');
+              if (bTxt) bTxt.textContent = 'RESOURCE GATHERED';
+              if (bSub) bSub.textContent = '+1 ISLAND WOOD (TOTAL: ' + (window.GAME.player.woodCount || 1) + ')';
+              setTimeout(() => hudEl.classList.add('hidden'), 2000);
+            }
+         }
+       };
+       this.interactables.push(interactObj);
+    }
+
+    // Tide pool fishing spots
+    for(let i=0; i<2; i++) {
+       const fx = -10 + i * 20;
+       const fz = -140;
+       const spot = new THREE.Mesh(new THREE.CircleGeometry(1, 16), new THREE.MeshBasicMaterial({color: 0x4488ff}));
+       spot.rotation.x = -Math.PI / 2;
+       spot.position.set(fx, 0.05, fz);
+       this.scene.add(spot);
+       this._meshes.push(spot);
+
+       const fishObj = {
+         position: new THREE.Vector3(fx, 0.05, fz),
+         radius: 3.0,
+         active: true,
+         prompt: 'FISH [E]',
+         onInteract: () => {
+            if (!fishObj.active) return;
+            fishObj.active = false;
+            spot.visible = false;
+            const item = Math.random() > 0.5 ? 'Raw Sea Bass' : 'Raw Mackerel';
+            if (window.GAME && window.GAME.player) {
+              if (!window.GAME.player.inventory) window.GAME.player.inventory = [];
+              window.GAME.player.inventory.push(item);
+            }
+            const hudEl = document.querySelector('#checkpoint-banner'); 
+            if (hudEl) {
+              hudEl.classList.remove('hidden');
+              const bTxt = hudEl.querySelector('.banner-text');
+              const bSub = hudEl.querySelector('.banner-sub');
+              if (bTxt) bTxt.textContent = 'FISHING SUCCESS';
+              if (bSub) bSub.textContent = 'Caught ' + item + '!';
+              setTimeout(() => hudEl.classList.add('hidden'), 2000);
+            }
+         }
+       };
+       this.interactables.push(fishObj);
+    }
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -613,6 +761,7 @@ export class MapLoader {
       }
     }
     this._meshes = [];
+    this.waterMeshes = [];
     this.walls = [];
     this.miniWalls = [];
     this.interactables = [];

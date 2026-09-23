@@ -525,28 +525,6 @@ export class MapLoader {
     this._addWall(-9, 186, 10, 2, wallMat, floorY);
     this._addWall(9, 186, 10, 2, wallMat, floorY);
 
-    // Shrine Interactable (radius 4.5 reaches test position (-16, 1.7, 87))
-    this.interactables.push({
-      position: new THREE.Vector3(-16, floorY + 1.0, 159),
-      radius: 4.5,
-      active: true,
-      prompt: 'REST AT SHRINE OF ASH [E]',
-      onInteract: () => {
-        this.isCheckpointActive = true;
-        if (player) {
-          player.restAtCheckpoint(new THREE.Vector3(-16, floorY + 1.7, 157));
-        }
-        audio.playSFX('bonfireRest');
-        if (hud && typeof hud.showCheckpointBanner === 'function') {
-          hud.showCheckpointBanner();
-          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
-          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
-          if (bTxt) bTxt.textContent = '🔥 SHRINE OF ASH RESTED';
-          if (bSub) bSub.textContent = 'Health & Flasks Restored · Foes Resurgent · Progress Saved';
-        }
-      }
-    });
-
     // Shortcut Lever situated at (X: 2.8, Z: 73)
     const leverBase = new THREE.Mesh(
       new THREE.BoxGeometry(0.5, 0.7, 0.5),
@@ -660,27 +638,7 @@ export class MapLoader {
     flameMesh2.position.set(8, floorY + 0.9, 282);
     this.scene.add(flameMesh2);
     this._meshes.push(flameMesh2);
-
-    this.interactables.push({
-      position: new window.THREE.Vector3(8, floorY + 1.0, 282),
-      radius: 4.0,
-      active: true,
-      prompt: 'REST AT HIGH SANCTUM [E]',
-      onInteract: () => {
-        this.isCheckpointActive = true;
-        if (player) player.restAtCheckpoint(new window.THREE.Vector3(8, floorY + 1.7, 280));
-        audio.playSFX('bonfireRest');
-        if (hud && typeof hud.showCheckpointBanner === 'function') {
-          hud.showCheckpointBanner();
-          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
-          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
-          if (bTxt) bTxt.textContent = '⚡ HIGH SANCTUM SHRINE';
-          if (bSub) bSub.textContent = 'Health & Flasks Restored · Foes Resurgent · Progress Saved';
-        }
-      }
-    });
-
-    // Grand Staircase 4: Rising from Floor 4 (Y=12, Z=238) to Floor 5 (Y=16, Z=254)
+// Grand Staircase 4: Rising from Floor 4 (Y=12, Z=238) to Floor 5 (Y=16, Z=254)
     this._addStaircase(0, 310, 326, 10, 12, 16, floorMat, wallMat);
 
     this._addTorch(-12, floorY + 2.5, 272, 0xffdd44);

@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-09-23T13:42:26.564Z",
+  "timestamp": "2026-09-23T14:05:29.492Z",
   "iteration": 1,
   "milestone": 22,
-  "mean_fps": 59,
-  "mean_frametime_ms": 16.95,
-  "p50_frametime_ms": 16.7,
-  "p95_frametime_ms": 18.9,
-  "p99_frametime_ms": 30.6,
+  "mean_fps": 57,
+  "mean_frametime_ms": 17.6,
+  "p50_frametime_ms": 17.3,
+  "p95_frametime_ms": 17.7,
+  "p99_frametime_ms": 34.5,
   "frames_over_20ms": 2,
-  "frames_over_33ms": 0,
+  "frames_over_33ms": 2,
   "test_results": {
     "BOOT_TEST": {
       "pass": true,
@@ -27,17 +27,17 @@
           "z": -140
         },
         "posMoved": {
-          "x": -3.331039293680799e-16,
-          "z": -137.27999999999957
+          "x": -3.1350958058172227e-16,
+          "z": -137.4399999999996
         },
-        "distMoved": 2.720000000000425,
+        "distMoved": 2.5600000000004,
         "movedForward": true
       }
     },
     "COLLISION_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 61,
+        "wallCount": 63,
         "posAfterWall": -4.640000000000001
       }
     },
@@ -51,8 +51,8 @@
     "DAMAGE_TEST": {
       "pass": true,
       "details": {
-        "playerHpBefore": 66,
-        "playerHpAfter": 41
+        "playerHpBefore": 120,
+        "playerHpAfter": 95
       }
     },
     "DODGE_TEST": {
@@ -60,8 +60,8 @@
       "details": {
         "isDodging": true,
         "iframes": 0.2466666666666667,
-        "stamBefore": 110,
-        "stamAfter": 88
+        "stamBefore": 100.3333333333334,
+        "stamAfter": 78.3333333333334
       }
     },
     "RESPAWN_TEST": {
@@ -144,14 +144,14 @@
     "PROJECTILE_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 61,
+        "wallCount": 63,
         "diedAtWall": true
       }
     },
     "ENEMY_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 61,
+        "wallCount": 63,
         "finalX": -5.560000000000001
       }
     },

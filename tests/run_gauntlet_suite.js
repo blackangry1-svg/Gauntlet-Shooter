@@ -154,10 +154,15 @@ async function run() {
     // TEST 7: CHECKPOINT & SHRINE TEST
     // ─────────────────────────────────────────────────────────
     console.log('\n[TEST 7/22] Running CHECKPOINT TEST...');
-    // Teleport to Shrine of Ash (X: -16, Z: 87)
+    // Teleport to Beach Shelter (X: -5, Z: -100)
     await harness.evaluate(`
-      window.GAME.setPosition(-16, 1.7, 159);
-      window.GAME.triggerInteract();
+      window.GAME.setPosition(-5, 1.7, -100);
+      window.GAME.player.woodCount = 10;
+      window.GAME.triggerInteract(); // Build shelter
+    `);
+    await sleep(200);
+    await harness.evaluate(`
+      window.GAME.triggerInteract(); // Rest at shelter
     `);
     await sleep(400);
     const isCheckpointActive = await harness.evaluate('window.GAME.map.isCheckpointActive');

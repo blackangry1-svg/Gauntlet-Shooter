@@ -46,7 +46,7 @@ scene.add(sunLight);
 const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0xd2b48c, 0.6);
 scene.add(hemiLight);
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 60);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 250);
 
 // Global ambient lighting
 const ambientLight = new THREE.AmbientLight(0x281c14, 0.7);
@@ -603,21 +603,22 @@ function checkLevelTriggers() {
   const px = camera.position.x;
   const py = camera.position.y;
 
-  if (pz < 0) {
-    scene.background.setHex(0x5da0d8);
-    scene.fog.color.setHex(0x8cb8d8);
-    scene.fog.near = 40;
-    scene.fog.far = 220;
-    sunLight.intensity = 1.3;
-    hemiLight.intensity = 0.6;
-  } else {
-    scene.background.setHex(0x0a0609);
-    scene.fog.color.setHex(0x080608);
-    scene.fog.near = 5;
-    scene.fog.far = 45;
-    sunLight.intensity = 0.0;
-    hemiLight.intensity = 0.0;
-  }
+    // Smooth transition for lighting & fog between beach (Z <= 0) and dungeon (Z >= 15)
+  const t = Math.max(0, Math.min(1, pz / 15.0)); // 0 = Beach, 1 = Dungeon
+  
+  const cBeachBg = new THREE.Color(0x5da0d8);
+  const cDungBg = new THREE.Color(0x0a0609);
+  scene.background.copy(cBeachBg).lerp(cDungBg, t);
+  
+  const cBeachFog = new THREE.Color(0x8cb8d8);
+  const cDungFog = new THREE.Color(0x080608);
+  scene.fog.color.copy(cBeachFog).lerp(cDungFog, t);
+  
+  scene.fog.near = 40 + (5 - 40) * t;
+  scene.fog.far = 220 + (45 - 220) * t;
+  
+  sunLight.intensity = 1.3 - 1.3 * t;
+  hemiLight.intensity = 0.6 - 0.6 * t;
 
   // Boss Arena trigger: Z in [230, 247] (automated test mode) or Z >= 326 (Cathedral at Y >= 15)
   const isTestTrigger = (pz >= 230 && pz <= 247);

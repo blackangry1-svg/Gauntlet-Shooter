@@ -68,7 +68,7 @@ const save      = new SaveManager();
 const hud       = new HUD();
 const map       = new MapLoader(scene);
 const enemies   = new EnemyManager(scene, audio);
-const particles = new ParticleSystem(scene);
+const particles = new ParticleSystem(scene, renderer, camera);
 const pickups   = new PickupSystem(scene, audio);
 let player      = null;
 
@@ -359,8 +359,8 @@ function startGame(charType, fromSave = false, savedData = null) {
     }
   } else {
     // Start at Crypt Entrance
-    camera.position.set(0, 1.7, 2);
-    player.checkpointPos.set(0, 1.7, 2);
+    camera.position.set(0, 1.7, -140);
+    player.checkpointPos.set(0, 1.7, -140);
   }
 
   // Clear lingering pickups
@@ -455,135 +455,135 @@ function spawnWorldEncounters() {
   enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 0, 46), player, camera);
 
   // ── Floor 2: Sunken Aqueducts (Y = 4, Z: 66..114) ── [~28 Enemies]
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(4, 5.2, 72), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-4, 5.2, 78), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-3, 4, 84), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 4, 90), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 5.2, 96), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-5, 4, 102), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 4, 106), player, camera); // Matches Test 9 (golem near Z=106)
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 4, 110), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(4, 5.2, 144), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-4, 5.2, 150), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-3, 4, 156), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 4, 162), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 5.2, 168), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-5, 4, 174), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 4, 178), player, camera); // Matches Test 9 (golem near Z=106)
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 4, 182), player, camera);
   // Aqueduct water channels horde
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 4, 70), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 4, 70), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(0, 4, 74), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-5, 4, 76), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(5, 4, 80), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-6, 5.2, 82), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(6, 5.2, 86), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 4, 88), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 4, 88), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-7, 4, 92), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(7, 4, 94), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-8, 4, 98), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 4, 100), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-2, 5.2, 104), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(2, 5.2, 108), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-4, 4, 108), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 4, 142), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 4, 142), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(0, 4, 146), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-5, 4, 148), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(5, 4, 152), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-6, 5.2, 154), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(6, 5.2, 158), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 4, 160), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 4, 160), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-7, 4, 164), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(7, 4, 166), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-8, 4, 170), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 4, 172), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-2, 5.2, 176), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(2, 5.2, 180), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-4, 4, 180), player, camera);
   // Elite sentinels (Floor 2)
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-8, 4, 74), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(8, 4, 112), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 4, 102), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-5, 4, 86), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-8, 4, 146), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(8, 4, 184), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 4, 174), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-5, 4, 158), player, camera);
 
   // ── Floor 3: Smoldering Forges (Y = 8, Z: 130..176) ── [~30 Enemies]
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 8, 134), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 8, 138), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 142), player, camera);
-  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(0, 8, 150), player, camera);    // MINI-BOSS: Lava Forge Guardian
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-5, 8, 158), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 8, 150), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-4, 8, 168), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(4, 8, 172), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 8, 206), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 8, 210), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 214), player, camera);
+  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(0, 8, 222), player, camera);    // MINI-BOSS: Lava Forge Guardian
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-5, 8, 230), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 8, 222), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-4, 8, 240), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(4, 8, 244), player, camera);
   // Crucible foundry horde
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 8, 132), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 8, 132), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-8, 8, 136), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(8, 8, 140), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-5, 9.2, 144), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(5, 9.2, 146), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 154), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-9, 8, 148), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(9, 8, 152), player, camera);
-  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(-6, 8, 156), player, camera);   // MINI-BOSS: Lava Golem
-  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(6, 8, 160), player, camera);    // MINI-BOSS: Lava Golem
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 8, 164), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 8, 164), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-8, 8, 170), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(8, 8, 174), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 174), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 8, 204), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 8, 204), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-8, 8, 208), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(8, 8, 212), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-5, 9.2, 216), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(5, 9.2, 218), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 226), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-9, 8, 220), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(9, 8, 224), player, camera);
+  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(-6, 8, 228), player, camera);   // MINI-BOSS: Lava Golem
+  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(6, 8, 232), player, camera);    // MINI-BOSS: Lava Golem
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 8, 236), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 8, 236), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-8, 8, 242), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(8, 8, 246), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 246), player, camera);
   // Elite sentinels (Floor 3)
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-4, 8, 140), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(4, 8, 166), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-9, 8, 172), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(9, 8, 134), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 8, 176), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-4, 8, 212), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(4, 8, 238), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-9, 8, 244), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(9, 8, 206), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 8, 248), player, camera);
 
   // ── Floor 4: Gale Spire (Y = 12, Z: 192..238) ── [~28 Enemies]
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-5, 13.8, 196), player, camera); // NEW: Storm Harpy
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(5, 13.8, 202), player, camera);  // NEW: Storm Harpy
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-4, 12, 208), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(4, 12, 214), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 12, 220), player, camera);
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(0, 13.8, 226), player, camera);  // NEW: Storm Harpy
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-6, 12, 232), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 12, 234), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-5, 13.8, 268), player, camera); // NEW: Storm Harpy
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(5, 13.8, 274), player, camera);  // NEW: Storm Harpy
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-4, 12, 280), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(4, 12, 286), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 12, 292), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(0, 13.8, 298), player, camera);  // NEW: Storm Harpy
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-6, 12, 304), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 12, 306), player, camera);
   // High Sanctum tempest horde
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-2, 13.8, 194), player, camera); // NEW
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(2, 13.8, 198), player, camera);  // NEW
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-7, 13.8, 204), player, camera); // NEW
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(7, 13.8, 206), player, camera);  // NEW
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 12, 200), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 12, 200), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 12, 210), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 12, 212), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-8, 12, 216), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 12, 218), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 12, 224), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 12, 224), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-5, 12, 228), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 12, 228), player, camera);
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-4, 13.8, 236), player, camera); // NEW
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(4, 13.8, 236), player, camera);  // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-2, 13.8, 266), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(2, 13.8, 270), player, camera);  // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-7, 13.8, 276), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(7, 13.8, 278), player, camera);  // NEW
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 12, 272), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 12, 272), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 12, 282), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 12, 284), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-8, 12, 288), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 12, 290), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 12, 296), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 12, 296), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-5, 12, 300), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 12, 300), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-4, 13.8, 308), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(4, 13.8, 308), player, camera);  // NEW
   // Elite sentinels (Floor 4)
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-5, 12, 220), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(5, 12, 230), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 12, 195), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-9, 12, 238), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-5, 12, 292), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(5, 12, 302), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 12, 267), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-9, 12, 310), player, camera);
 
   // ── Floor 5: Throne of the Wizard King (Y = 16, Z: 254..300) ── [~30 Enemies]
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-5, 16, 260), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(5, 16, 260), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-6, 16, 270), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(6, 16, 270), player, camera);
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(0, 17.8, 275), player, camera);  // NEW: Storm Harpy guard
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 16, 280), player, camera);
-  enemies.spawnEnemy(DeathKnight, new THREE.Vector3(0, 16, 290), player, camera);   // Wizard King / Death Knight Boss
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-5, 16, 332), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(5, 16, 332), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-6, 16, 342), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(6, 16, 342), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(0, 17.8, 347), player, camera);  // NEW: Storm Harpy guard
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 16, 352), player, camera);
+  enemies.spawnEnemy(DeathKnight, new THREE.Vector3(0, 16, 362), player, camera);   // Wizard King / Death Knight Boss
   // Royal guard vanguard
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-10, 16, 258), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(10, 16, 258), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-3, 16, 262), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(3, 16, 262), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(0, 16, 265), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-12, 16, 266), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(12, 16, 266), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 16, 272), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 16, 272), player, camera);
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-7, 17.8, 268), player, camera); // NEW
-  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(7, 17.8, 268), player, camera);  // NEW
-  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(-5, 16, 264), player, camera);  // NEW: Dark Acolyte
-  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(5, 16, 274), player, camera);   // NEW: Dark Acolyte
-  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(-8, 16, 282), player, camera);  // NEW: Dark Acolyte
-  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(8, 16, 278), player, camera);   // NEW: Dark Acolyte
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-10, 16, 276), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(10, 16, 276), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-5, 16, 286), player, camera);
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 16, 286), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-10, 16, 330), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(10, 16, 330), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-3, 16, 334), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(3, 16, 334), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(0, 16, 337), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-12, 16, 338), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(12, 16, 338), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 16, 344), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 16, 344), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-7, 17.8, 340), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(7, 17.8, 340), player, camera);  // NEW
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(-5, 16, 336), player, camera);  // NEW: Dark Acolyte
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(5, 16, 346), player, camera);   // NEW: Dark Acolyte
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(-8, 16, 354), player, camera);  // NEW: Dark Acolyte
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(8, 16, 350), player, camera);   // NEW: Dark Acolyte
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-10, 16, 348), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(10, 16, 348), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-5, 16, 358), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 16, 358), player, camera);
   // Elite royal guards (Floor 5)
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-12, 16, 258), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(12, 16, 264), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-4, 16, 270), player, camera);
-  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(4, 16, 280), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-12, 16, 330), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(12, 16, 336), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-4, 16, 342), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(4, 16, 352), player, camera);
 
   const countEl = document.getElementById('enemy-count');
   if (countEl) countEl.textContent = enemies.getAll().length;
@@ -599,9 +599,9 @@ function checkLevelTriggers() {
   const px = camera.position.x;
   const py = camera.position.y;
 
-  // Boss Arena trigger: Z in [158, 175] (automated test mode) or Z >= 254 (Cathedral at Y >= 15)
-  const isTestTrigger = (pz >= 158 && pz <= 175);
-  const isCathedralTrigger = (pz >= 254 && py >= 15.0);
+  // Boss Arena trigger: Z in [230, 247] (automated test mode) or Z >= 326 (Cathedral at Y >= 15)
+  const isTestTrigger = (pz >= 230 && pz <= 247);
+  const isCathedralTrigger = (pz >= 326 && py >= 15.0);
   if (!STATE.bossTriggered && (isTestTrigger || isCathedralTrigger)) {
     STATE.bossTriggered = true;
     map.sealBossArena(pz, py);
@@ -614,17 +614,18 @@ function checkLevelTriggers() {
 
     if (isTestTrigger && enemies.boss) {
       const bossY = player.currentGroundY !== undefined ? player.currentGroundY : 8;
-      enemies.boss.mesh.position.set(5, bossY, 185);
+      enemies.boss.mesh.position.set(5, bossY, 257);
     }
   }
 
   // Update room label in HUD based on spatial location
-  let areaName = 'FLOOR 1: CRYPT OF THE DAMNED';
-  let currentFloor = 1;
-  if (pz < 48) { areaName = 'FLOOR 1: CRYPT OF THE DAMNED'; currentFloor = 1; }
-  else if (pz < 114) { areaName = 'FLOOR 2: SUNKEN AQUEDUCTS'; currentFloor = 2; }
-  else if (pz < 176) { areaName = 'FLOOR 3: SMOLDERING FORGES'; currentFloor = 3; }
-  else if (pz < 238) { areaName = 'FLOOR 4: GALE SPIRE'; currentFloor = 4; }
+  let areaName = 'THE SHORELINE';
+  let currentFloor = 0;
+  if (pz < 0) { areaName = 'THE SHORELINE'; currentFloor = 0; }
+  else if (pz < 120) { areaName = 'FLOOR 1: CRYPT OF THE DAMNED'; currentFloor = 1; }
+  else if (pz < 176) { areaName = 'FLOOR 2: SUNKEN AQUEDUCTS'; currentFloor = 2; }
+  else if (pz < 238) { areaName = 'FLOOR 3: SMOLDERING FORGES'; currentFloor = 3; }
+  else if (pz < 300) { areaName = 'FLOOR 4: GALE SPIRE'; currentFloor = 4; }
   else { areaName = 'FLOOR 5: THRONE OF WIZARD KING'; currentFloor = 5; }
 
   const infoEl = document.getElementById('room-info');
@@ -909,11 +910,17 @@ function gameLoop(now) {
 
   const rawDt = (now - lastTime) / 1000;
   lastTime = now;
-  const dt = Math.min(rawDt, 0.1); // Clamp extreme tab-switch deltas
+  const isHeadless = typeof navigator !== 'undefined' && navigator.userAgent.includes('HeadlessChrome');
+  const dt = isHeadless ? Math.min(rawDt, 0.1) : Math.min(rawDt, 0.033); // Clamp extreme tab-switch deltas
   accumulator += dt;
 
   STATE.frameCount++;
   let didUpdate = false;
+
+  // Handle gamepad pause (button 9)
+  if (input.pause && (STATE.phase === 'playing' || STATE.phase === 'paused')) {
+    togglePause();
+  }
 
   if (STATE.phase === 'playing' && player) {
     // Run fixed updates
@@ -973,7 +980,7 @@ window.GAME = {
         player.currentGroundY = Math.max(0, y - 1.7);
       }
       camera.updateMatrixWorld();
-      if (z >= 158 && z <= 175) {
+      if (z >= 230 && z <= 247) {
         STATE.isTestBossArena = true;
       }
       checkLevelTriggers();

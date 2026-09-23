@@ -7,7 +7,14 @@
 const POOL_SIZE = 200;
 
 export class ParticleSystem {
-  constructor(scene) {
+  constructor(scene, renderer, camera) {
+    this._sharedMat = new THREE.MeshBasicMaterial({
+      color: 0xff0000,
+      transparent: true,
+      opacity: 1.0,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    });
     this.scene = scene;
     this._pool = [];
     this._active = [];
@@ -19,17 +26,16 @@ export class ParticleSystem {
       this._pool.push(p);
       scene.add(p.mesh);
     }
+    if (renderer && camera && this._pool.length > 0) {
+      this._pool[0].mesh.visible = true;
+      renderer.compile(scene, camera);
+      this._pool[0].mesh.visible = false;
+    }
   }
 
   _createParticle() {
     const geo = new THREE.PlaneGeometry(0.08, 0.08);
-    const mat = new THREE.MeshBasicMaterial({
-      color: 0xff0000,
-      transparent: true,
-      opacity: 1.0,
-      depthWrite: false,
-      side: THREE.DoubleSide,
-    });
+    const mat = this._sharedMat;
     const mesh = new THREE.Mesh(geo, mat);
     return {
       mesh,

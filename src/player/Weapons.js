@@ -277,12 +277,26 @@ export class Weapons {
       }
     }
 
+    // Weapon Cycling (Gamepad D-Pad)
+    if (this.input.cyclePrev) {
+      const idx = (this.currentIdx - 1 + this.available.length) % this.available.length;
+      this._switchTo(idx);
+    } else if (this.input.cycleNext) {
+      const idx = (this.currentIdx + 1) % this.available.length;
+      this._switchTo(idx);
+    }
+
     // Attack Trigger (Left Mouse = Light Attack, R = Heavy Attack)
     // Only attack when not blocking, not stunned, not in cooldown
     if (this.input.mouseJustDown(0)) {
       this.triggerAttack(false);
     } else if (this.input.heavyAttack) {
       this.triggerAttack(true);
+    } else if (this.input.quickRanged) {
+      // Quick Ranged Fire (R1) - Switch to slot 3 (or last slot) and attack
+      const targetIdx = this.available.length > 2 ? 2 : this.available.length - 1;
+      if (this.currentIdx !== targetIdx) this._switchTo(targetIdx);
+      if (this.current.type !== 'melee') this.triggerAttack(false);
     }
 
     // Update projectiles
@@ -373,6 +387,7 @@ export class Weapons {
           this._hitEnemiesThisSwing.add(enemy);
           if (this.onMeleeHit) this.onMeleeHit(enemy);
           enemy.takeDamage(damage, this._isHeavy);
+          if (this.input.playRumble) this.input.playRumble(this._isHeavy ? 'heavy' : 'hit');
           this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordHit');
           if (this.particles) {
             const hitPoint = enemy.mesh.position.clone().add(new THREE.Vector3(0, 1.2, 0));

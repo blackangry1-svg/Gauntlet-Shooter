@@ -54,13 +54,12 @@ export class PickupSystem {
     tex.repeat.set(CELL_W, CELL_H);
     tex.offset.set(def.col * CELL_W, (1 - def.row * CELL_H) - CELL_H);
 
-    const mat = new THREE.MeshLambertMaterial({
+    const mat = new THREE.MeshBasicMaterial({
       map: tex,
       transparent: true,
       alphaTest: 0.2,
       side: THREE.DoubleSide,
-      emissive: new THREE.Color(def.glow),
-      emissiveIntensity: 0.5,
+      color: def.glow
     });
 
     const geo  = new THREE.PlaneGeometry(0.6, 0.6);
@@ -68,11 +67,6 @@ export class PickupSystem {
     mesh.position.copy(pos);
     const baseY = pos.y !== undefined ? pos.y : 0;
     mesh.position.y = baseY + 0.35;
-
-    // Point light for glow
-    const light = new THREE.PointLight(def.glow, 0.8, 2.5);
-    light.position.set(0, 0, 0);
-    mesh.add(light);
 
     this.scene.add(mesh);
 
@@ -95,11 +89,9 @@ export class PickupSystem {
 
       // Spin to face camera
       item.mesh.rotation.y += dt * 1.5;
-
-      // Pulse glow
-      if (item.mesh.children[0]) {
-        item.mesh.children[0].intensity = 0.6 + Math.sin(item.bobT * 2) * 0.25;
-      }
+      // Pulse scale
+      const s = 1.0 + Math.sin(item.bobT * 2) * 0.15;
+      item.mesh.scale.set(s, s, s);
 
       // Collect
       if (playerPos && item.mesh.position.distanceTo(playerPos) < PICKUP_RADIUS) {

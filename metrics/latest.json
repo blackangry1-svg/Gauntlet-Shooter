@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-09-22T22:49:53.543Z",
+  "timestamp": "2026-09-23T13:42:26.564Z",
   "iteration": 1,
   "milestone": 22,
-  "mean_fps": 55,
-  "mean_frametime_ms": 18.24,
-  "p50_frametime_ms": 17.3,
-  "p95_frametime_ms": 34.2,
-  "p99_frametime_ms": 35.1,
-  "frames_over_20ms": 6,
-  "frames_over_33ms": 6,
+  "mean_fps": 59,
+  "mean_frametime_ms": 16.95,
+  "p50_frametime_ms": 16.7,
+  "p95_frametime_ms": 18.9,
+  "p99_frametime_ms": 30.6,
+  "frames_over_20ms": 2,
+  "frames_over_33ms": 0,
   "test_results": {
     "BOOT_TEST": {
       "pass": true,
@@ -24,20 +24,20 @@
       "details": {
         "posStart": {
           "x": 0,
-          "z": 2
+          "z": -140
         },
         "posMoved": {
-          "x": -3.1350958058172227e-16,
-          "z": 4.560000000000002
+          "x": -3.331039293680799e-16,
+          "z": -137.27999999999957
         },
-        "distMoved": 2.5600000000000023,
+        "distMoved": 2.720000000000425,
         "movedForward": true
       }
     },
     "COLLISION_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 48,
+        "wallCount": 61,
         "posAfterWall": -4.640000000000001
       }
     },
@@ -45,23 +45,23 @@
       "pass": true,
       "details": {
         "enemyHpBefore": 60,
-        "enemyHpAfter": 28
+        "enemyHpAfter": 34
       }
     },
     "DAMAGE_TEST": {
       "pass": true,
       "details": {
-        "playerHpBefore": 132,
-        "playerHpAfter": 107
+        "playerHpBefore": 66,
+        "playerHpAfter": 41
       }
     },
     "DODGE_TEST": {
       "pass": true,
       "details": {
         "isDodging": true,
-        "iframes": 0.26333333333333336,
-        "stamBefore": 107.93333333333348,
-        "stamAfter": 86.56666666666682
+        "iframes": 0.2466666666666667,
+        "stamBefore": 110,
+        "stamAfter": 88
       }
     },
     "RESPAWN_TEST": {
@@ -117,7 +117,7 @@
     "HEAVY_ATTACK_TEST": {
       "pass": true,
       "details": {
-        "damageDealt": 55,
+        "damageDealt": 44,
         "stamCost": 27,
         "stateAfter": "stagger"
       }
@@ -144,14 +144,14 @@
     "PROJECTILE_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 48,
+        "wallCount": 61,
         "diedAtWall": true
       }
     },
     "ENEMY_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 48,
+        "wallCount": 61,
         "finalX": -5.560000000000001
       }
     },
@@ -180,19 +180,19 @@
           ]
         },
         "elfSpeedResult": {
-          "dist": 2.1466666666666754,
+          "dist": 1.9712000000000174,
           "speed": 5.6
         },
         "elfCombatResult": {
           "hpBefore": 60,
-          "hpAfterFirst": 36,
+          "hpAfterFirst": 48,
           "arrowSpawned": true,
           "arrowSpeed": 28,
-          "arrowDamage": 24,
+          "arrowDamage": 12,
           "hitFirst": true
         },
         "elfKiteResult": {
-          "hpBeforeKite": 36,
+          "hpBeforeKite": 48,
           "enemyDead": false,
           "playerHp": 100,
           "playerMaxHp": 100,
@@ -217,8 +217,8 @@
           "currentWeapon": "staff",
           "weaponType": "magic",
           "manaCost": 15,
-          "damage": 45,
-          "heavyDamage": 75
+          "damage": 22,
+          "heavyDamage": 36
         },
         "wizCast1": {
           "mana0": 140,
@@ -226,7 +226,7 @@
           "deducted": 15,
           "hasLight": true,
           "speed": 18,
-          "damage": 45
+          "damage": 22
         },
         "wizExhaustion": {
           "manaDrained": 5,
@@ -235,11 +235,11 @@
           "projCountAfter": 2
         },
         "wizRecovery": {
-          "manaBeforeRegen": 5.133333333333334,
-          "manaRegened": 17.13333333333331,
+          "manaBeforeRegen": 5,
+          "manaRegened": 16.99999999999998,
           "regenGain": 11.999999999999979,
           "resumed": true,
-          "finalMana": 2.1333333333333115
+          "finalMana": 1.9999999999999787
         },
         "wizPersistence": {
           "maxMana": 140,
@@ -252,7 +252,7 @@
           "respawnRestored": true
         },
         "wizCombat": {
-          "enemyHp": -15
+          "enemyHp": 24
         },
         "wizVictory": true
       }
@@ -267,7 +267,7 @@
           "baseSpeed": 5.2,
           "currentWeapon": "spear",
           "spearRange": 3.6,
-          "spearDamage": 26,
+          "spearDamage": 22,
           "availableWeapons": [
             "spear",
             "shield"
@@ -275,9 +275,9 @@
         },
         "spearHitResult": {
           "shieldMissed": true,
-          "hpAfter": 34,
+          "hpAfter": 38,
           "damaged": true,
-          "damageDealt": 26
+          "damageDealt": 22
         },
         "shieldDefenseResult": {
           "isBlocking": true,

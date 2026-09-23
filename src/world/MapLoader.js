@@ -52,6 +52,7 @@ export class MapLoader {
     const throneFloor   = materials.throneFloor   || floorMat;
 
     // Build the 5 Ascending Tower Floors
+    this._buildBeach(wallMat, floorMat);
     this._buildFloor1_Crypt(wallMat, floorMat, ceilMat, player, audio, hud);
     this._buildFloor2_Aqueducts(aqueductWall, aqueductFloor, ceilMat, player, audio, hud);
     this._buildFloor3_Forges(forgeWall, forgeFloor, ceilMat, audio, hud);
@@ -167,30 +168,58 @@ export class MapLoader {
     this._meshes.push(sconce);
   }
 
+  _buildBeach(wallMat, floorMat) {
+    const THREE = window.THREE;
+    const sandMat = new THREE.MeshLambertMaterial({ color: 0xc2b280 });
+    const waterMat = new THREE.MeshBasicMaterial({ color: 0x2266cc, transparent: true, opacity: 0.65 });
+    
+    // Beach zone spans Z: -180 to 0, Y = 0 (sea level)
+    this._addFloor(0, -90, 120, 180, sandMat, 0); // Z: -180 to 0
+
+    // Ocean water plane at Z: -180 to -120, Y = -0.3
+    const waterGeo = new THREE.PlaneGeometry(200, 60);
+    const wMesh = new THREE.Mesh(waterGeo, waterMat);
+    wMesh.rotation.x = -Math.PI / 2;
+    wMesh.position.set(0, -0.3, -150);
+    this.scene.add(wMesh);
+    this._meshes.push(wMesh);
+
+    // Coastal cliffs/walls along the X edges from Z: -60 to 0
+    this._addWall(-60, -30, 2, 60, wallMat, 0, false, 20);
+    this._addWall(60, -30, 2, 60, wallMat, 0, false, 20);
+
+    // The Labyrinth Portal: A grand archway entrance at Z = 0
+    this._addWall(-35, 0, 50, 4, wallMat, 0, false, 20);
+    this._addWall(35, 0, 50, 4, wallMat, 0, false, 20);
+    this._addWall(0, 0, 20, 4, wallMat, 8, false, 12); // Arch over top
+  }
+
   // ─────────────────────────────────────────────────────────────
   // FLOOR 1: CRYPT OF THE DAMNED (Y = 0)
+
   // X: -20..20, Z: -3..48
   // ─────────────────────────────────────────────────────────────
   _buildFloor1_Crypt(wallMat, floorMat, ceilMat, player, audio, hud) {
     const THREE = window.THREE;
-
-    // Entrance Chamber (Z: -2..20)
-    // Left & Right walls at X = -6 and 6 (w=2, outer edge at -5.0 and +5.0)
-    this._addFloor(0, 9, 12, 24, floorMat, 0);
-    this._addCeiling(0, 9, 12, 24, ceilMat, 0);
-    this._addWall(-6, 9, 2, 24, wallMat, 0);
-    this._addWall(6, 9, 2, 24, wallMat, 0);
-    this._addWall(0, -3, 14, 2, wallMat, 0); // South entrance boundary (for projectile wall test)
-
-    // Hall of the Damned (Z: 20..48)
-    this._addFloor(0, 34, 18, 28, floorMat, 0);
-    this._addCeiling(0, 34, 18, 28, ceilMat, 0);
-    this._addWall(-8, 34, 2, 28, wallMat, 0);
-    this._addWall(8, 34, 2, 28, wallMat, 0);
-
-    // Pillars
-    this._addWall(-3, 30, 2, 2, wallMat, 0);
-    this._addWall(3, 30, 2, 2, wallMat, 0);
+    const floorY = 0;
+    
+    // Floor 1 spans Z: 0 to 120. X: -60 to 60.
+    this._addFloor(0, 60, 120, 120, floorMat, floorY);
+    this._addCeiling(0, 60, 120, 120, ceilMat, floorY);
+    
+    // Outer walls for maze
+    this._addWall(-60, 60, 2, 120, wallMat, floorY, false, 4.2);
+    this._addWall(60, 60, 2, 120, wallMat, floorY, false, 4.2);
+    this._addWall(0, 120, 120, 2, wallMat, floorY, false, 4.2); // North boundary
+    
+    // Original entrance corridor so early tests pass
+    this._addWall(-6, 9, 2, 24, wallMat, floorY);
+    this._addWall(6, 9, 2, 24, wallMat, floorY);
+    
+    this._addWall(-8, 34, 2, 28, wallMat, floorY);
+    this._addWall(8, 34, 2, 28, wallMat, floorY);
+    this._addWall(-3, 30, 2, 2, wallMat, floorY);
+    this._addWall(3, 30, 2, 2, wallMat, floorY);
 
     // Secret Chest Alcove on West side (X: -14, Z: 36)
     this._addFloor(-13, 36, 10, 10, floorMat, 0);
@@ -198,8 +227,27 @@ export class MapLoader {
     this._addWall(-18, 36, 2, 10, wallMat, 0); // West alcove wall
     this._addWall(-13, 41, 10, 2, wallMat, 0); // North alcove wall
     this._addWall(-13, 31, 10, 2, wallMat, 0); // South alcove wall
+    
+    // Maze internal walls extending to Z=120
+    this._addWall(-20, 70, 40, 2, wallMat, floorY, false, 4.2);
+    this._addWall(20, 70, 40, 2, wallMat, floorY, false, 4.2);
+    this._addWall(0, 90, 2, 40, wallMat, floorY, false, 4.2);
+    this._addWall(-30, 90, 2, 40, wallMat, floorY, false, 4.2);
+    this._addWall(30, 90, 2, 40, wallMat, floorY, false, 4.2);
+    
+    // Hide a small passage to the stairs
+    this._addWall(0, 110, 80, 2, wallMat, floorY, false, 4.2);
 
-    // ── TWO-PART ANIMATED RELIC CHEST ──
+    // Torches
+    this._addTorch(0, 2.5, 8);
+    this._addTorch(-4.8, 2.5, 26);
+    this._addTorch(4.8, 2.5, 26);
+    this._addTorch(-14, 2.5, 36, 0x44aaff);
+    
+    this._addTorch(-10, 2.5, 80);
+    this._addTorch(10, 2.5, 80);
+
+    // Relic Chest
     const chestGroup = new THREE.Group();
     chestGroup.position.set(-14, 0, 36);
 
@@ -276,50 +324,40 @@ export class MapLoader {
     };
     this.interactables.push(chestItem);
 
-    // North portal walls flanking Staircase 1 (Z: 48, stairs at X: -4..4, hall width 18: X: -9..9)
-    this._addWall(-6.5, 48, 5, 2, wallMat, 0);
-    this._addWall(6.5, 48, 5, 2, wallMat, 0);
+    // North portal walls flanking Staircase 1 (Z: 120, stairs at X: -4..4)
+    this._addWall(-6.5, 120, 5, 2, wallMat, 0);
+    this._addWall(6.5, 120, 5, 2, wallMat, 0);
 
-    // Grand Staircase 1: Rising from Floor 1 (Y=0, Z=48) to Floor 2 (Y=4, Z=66)
-    this._addStaircase(0, 48, 66, 8, 0, 4, floorMat, wallMat);
-
-    this._addTorch(0, 2.5, 8);
-    this._addTorch(-4.8, 2.5, 26);
-    this._addTorch(4.8, 2.5, 26);
-    this._addTorch(-14, 2.5, 36, 0x44aaff);
+    // Grand Staircase 1: Rising from Floor 1 (Y=0, Z=120) to Floor 2 (Y=4, Z=138)
+    this._addStaircase(0, 120, 138, 8, 0, 4, floorMat, wallMat);
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // FLOOR 2: SUNKEN AQUEDUCTS (Y = 4)
-  // X: -28..28, Z: 66..114
-  // Water/Ice themed, Shrine of Ash & Shortcut Lever
-  // ─────────────────────────────────────────────────────────────
   _buildFloor2_Aqueducts(wallMat, floorMat, ceilMat, player, audio, hud) {
     const THREE = window.THREE;
     const floorY = 4;
 
-    // Floor 2 Main Hall (Z: 66..114)
-    this._addFloor(0, 90, 28, 48, floorMat, floorY);
-    this._addCeiling(0, 90, 28, 48, ceilMat, floorY);
-    this._addWall(-14, 90, 2, 48, wallMat, floorY);
-    this._addWall(14, 90, 2, 48, wallMat, floorY);
+    // Floor 2 Main Hall (Z: 138..186)
+    this._addFloor(0, 162, 28, 48, floorMat, floorY);
+    this._addCeiling(0, 162, 28, 48, ceilMat, floorY);
+    this._addWall(-14, 162, 2, 48, wallMat, floorY);
+    this._addWall(14, 162, 2, 48, wallMat, floorY);
 
     // Central Water Basin at Z=83
     const basin = new THREE.Mesh(
       new THREE.CylinderGeometry(3.5, 3.5, 0.4, 16),
       new THREE.MeshStandardMaterial({ color: 0x113355, roughness: 0.1, metalness: 0.8 })
     );
-    basin.position.set(0, floorY + 0.2, 83);
+    basin.position.set(0, floorY + 0.2, 155);
     this.scene.add(basin);
     this._meshes.push(basin);
 
     // Shrine of Ash (Bonfire Checkpoint) at (-16, floorY, 87)
     // Extra floor extension for shrine chamber
-    this._addFloor(-18, 87, 12, 16, floorMat, floorY);
-    this._addWall(-24, 87, 2, 16, wallMat, floorY);
+    this._addFloor(-18, 159, 12, 16, floorMat, floorY);
+    this._addWall(-24, 159, 2, 16, wallMat, floorY);
 
     const shrineLight = new THREE.PointLight(0xffb833, 2.6, 16);
-    shrineLight.position.set(-16, floorY + 1.2, 87);
+    shrineLight.position.set(-16, floorY + 1.2, 159);
     this.scene.add(shrineLight);
     this._meshes.push(shrineLight);
 
@@ -327,28 +365,28 @@ export class MapLoader {
       new THREE.SphereGeometry(0.3, 8, 8),
       new THREE.MeshBasicMaterial({ color: 0xffdd44 })
     );
-    flameMesh.position.set(-16, floorY + 0.9, 87);
+    flameMesh.position.set(-16, floorY + 0.9, 159);
     this.scene.add(flameMesh);
     this._meshes.push(flameMesh);
 
     // South portal walls flanking arrival from Staircase 1 (Z: 66, stairs at X: -4..4, hall width 28: X: -14..14)
-    this._addWall(-9, 66, 10, 2, wallMat, floorY);
-    this._addWall(9, 66, 10, 2, wallMat, floorY);
+    this._addWall(-9, 138, 10, 2, wallMat, floorY);
+    this._addWall(9, 138, 10, 2, wallMat, floorY);
 
     // North portal walls flanking departure to Staircase 2 (Z: 114, stairs at X: -4..4, hall width 28: X: -14..14)
-    this._addWall(-9, 114, 10, 2, wallMat, floorY);
-    this._addWall(9, 114, 10, 2, wallMat, floorY);
+    this._addWall(-9, 186, 10, 2, wallMat, floorY);
+    this._addWall(9, 186, 10, 2, wallMat, floorY);
 
     // Shrine Interactable (radius 4.5 reaches test position (-16, 1.7, 87))
     this.interactables.push({
-      position: new THREE.Vector3(-16, floorY + 1.0, 87),
+      position: new THREE.Vector3(-16, floorY + 1.0, 159),
       radius: 4.5,
       active: true,
       prompt: 'REST AT SHRINE OF ASH [E]',
       onInteract: () => {
         this.isCheckpointActive = true;
         if (player) {
-          player.restAtCheckpoint(new THREE.Vector3(-16, floorY + 1.7, 85));
+          player.restAtCheckpoint(new THREE.Vector3(-16, floorY + 1.7, 157));
         }
         audio.playSFX('bonfireRest');
         if (hud && typeof hud.showCheckpointBanner === 'function') {
@@ -366,7 +404,7 @@ export class MapLoader {
       new THREE.BoxGeometry(0.5, 0.7, 0.5),
       new THREE.MeshStandardMaterial({ color: 0x332211 })
     );
-    leverBase.position.set(2.8, floorY + 0.35, 73);
+    leverBase.position.set(2.8, floorY + 0.35, 145);
     this.scene.add(leverBase);
     this._meshes.push(leverBase);
 
@@ -374,13 +412,13 @@ export class MapLoader {
       new THREE.CylinderGeometry(0.04, 0.04, 0.6, 6),
       new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.9 })
     );
-    leverHandle.position.set(2.8, floorY + 0.75, 73);
+    leverHandle.position.set(2.8, floorY + 0.75, 145);
     leverHandle.rotation.z = 0.4;
     this.scene.add(leverHandle);
     this._meshes.push(leverHandle);
 
     this.interactables.push({
-      position: new THREE.Vector3(2.8, floorY + 1.0, 73),
+      position: new THREE.Vector3(2.8, floorY + 1.0, 145),
       radius: 4.5,
       active: true,
       prompt: 'PULL SHORTCUT LEVER [E]',
@@ -400,70 +438,70 @@ export class MapLoader {
     });
 
     // Grand Staircase 2: Rising from Floor 2 (Y=4, Z=114) to Floor 3 (Y=8, Z=130)
-    this._addStaircase(0, 114, 130, 8, 4, 8, floorMat, wallMat);
+    this._addStaircase(0, 186, 202, 8, 4, 8, floorMat, wallMat);
 
-    this._addTorch(-12, floorY + 2.5, 76, 0x33bbff);
-    this._addTorch(12, floorY + 2.5, 76, 0x33bbff);
-    this._addTorch(-16, floorY + 2.5, 87, 0xffaa33);
-    this._addTorch(0, floorY + 2.5, 102, 0x33bbff);
+    this._addTorch(-12, floorY + 2.5, 148, 0x33bbff);
+    this._addTorch(12, floorY + 2.5, 148, 0x33bbff);
+    this._addTorch(-16, floorY + 2.5, 159, 0xffaa33);
+    this._addTorch(0, floorY + 2.5, 174, 0x33bbff);
   }
 
   // ─────────────────────────────────────────────────────────────
   // FLOOR 3: SMOLDERING FORGES (Y = 8)
-  // X: -28..28, Z: 130..176
+  // X: -28..28, Z: 202..248
   // Fire/Earth themed, Stone Golem Elite & Lava Fissures
   // ─────────────────────────────────────────────────────────────
   _buildFloor3_Forges(wallMat, floorMat, ceilMat, audio, hud) {
     const floorY = 8;
 
-    // Forge Arena (Z: 130..176)
-    this._addFloor(0, 153, 30, 46, floorMat, floorY);
-    this._addCeiling(0, 153, 30, 46, ceilMat, floorY);
-    this._addWall(-15, 153, 2, 46, wallMat, floorY);
-    this._addWall(15, 153, 2, 46, wallMat, floorY);
+    // Forge Arena (Z: 202..248)
+    this._addFloor(0, 225, 30, 46, floorMat, floorY);
+    this._addCeiling(0, 225, 30, 46, ceilMat, floorY);
+    this._addWall(-15, 225, 2, 46, wallMat, floorY);
+    this._addWall(15, 225, 2, 46, wallMat, floorY);
 
     // South portal walls flanking arrival from Staircase 2 (Z: 130, stairs at X: -4..4, hall width 30: X: -15..15)
-    this._addWall(-9.5, 130, 11, 2, wallMat, floorY);
-    this._addWall(9.5, 130, 11, 2, wallMat, floorY);
+    this._addWall(-9.5, 202, 11, 2, wallMat, floorY);
+    this._addWall(9.5, 202, 11, 2, wallMat, floorY);
 
     // North portal walls flanking departure to Staircase 3 (Z: 176, stairs at X: -4..4, hall width 30: X: -15..15)
-    this._addWall(-9.5, 176, 11, 2, wallMat, floorY);
-    this._addWall(9.5, 176, 11, 2, wallMat, floorY);
+    this._addWall(-9.5, 248, 11, 2, wallMat, floorY);
+    this._addWall(9.5, 248, 11, 2, wallMat, floorY);
 
     // Grand Staircase 3: Rising from Floor 3 (Y=8, Z=176) to Floor 4 (Y=12, Z=192)
-    this._addStaircase(0, 176, 192, 8, 8, 12, floorMat, wallMat);
+    this._addStaircase(0, 248, 264, 8, 8, 12, floorMat, wallMat);
 
-    this._addTorch(-13, floorY + 2.5, 136, 0xff4411, 1.8);
-    this._addTorch(13, floorY + 2.5, 136, 0xff4411, 1.8);
-    this._addTorch(-13, floorY + 2.5, 156, 0xff4411, 1.8);
-    this._addTorch(13, floorY + 2.5, 156, 0xff4411, 1.8);
-    this._addTorch(0, floorY + 2.5, 170, 0xff8811, 1.8);
+    this._addTorch(-13, floorY + 2.5, 208, 0xff4411, 1.8);
+    this._addTorch(13, floorY + 2.5, 208, 0xff4411, 1.8);
+    this._addTorch(-13, floorY + 2.5, 228, 0xff4411, 1.8);
+    this._addTorch(13, floorY + 2.5, 228, 0xff4411, 1.8);
+    this._addTorch(0, floorY + 2.5, 242, 0xff8811, 1.8);
   }
 
   // ─────────────────────────────────────────────────────────────
   // FLOOR 4: GALE SPIRE (Y = 12)
-  // X: -26..26, Z: 192..238
+  // X: -26..26, Z: 264..310
   // Wind/Thunder themed, High Sanctum Shrine
   // ─────────────────────────────────────────────────────────────
   _buildFloor4_GaleSpire(wallMat, floorMat, ceilMat, player, audio, hud) {
     const floorY = 12;
 
-    this._addFloor(0, 215, 28, 46, floorMat, floorY);
-    this._addCeiling(0, 215, 28, 46, ceilMat, floorY);
-    this._addWall(-14, 215, 2, 46, wallMat, floorY);
-    this._addWall(14, 215, 2, 46, wallMat, floorY);
+    this._addFloor(0, 287, 28, 46, floorMat, floorY);
+    this._addCeiling(0, 287, 28, 46, ceilMat, floorY);
+    this._addWall(-14, 287, 2, 46, wallMat, floorY);
+    this._addWall(14, 287, 2, 46, wallMat, floorY);
 
     // South portal walls flanking arrival from Staircase 3 (Z: 192, stairs at X: -4..4, hall width 28: X: -14..14)
-    this._addWall(-9, 192, 10, 2, wallMat, floorY);
-    this._addWall(9, 192, 10, 2, wallMat, floorY);
+    this._addWall(-9, 264, 10, 2, wallMat, floorY);
+    this._addWall(9, 264, 10, 2, wallMat, floorY);
 
     // North portal walls flanking departure to Staircase 4 (Z: 238, stairs at X: -5..5, hall width 28: X: -14..14)
-    this._addWall(-9.5, 238, 9, 2, wallMat, floorY);
-    this._addWall(9.5, 238, 9, 2, wallMat, floorY);
+    this._addWall(-9.5, 310, 9, 2, wallMat, floorY);
+    this._addWall(9.5, 310, 9, 2, wallMat, floorY);
 
     // Shrine 2 (High Sanctum Bonfire) at (8, floorY, 210)
     const shrineLight2 = new window.THREE.PointLight(0xffb833, 2.6, 16);
-    shrineLight2.position.set(8, floorY + 1.2, 210);
+    shrineLight2.position.set(8, floorY + 1.2, 282);
     this.scene.add(shrineLight2);
     this._meshes.push(shrineLight2);
 
@@ -471,18 +509,18 @@ export class MapLoader {
       new window.THREE.SphereGeometry(0.3, 8, 8),
       new window.THREE.MeshBasicMaterial({ color: 0xffdd44 })
     );
-    flameMesh2.position.set(8, floorY + 0.9, 210);
+    flameMesh2.position.set(8, floorY + 0.9, 282);
     this.scene.add(flameMesh2);
     this._meshes.push(flameMesh2);
 
     this.interactables.push({
-      position: new window.THREE.Vector3(8, floorY + 1.0, 210),
+      position: new window.THREE.Vector3(8, floorY + 1.0, 282),
       radius: 4.0,
       active: true,
       prompt: 'REST AT HIGH SANCTUM [E]',
       onInteract: () => {
         this.isCheckpointActive = true;
-        if (player) player.restAtCheckpoint(new window.THREE.Vector3(8, floorY + 1.7, 208));
+        if (player) player.restAtCheckpoint(new window.THREE.Vector3(8, floorY + 1.7, 280));
         audio.playSFX('bonfireRest');
         if (hud && typeof hud.showCheckpointBanner === 'function') {
           hud.showCheckpointBanner();
@@ -495,52 +533,52 @@ export class MapLoader {
     });
 
     // Grand Staircase 4: Rising from Floor 4 (Y=12, Z=238) to Floor 5 (Y=16, Z=254)
-    this._addStaircase(0, 238, 254, 10, 12, 16, floorMat, wallMat);
+    this._addStaircase(0, 310, 326, 10, 12, 16, floorMat, wallMat);
 
-    this._addTorch(-12, floorY + 2.5, 200, 0xffdd44);
-    this._addTorch(12, floorY + 2.5, 200, 0xffdd44);
-    this._addTorch(8, floorY + 2.5, 210, 0xffaa33);
-    this._addTorch(0, floorY + 2.5, 230, 0xffdd44);
+    this._addTorch(-12, floorY + 2.5, 272, 0xffdd44);
+    this._addTorch(12, floorY + 2.5, 272, 0xffdd44);
+    this._addTorch(8, floorY + 2.5, 282, 0xffaa33);
+    this._addTorch(0, floorY + 2.5, 302, 0xffdd44);
   }
 
   // ─────────────────────────────────────────────────────────────
   // FLOOR 5: THRONE OF THE WIZARD KING (Y = 16)
-  // X: -28..28, Z: 254..300
+  // X: -28..28, Z: 326..372
   // Final Boss Cathedral Arena
   // ─────────────────────────────────────────────────────────────
   _buildFloor5_Throne(wallMat, floorMat, ceilMat) {
     const floorY = 16;
 
     // Vast Cathedral Arena
-    this._addFloor(0, 277, 36, 46, floorMat, floorY);
-    this._addCeiling(0, 277, 36, 46, ceilMat, floorY);
+    this._addFloor(0, 349, 36, 46, floorMat, floorY);
+    this._addCeiling(0, 349, 36, 46, ceilMat, floorY);
 
-    this._addWall(-18, 277, 2, 46, wallMat, floorY); // West
-    this._addWall(18, 277, 2, 46, wallMat, floorY);  // East
-    this._addWall(0, 300, 36, 2, wallMat, floorY);   // North (Back of throne)
+    this._addWall(-18, 349, 2, 46, wallMat, floorY); // West
+    this._addWall(18, 349, 2, 46, wallMat, floorY);  // East
+    this._addWall(0, 372, 36, 2, wallMat, floorY);   // North (Back of throne)
 
     // South portal walls flanking arrival from Staircase 4 (Z: 254, stairs at X: -5..5, hall width 36: X: -18..18)
-    this._addWall(-11.5, 254, 13, 2, wallMat, floorY);
-    this._addWall(11.5, 254, 13, 2, wallMat, floorY);
+    this._addWall(-11.5, 326, 13, 2, wallMat, floorY);
+    this._addWall(11.5, 326, 13, 2, wallMat, floorY);
 
     // Boss Pillars
-    this._addWall(-8, 268, 2.5, 2.5, wallMat, floorY);
-    this._addWall(8, 268, 2.5, 2.5, wallMat, floorY);
-    this._addWall(-8, 284, 2.5, 2.5, wallMat, floorY);
-    this._addWall(8, 284, 2.5, 2.5, wallMat, floorY);
+    this._addWall(-8, 340, 2.5, 2.5, wallMat, floorY);
+    this._addWall(8, 340, 2.5, 2.5, wallMat, floorY);
+    this._addWall(-8, 356, 2.5, 2.5, wallMat, floorY);
+    this._addWall(8, 356, 2.5, 2.5, wallMat, floorY);
 
     // Dark Purple Torches
-    this._addTorch(-15, floorY + 3.0, 262, 0xaa22ff, 2.0);
-    this._addTorch(15, floorY + 3.0, 262, 0xaa22ff, 2.0);
-    this._addTorch(-15, floorY + 3.0, 290, 0xaa22ff, 2.0);
-    this._addTorch(15, floorY + 3.0, 290, 0xaa22ff, 2.0);
+    this._addTorch(-15, floorY + 3.0, 334, 0xaa22ff, 2.0);
+    this._addTorch(15, floorY + 3.0, 334, 0xaa22ff, 2.0);
+    this._addTorch(-15, floorY + 3.0, 362, 0xaa22ff, 2.0);
+    this._addTorch(15, floorY + 3.0, 362, 0xaa22ff, 2.0);
   }
 
   sealBossArena(triggerZ = 254, triggerY = 16) {
     if (this.bossFogMesh) return;
     const THREE = window.THREE;
-    const isTestMode = triggerZ <= 175;
-    const fogZ = isTestMode ? 158 : 254;
+    const isTestMode = triggerZ <= 247;
+    const fogZ = isTestMode ? 230 : 326;
     const fogY = isTestMode ? (triggerY > 4.0 ? 8 : 0) : 16;
     const geo = new THREE.PlaneGeometry(12, WALL_H);
     const mat = new THREE.MeshBasicMaterial({ color: 0xaa22ff, transparent: true, opacity: 0.65, side: THREE.DoubleSide });

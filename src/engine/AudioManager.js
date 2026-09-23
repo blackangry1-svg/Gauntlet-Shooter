@@ -24,6 +24,17 @@ export class AudioManager {
       this._masterGain = this._ctx.createGain();
       this._masterGain.gain.value = this._volume;
       this._masterGain.connect(this._ctx.destination);
+      
+      this._noiseBuffers = {};
+      for (const [key, def] of Object.entries(this._sfxDefs)) {
+        if (def.gen === 'noise' || def.gen === 'boom') {
+          const bufLen = Math.floor(this._ctx.sampleRate * def.duration);
+          const buf = this._ctx.createBuffer(1, bufLen, this._ctx.sampleRate);
+          const data = buf.getChannelData(0);
+          for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+          this._noiseBuffers[key] = buf;
+        }
+      }
     } catch (e) {
       console.warn('[Audio] Web Audio not available:', e);
     }
@@ -111,12 +122,8 @@ export class AudioManager {
     }
 
     if (def.gen === 'noise') {
-      const bufLen = ctx.sampleRate * def.duration;
-      const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
       const src = ctx.createBufferSource();
-      src.buffer = buf;
+      src.buffer = this._noiseBuffers[name];
 
       // Bandpass filter for character
       const filter = ctx.createBiquadFilter();
@@ -147,12 +154,8 @@ export class AudioManager {
 
     } else if (def.gen === 'boom') {
       // Noise + sine layered
-      const bufLen = ctx.sampleRate * def.duration;
-      const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
       const src = ctx.createBufferSource();
-      src.buffer = buf;
+      src.buffer = this._noiseBuffers[name];
       const f = ctx.createBiquadFilter();
       f.type = 'lowpass';
       f.frequency.value = 200;

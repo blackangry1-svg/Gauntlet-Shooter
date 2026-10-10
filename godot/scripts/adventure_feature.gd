@@ -221,4 +221,3 @@ func hit_weapon(weapon_id: String) -> void:
 		state.set_flag(world.current_floor, "hidden_guardian_awake")
 		world.notify("The long grate mechanism yields the Moon Seal.")
 	world.refresh_features()
-

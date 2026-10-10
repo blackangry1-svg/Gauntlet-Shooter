@@ -125,4 +125,3 @@ static func choose_branch(grid: Array, start: Vector2i, blocked: Dictionary, res
 			if visited.has(cell_key(cell)) and not reserved.has(cell_key(cell)):
 				return cell
 	return start
-

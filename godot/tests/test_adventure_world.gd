@@ -259,4 +259,3 @@ func _run() -> void:
 	expect(state.has_flag(4, "arcane_open"), "sight reveals true route")
 	print("ADVENTURE_WORLD_TESTS checks=", checks, " failures=", failures)
 	quit(1 if failures > 0 else 0)
-

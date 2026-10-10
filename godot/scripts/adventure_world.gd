@@ -519,4 +519,3 @@ func _physics_process(delta: float) -> void:
 				_burn_cooldown = 0.8
 		if player.global_position.y < -8.0 and current_floor != 1:
 			player.take_damage(200.0, player.global_position)
-

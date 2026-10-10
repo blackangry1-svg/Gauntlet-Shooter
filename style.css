@@ -143,7 +143,16 @@ html, body {
   box-shadow: 0 0 15px rgba(200,168,75,0.3), inset 0 0 20px rgba(200,168,75,0.05);
 }
 
-.char-icon { font-size: 2.5rem; margin-bottom: 6px; }
+.char-icon { display: none; }
+.char-sprite-canvas {
+  display: block;
+  margin: 0 auto 6px;
+  width: 72px;
+  height: 86px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+}
 .char-name {
   font-size: 0.85rem; font-weight: 700;
   letter-spacing: 0.1em; color: var(--gold-light);
@@ -177,11 +186,12 @@ html, body {
   font-family: var(--font-main);
 }
 
-.menu-btn:hover:not(:disabled) {
-  border-color: var(--gold);
+.menu-btn:hover:not(:disabled),
+.menu-btn.gamepad-focused {
+  border-color: var(--gold-light);
   color: var(--gold-light);
-  background: linear-gradient(180deg, #1e1600 0%, #0e0c00 100%);
-  box-shadow: 0 0 10px rgba(200,168,75,0.2);
+  background: linear-gradient(180deg, #2a1f00 0%, #151000 100%);
+  box-shadow: 0 0 14px rgba(200,168,75,0.45);
 }
 
 .menu-btn:disabled { opacity: 0.4; cursor: not-allowed; }

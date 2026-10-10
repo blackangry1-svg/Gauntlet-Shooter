@@ -1,0 +1,685 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-10",
+  "canonical_project": "godot/project.godot",
+  "scope": "Portable index of selected delivered sources; source files are preserved and production integration is pending.",
+  "selected_shield": "godot/assets/weapons/shield_source_v2.png",
+  "superseded_shield": "godot/assets/weapons/shield_source_v1.png",
+  "historical_manifests": [
+    "godot/ASSET_DELIVERY_MANIFEST_V1.json",
+    "godot/EXPANSION_MANIFEST_V1.json"
+  ],
+  "assets": [
+    {
+      "asset": "broadsword",
+      "category": "weapon",
+      "source": "godot/assets/weapons/broadsword_source_v1.png",
+      "sha256": "410aa1aea87b97050794cdc257fca6bdbaf59aee2cca7246c497eee451b4370c",
+      "bytes": 2108213,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1024,
+        256
+      ],
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "review_notes": [
+        "Two-handed grip and runic fuller corrected.",
+        "Second-frame left forearm reaches across nominal quarter; isolate at intended viewport edge, preserve both hands."
+      ]
+    },
+    {
+      "asset": "shield",
+      "category": "weapon",
+      "source": "godot/assets/weapons/shield_source_v2.png",
+      "sha256": "9640643fa50d115abf86dad3564377645238075ab5f86a0c0c41b6ed3b4811e1",
+      "bytes": 2232150,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        768,
+        256
+      ],
+      "intended_grid": {
+        "columns": 3,
+        "rows": 1
+      },
+      "review_notes": [
+        "Direction correction accepted: all three poses show the wearer-facing wooden interior and handgrip; outward griffin face stays away from camera.",
+        "Independent visual QA passed orientation, coherent left-hand grip and arm placement.",
+        "Three-pose artwork source remains subject to reviewed chroma-key removal, boundary extraction and anchor normalization before runtime import."
+      ]
+    },
+    {
+      "asset": "bow",
+      "category": "weapon",
+      "source": "godot/assets/weapons/bow_source_v1.png",
+      "sha256": "99008d2ac9cb77175c4fcc279d397b2f754560099fc7ee9174170f9a651b5482",
+      "bytes": 1997003,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1024,
+        256
+      ],
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "review_notes": [
+        "Four temporal states reviewed; margin revision applied.",
+        "Arrow tip reaches beyond nominal divider; lower forearms touch at panel transitions. Custom masks and intended viewport cropping required; do not claim fully isolated equal-quarter frames."
+      ]
+    },
+    {
+      "asset": "staff",
+      "category": "weapon",
+      "source": "godot/assets/weapons/staff_source_v1.png",
+      "sha256": "d18250a1dedebf8b371f55960d2f350a5a41c2c793a47d5d026382b39994958b",
+      "bytes": 1836031,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1024,
+        256
+      ],
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "review_notes": [
+        "Violet crystal and cyan rune identity reviewed.",
+        "Casting aura extends outside nominal quarter; preserve full effect through reviewed extraction."
+      ]
+    },
+    {
+      "asset": "spear",
+      "category": "weapon",
+      "source": "godot/assets/weapons/spear_source_v1.png",
+      "sha256": "3b9d8d2bf4b09426a9845751bcc2b3ddcc93563f49d09990d1959530f3f844af",
+      "bytes": 2051298,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1024,
+        256
+      ],
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "review_notes": [
+        "Two hands, gilded wing collar and steel tip reviewed.",
+        "Thrust changes projected length through first-person foreshortening."
+      ]
+    },
+    {
+      "asset": "minotaur_stalker",
+      "category": "character",
+      "source": "godot/assets/sprites/minotaur_stalker_source_v1.png",
+      "sha256": "a188072a8008f35713dab758a8e4a32746df90d47641f2c6a1b908a7d35aefed",
+      "bytes": 2286434,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Axe continuity and outer-canvas clipping corrected; complete extremities reviewed.",
+        "Temporary exhaustion, not permanent death. Normalize anchors using world reference and preserve full axe."
+      ]
+    },
+    {
+      "asset": "asterion",
+      "category": "character",
+      "source": "godot/assets/sprites/asterion_source_v1.png",
+      "sha256": "9f65e59ad1497924e2f8f5209403e5e055c5d2947caac2940eab10b698525d71",
+      "bytes": 2508705,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Bronze armor, hammer and gold-dissolution sequence reviewed.",
+        "Posture-break row ends on knees; integration needs explicit recovery transition or selected reverse segment."
+      ]
+    },
+    {
+      "asset": "skeleton_archer",
+      "category": "character",
+      "source": "godot/assets/sprites/skeleton_archer_source_v1.png",
+      "sha256": "5cd909868552653b06d6ee2fee6800969b0a427d85f7d85819f2823f2fe15e58",
+      "bytes": 2343705,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Stagger corrected to retain bow and recover to standing guard.",
+        "Death row scatters bones and skull; preserve world anchor through collapse."
+      ]
+    },
+    {
+      "asset": "orc_grunt",
+      "category": "character",
+      "source": "godot/assets/sprites/orc_grunt_source_v1.png",
+      "sha256": "72a3a174ca74ed1dc52c665bd605171f13adb52e482b4408fa4d5a006c0f2b14",
+      "bytes": 2284386,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Cleaver disappearance corrected across attack and stagger.",
+        "Source foot baseline varies between some rows; per-pose anchor normalization required. Protect muted olive skin during keying."
+      ]
+    },
+    {
+      "asset": "warrior_thor",
+      "category": "character",
+      "source": "godot/assets/sprites/warrior_thor_source_v1.png",
+      "sha256": "bafe18d5209b234c836a403598712ade5e1be56fc02276afde2d19f311e2dfee",
+      "bytes": 2593881,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Winged steel helmet, chainmail, red fur cape, sword and round shield reviewed.",
+        "Normalize anchors and temporal pacing against actual controller."
+      ]
+    },
+    {
+      "asset": "elf_questor",
+      "category": "character",
+      "source": "godot/assets/sprites/elf_questor_source_v1.png",
+      "sha256": "5df611ea963f5f99d27a8460c8a1acab8fe1450f6b9b029457acf8cfb3c14366",
+      "bytes": 2390207,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Bow continuity corrected in stagger; all six cells reviewed and recovery returns to standing guard.",
+        "Protect forest-green clothing and olive fletching during chromakey removal."
+      ]
+    },
+    {
+      "asset": "wizard_merlin",
+      "category": "character",
+      "source": "godot/assets/sprites/wizard_merlin_source_v1.png",
+      "sha256": "ef77030198725754205eb341158ce4ebeaf7fd5fd052ef101c9a420395d838d1",
+      "bytes": 2525119,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Robes, silver beard, crystal staff and projected cast poses reviewed.",
+        "Some spell effects cross nominal cell boundaries; use reviewed masks and preserve full effects. Hover uses fixed nominal ground reference."
+      ]
+    },
+    {
+      "asset": "valkyrie_thyra",
+      "category": "character",
+      "source": "godot/assets/sprites/valkyrie_thyra_source_v1.png",
+      "sha256": "2df009cfdbc72dc2a1cd261143e905b0d9b6259eefcfc38e5324c8cc5b087baa",
+      "bytes": 2482297,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Winged tiara, spear collar/butt cap and gold shield reviewed.",
+        "Attack row first three lunges cross nominal cell edges with rear leg or shaft; wider reviewed masks and anchor normalization required. Hard 6x6 slicing will cut poses."
+      ]
+    },
+    {
+      "asset": "thornbound_revenant",
+      "category": "character",
+      "source": "godot/assets/sprites/thornbound_revenant_source_v1.png",
+      "sha256": "a50f168b0c13c8c527c14b53bcc8cf522c7b63c89025147683b45060a30578c3",
+      "bytes": 2336596,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Duplicate attack spear removed and independently rechecked.",
+        "Preserve spear shafts and thorn fragments in reviewed extraction."
+      ]
+    },
+    {
+      "asset": "barrow_knight",
+      "category": "character",
+      "source": "godot/assets/sprites/barrow_knight_source_v1.png",
+      "sha256": "295acd0acb55f4e8dda2b0636ca7324e40ff0e09fb5d60a333884e1637d845ca",
+      "bytes": 2423316,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Six independently occupied death cells restored; stagger greatsword retained.",
+        "Normalize corpse anchor; preserve blade tips and remove incidental floor lines."
+      ]
+    },
+    {
+      "asset": "mire_hag",
+      "category": "character",
+      "source": "godot/assets/sprites/mire_hag_source_v1.png",
+      "sha256": "8302e6bf299b63128de9e672c5cc7ca883888797cf12f777bb544f9d475932f1",
+      "bytes": 2663755,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Staff/censer and six phases coherent.",
+        "Soft mist requires reviewed alpha mask; remove incidental ground lines."
+      ]
+    },
+    {
+      "asset": "frost_wraith",
+      "category": "character",
+      "source": "godot/assets/sprites/frost_wraith_source_v1.png",
+      "sha256": "d6b0429379e7973838dada2521f3dec46fbacf2896d47705d2982ab860da68e6",
+      "bytes": 2588055,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Scythe and hovering figure coherent, ice sweep and dissolution readable.",
+        "Preserve full ice arcs/fragments and stable hover ground reference."
+      ]
+    },
+    {
+      "asset": "ember_imp",
+      "category": "character",
+      "source": "godot/assets/sprites/ember_imp_source_v1.png",
+      "sha256": "679626d0e1e52c886a1cffc40d851118eeddb664c014fc889028026340401abd",
+      "bytes": 2309488,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Missing attack subject restored; six complete throw/reload poses accepted.",
+        "Keep pot trajectory separate from collision events; extract particles and complete tail."
+      ]
+    },
+    {
+      "asset": "ash_zealot",
+      "category": "character",
+      "source": "godot/assets/sprites/ash_zealot_source_v1.png",
+      "sha256": "926268561ddcd96ed9250ad5d8cadf30c1703b2564299167b32932728db46872",
+      "bytes": 2190665,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Flail continuity and six phases accepted.",
+        "Exclude darker green walk shadows and thin ground marks during keying."
+      ]
+    },
+    {
+      "asset": "storm_gargoyle",
+      "category": "character",
+      "source": "godot/assets/sprites/storm_gargoyle_source_v1.png",
+      "sha256": "bdc69c948a27d670483b506c330204ce5eb3124ad86c940dc2806e60d321405b",
+      "bytes": 2930184,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Wings/horns/tail and lightning slam/rubble coherent.",
+        "Review widest wings and loose rubble bounds."
+      ]
+    },
+    {
+      "asset": "tempest_harpy",
+      "category": "character",
+      "source": "godot/assets/sprites/tempest_harpy_source_v1.png",
+      "sha256": "926427e51724012d1290257113be6802f309be8aa6db17408d6ce1aad532606c",
+      "bytes": 2551097,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "36 subjects with consistent mask, wings and talons.",
+        "Review wide-wing frame bounds and normalize hovering anchor."
+      ]
+    },
+    {
+      "asset": "rune_sentinel",
+      "category": "character",
+      "source": "godot/assets/sprites/rune_sentinel_source_v1.png",
+      "sha256": "934de5affc937e11cd9e7743ef09e3662b6ab2b61d072b3661c896777edf7541",
+      "bytes": 2312919,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Two corrections; duplicate hammer removed in attack row4 column1, final revision independently passes.",
+        "Shield stays on character right, hammer left; preserve disassembly fragments."
+      ]
+    },
+    {
+      "asset": "mirror_duelist",
+      "category": "character",
+      "source": "godot/assets/sprites/mirror_duelist_source_v1.png",
+      "sha256": "c4ef4e5f8dc6761c6418c59155c4a157681122755d4cadaec8f74d6da16ef62a",
+      "bytes": 2333839,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "36 subjects with rapier retained.",
+        "Rapier tips extend beyond nominal cells; reviewed extraction required. Align windup-to-thrust timing."
+      ]
+    },
+    {
+      "asset": "cave_spider",
+      "category": "character",
+      "source": "godot/assets/sprites/cave_spider_source_v1.png",
+      "sha256": "0c1cccb316389bb9d8d7112e78f17c1a1230c5a7d7f695ed518f9e76ed86ffb0",
+      "bytes": 2333915,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "36 subjects; overlapping leg arrangement consistent with eight legs.",
+        "Exclude darker-green ground patches; keep full legs in masks."
+      ]
+    },
+    {
+      "asset": "moss_troll",
+      "category": "character",
+      "source": "godot/assets/sprites/moss_troll_source_v1.png",
+      "sha256": "81ddcd5f0bcf88c57d22512f636cd1a82bb7b6afbd5c6a776911fd3e222875f3",
+      "bytes": 2644017,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Club restored through affected stagger cells and independently accepted.",
+        "Normalize collapse reference and preserve fallen club."
+      ]
+    },
+    {
+      "asset": "stonehart_regent",
+      "category": "character",
+      "source": "godot/assets/sprites/stonehart_regent_source_v1.png",
+      "sha256": "8bfb481a0cd1225808e1f49f0a5db4528c4d49d404f2c5883a35fbdce366c203",
+      "bytes": 2738461,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "36 positions, crown/antlers/heart and quadruped stance coherent.",
+        "Far-side limbs normally occluded; preserve full antlers and flying debris."
+      ]
+    },
+    {
+      "asset": "abbess_of_the_tide",
+      "category": "character",
+      "source": "godot/assets/sprites/abbess_of_the_tide_source_v1.png",
+      "sha256": "0df9885b43dd1b776e58d5e4422f505f66f2857937656bf23aa89cff7b115f9f",
+      "bytes": 2667111,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "Staff and bell stay single consistent objects across36 positions.",
+        "Preserve water rings, droplets and fallen implements through sinking death."
+      ]
+    },
+    {
+      "asset": "bellows_wyrm",
+      "category": "character",
+      "source": "godot/assets/sprites/bellows_wyrm_source_v1.png",
+      "sha256": "f0ff68ef570435cdd869d41a2ba022394ff63bd57855874cf5508adda84edb00",
+      "bytes": 2749411,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "36 bodies; quadruped/wing anatomy coherent with far-side occlusion.",
+        "Attack fire streams cross nominal boundaries. Use reviewed masks; if inseparable, regenerate that row or use separately reviewed fire VFX. Automatic slicing not certified."
+      ]
+    },
+    {
+      "asset": "roc_of_the_broken_sky",
+      "category": "character",
+      "source": "godot/assets/sprites/roc_of_the_broken_sky_source_v1.png",
+      "sha256": "6d35642cdf1490ef580f144ac5784d32eb81969950c18373787e065abe94380c",
+      "bytes": 2704856,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "36 positions; two wings/taloned legs, crest and lightning emblem coherent.",
+        "Wide attack wings/lightning have narrow gutters; preserve full feather tips."
+      ]
+    },
+    {
+      "asset": "magister_of_glass",
+      "category": "character",
+      "source": "godot/assets/sprites/magister_of_glass_source_v1.png",
+      "sha256": "a3fc40c25ac9058067f6cb573e3aee06090519e298e9fe711f2185b18490e99a",
+      "bytes": 2540924,
+      "source_status": "reviewed source art; masks, frame extraction and engine integration pending",
+      "canonical_dimensions": [
+        1536,
+        1536
+      ],
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "review_notes": [
+        "36 positions; one staff and off-hand spell crystal coherent.",
+        "Spell tips cross nominal boundaries. Preserve staff/crystal fragments and world reference."
+      ]
+    },
+    {
+      "asset": "earth_labyrinth",
+      "category": "biome",
+      "source": "godot/assets/biomes/earth_labyrinth_concept_v1.png",
+      "sha256": "8332f88e22d4a832f3261151c7fc0b7fefc028b99fca73010ed5ab97fcf860f0",
+      "bytes": 3934114,
+      "source_status": "concept art; modular maze assets pending",
+      "canonical_dimensions": null,
+      "intended_grid": null,
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ]
+    },
+    {
+      "asset": "water_labyrinth",
+      "category": "biome",
+      "source": "godot/assets/biomes/water_labyrinth_concept_v1.png",
+      "sha256": "80d88d9ff3be1ecc43e49b4190633957b80f4fcdb0b95a6e53580311069d4cc0",
+      "bytes": 3724325,
+      "source_status": "concept art; modular maze assets pending",
+      "canonical_dimensions": null,
+      "intended_grid": null,
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ]
+    },
+    {
+      "asset": "fire_labyrinth",
+      "category": "biome",
+      "source": "godot/assets/biomes/fire_labyrinth_concept_v1.png",
+      "sha256": "9f9091b8ea96186adae445cd9f20c43d366689328150f9c412c5c49b4d8e5fdb",
+      "bytes": 3695190,
+      "source_status": "concept art; modular maze assets pending",
+      "canonical_dimensions": null,
+      "intended_grid": null,
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ]
+    },
+    {
+      "asset": "air_labyrinth",
+      "category": "biome",
+      "source": "godot/assets/biomes/air_labyrinth_concept_v1.png",
+      "sha256": "850248405924c448542dbfa8b35ca54e5e95cd5af8289cd02bd08803e2a1e1cc",
+      "bytes": 3998429,
+      "source_status": "concept art; modular maze assets pending",
+      "canonical_dimensions": null,
+      "intended_grid": null,
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ]
+    },
+    {
+      "asset": "aether_labyrinth",
+      "category": "biome",
+      "source": "godot/assets/biomes/aether_labyrinth_concept_v1.png",
+      "sha256": "cce9baaa3c6ce4ae141e3b467b9c79e0274f53a0bcdd909f15745d95d7187fb5",
+      "bytes": 3670056,
+      "source_status": "concept art; modular maze assets pending",
+      "canonical_dimensions": null,
+      "intended_grid": null,
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ]
+    }
+  ]
+}

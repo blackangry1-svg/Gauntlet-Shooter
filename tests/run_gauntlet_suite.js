@@ -10,7 +10,7 @@ async function run() {
   console.log('   GAUNTLET SOUL-DOOM: COMPREHENSIVE AUTOMATED TEST SUITE');
   console.log('========================================================\n');
 
-  const harness = new CDPHarness({ port: 9222, width: 1280, height: 720 });
+  const harness = new CDPHarness({ port: 9230, width: 1280, height: 720 });
   const results = {};
 
   try {
@@ -222,10 +222,10 @@ async function run() {
     // TEST 10: BOSS ARENA TEST
     // ─────────────────────────────────────────────────────────
     console.log('\n[TEST 10/22] Running BOSS ARENA TEST...');
-    // Enter Boss Arena at (5, 1.7, 162)
+    // Enter Cathedral Boss Arena at Z >= 326 (Y = 16)
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 234);
-      window.GAME.lookAt(5, 257);
+      window.GAME.setPosition(0, 17.7, 330);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(600);
     const bossTriggered = await harness.evaluate('window.GAME.STATE.bossTriggered');
@@ -238,10 +238,10 @@ async function run() {
     // Capture 08_boss_intro
     await harness.captureScreenshot('screenshots/08_boss_intro.png');
 
-    // Approach boss for combat
+    // Approach boss for combat in Cathedral
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 252);
-      window.GAME.lookAt(5, 257);
+      window.GAME.setPosition(0, 17.7, 356);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(500);
     // Capture 09_boss_combat
@@ -553,8 +553,8 @@ async function run() {
 
     // Boss Arena Playthrough Completion for Elf
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 234);
-      window.GAME.lookAt(5, 257);
+      window.GAME.setPosition(0, 17.7, 330);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(400);
 
@@ -747,8 +747,8 @@ async function run() {
 
     // Advance Wizard to Boss Arena and trigger victory
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 234);
-      window.GAME.lookAt(5, 257);
+      window.GAME.setPosition(0, 17.7, 330);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(400);
 
@@ -921,8 +921,8 @@ async function run() {
 
     // Valkyrie Boss Arena Playthrough Completion
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 234);
-      window.GAME.lookAt(5, 257);
+      window.GAME.setPosition(0, 17.7, 356);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(400);
 

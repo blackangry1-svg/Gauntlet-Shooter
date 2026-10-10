@@ -1,0 +1,150 @@
+{
+  "date": "2026-10-09",
+  "status": "VERIFIED_SOURCE_DELIVERY",
+  "selected_sources": 13,
+  "delivered_sources": 13,
+  "total_source_bytes": 29639429,
+  "shield_selected_version": 2,
+  "other_selected_sources_unchanged": true,
+  "other_selected_sources_checked": 12,
+  "original_assets_checked": 41,
+  "original_assets_changed": [],
+  "superseded_shield": {
+    "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\shield_source_v1.png",
+    "sha256": "1912c74b79310e3c13343e97bac121d6c1927b0fb87369d5f556fe570d88d2fc",
+    "preserved_hash_matches": true
+  },
+  "documents": {
+    "ASSET_DELIVERY_MANIFEST_V1_json": {
+      "normalized_chars": 74489,
+      "exact_readback_matches": true
+    },
+    "ASSET_HANDOFF_V1_md": {
+      "normalized_chars": 6799,
+      "exact_readback_matches": true
+    }
+  },
+  "asset_checks": [
+    {
+      "asset": "broadsword",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\broadsword_source_v1.png",
+      "sha256": "410aa1aea87b97050794cdc257fca6bdbaf59aee2cca7246c497eee451b4370c",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2108213
+    },
+    {
+      "asset": "shield",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\shield_source_v2.png",
+      "sha256": "9640643fa50d115abf86dad3564377645238075ab5f86a0c0c41b6ed3b4811e1",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2232150
+    },
+    {
+      "asset": "bow",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\bow_source_v1.png",
+      "sha256": "99008d2ac9cb77175c4fcc279d397b2f754560099fc7ee9174170f9a651b5482",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 1997003
+    },
+    {
+      "asset": "staff",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\staff_source_v1.png",
+      "sha256": "d18250a1dedebf8b371f55960d2f350a5a41c2c793a47d5d026382b39994958b",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 1836031
+    },
+    {
+      "asset": "spear",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\spear_source_v1.png",
+      "sha256": "3b9d8d2bf4b09426a9845751bcc2b3ddcc93563f49d09990d1959530f3f844af",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2051298
+    },
+    {
+      "asset": "minotaur_stalker",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\minotaur_stalker_source_v1.png",
+      "sha256": "a188072a8008f35713dab758a8e4a32746df90d47641f2c6a1b908a7d35aefed",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2286434
+    },
+    {
+      "asset": "asterion",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\asterion_source_v1.png",
+      "sha256": "9f65e59ad1497924e2f8f5209403e5e055c5d2947caac2940eab10b698525d71",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2508705
+    },
+    {
+      "asset": "skeleton_archer",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\skeleton_archer_source_v1.png",
+      "sha256": "5cd909868552653b06d6ee2fee6800969b0a427d85f7d85819f2823f2fe15e58",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2343705
+    },
+    {
+      "asset": "orc_grunt",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\orc_grunt_source_v1.png",
+      "sha256": "72a3a174ca74ed1dc52c665bd605171f13adb52e482b4408fa4d5a006c0f2b14",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2284386
+    },
+    {
+      "asset": "warrior_thor",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\warrior_thor_source_v1.png",
+      "sha256": "bafe18d5209b234c836a403598712ade5e1be56fc02276afde2d19f311e2dfee",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2593881
+    },
+    {
+      "asset": "elf_questor",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\elf_questor_source_v1.png",
+      "sha256": "5df611ea963f5f99d27a8460c8a1acab8fe1450f6b9b029457acf8cfb3c14366",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2390207
+    },
+    {
+      "asset": "wizard_merlin",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\wizard_merlin_source_v1.png",
+      "sha256": "ef77030198725754205eb341158ce4ebeaf7fd5fd052ef101c9a420395d838d1",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2525119
+    },
+    {
+      "asset": "valkyrie_thyra",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\valkyrie_thyra_source_v1.png",
+      "sha256": "2df009cfdbc72dc2a1cd261143e905b0d9b6259eefcfc38e5324c8cc5b087baa",
+      "hash_matches": true,
+      "dimensions_match": true,
+      "mode_matches": true,
+      "bytes": 2482297
+    }
+  ],
+  "orientation_review": "PASS: inside wooden face and coherent left-hand grip in all three poses; independent review agrees.",
+  "runtime_validation": "NOT_RUN; Antigravity processing and Godot wiring pending",
+  "production_import_readiness": "NOT_ESTABLISHED"
+}
+

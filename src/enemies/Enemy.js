@@ -45,6 +45,7 @@ export function preloadEnemyTextures() {
     '/assets/sprites/storm_harpy.png',
     '/assets/sprites/dark_acolyte.png',
     '/assets/sprites/champion_orc.png',
+    '/assets/sprites/minotaur.png',
   ];
   paths.forEach(p => getSharedSpriteImage(p, () => {}));
 }
@@ -173,12 +174,9 @@ export class Enemy {
     if (spritePath) {
       this.tex = new THREE.Texture();
       this.tex.magFilter = THREE.NearestFilter;
-      this.tex.minFilter = THREE.LinearMipmapLinearFilter;
-      this.tex.generateMipmaps = true;
-      const insetScaleX = 0.02;
-      const insetScaleY = 0.02;
-      this.tex.repeat.set((1 / this.sheetCols) - insetScaleX, (1 / this.sheetRows) - insetScaleY);
-
+      this.tex.minFilter = THREE.NearestFilter;
+      this.tex.generateMipmaps = false;
+      this.tex.repeat.set(1 / this.sheetCols, 1 / this.sheetRows);
 
       // Check if image is already cached from preload
       const cached = SPRITE_IMAGE_CACHE.get(spritePath);
@@ -215,7 +213,7 @@ export class Enemy {
         emissive: new THREE.Color(0.85, 0.85, 0.85),
         emissiveIntensity: 0.85,
         transparent: true,
-        alphaTest: 0.5,
+        alphaTest: 0.25,
         side: THREE.DoubleSide,
         depthWrite: true,
       });
@@ -228,9 +226,9 @@ export class Enemy {
       });
     }
 
-    const spriteGeo = new THREE.PlaneGeometry(size, size * 1.35);
+    const spriteGeo = new THREE.PlaneGeometry(size, size);
     this.spriteMesh = new THREE.Mesh(spriteGeo, this.material);
-    this.spriteMesh.position.y = (size * 1.35) / 2;
+    this.spriteMesh.position.y = size / 2;
     this.spriteMesh.userData.isSprite = true;
     this.mesh.add(this.spriteMesh);
 
@@ -273,11 +271,9 @@ export class Enemy {
     const def = this.animSets[this._currentAnim] || this.animSets.idle;
     const row = Math.min(this.sheetRows - 1, def.row);
     const col = this._animFrame % (def.count || 1);
-    const insetX = 0.01;
-    const insetY = 0.01;
 
-    this.tex.offset.x = (col / this.sheetCols) + insetX;
-    this.tex.offset.y = ((this.sheetRows - 1 - row) / this.sheetRows) + insetY;
+    this.tex.offset.x = col / this.sheetCols;
+    this.tex.offset.y = (this.sheetRows - 1 - row) / this.sheetRows;
   }
 
 
@@ -314,28 +310,29 @@ export class Enemy {
     this.dead = true;
     this.state = 'dead';
     this.setAnimation('dead');
-
-    // Fade and sink
-    let t = 0;
-    const startY = this.mesh.position.y;
-    const interval = setInterval(() => {
-      t += 0.05;
-      if (this.material) {
-        this.material.opacity = Math.max(0, 1 - t);
-        this.material.emissiveIntensity = Math.max(0, 0.85 * (1 - t));
-      }
-      this.mesh.position.y = startY - t * 0.4;
-      if (t >= 1.0) {
-        clearInterval(interval);
-        this.dispose();
-      }
-    }, 20);
+    this._isDying = true;
+    this._deathTimer = 0;
 
     if (this.onDeath) this.onDeath();
   }
 
   update(dt, playerPos) {
-    if (this.dead) return;
+    if (this.dead) {
+      if (this._isDying) {
+        this._deathTimer += dt * 2.5;
+        const t = Math.min(1.0, this._deathTimer);
+        if (this.material) {
+          this.material.opacity = Math.max(0, 1 - t);
+          this.material.emissiveIntensity = Math.max(0, 0.85 * (1 - t));
+        }
+        this.mesh.position.y -= dt * 0.5;
+        if (t >= 1.0) {
+          this._isDying = false;
+          this.dispose();
+        }
+      }
+      return;
+    }
 
     // Billboard: face camera
     if (this.camera) {
@@ -685,14 +682,14 @@ export class DeathBat extends Enemy {
       size: 1.3,
       spritePath: '/assets/sprites/death_bat.png',
       rows: 6,
-      cols: 4,
+      cols: 6,
       anims: {
-        idle:    { row: 0, count: 4, speed: 8 },
-        chase:   { row: 1, count: 4, speed: 12 },
+        idle:    { row: 0, count: 6, speed: 8 },
+        chase:   { row: 1, count: 6, speed: 12 },
         windup:  { row: 2, count: 4, speed: 10 },
-        attack:  { row: 3, count: 4, speed: 14 },
+        attack:  { row: 3, count: 6, speed: 14 },
         recover: { row: 0, count: 1, speed: 1 },
-        dead:    { row: 5, count: 4, speed: 8 },
+        dead:    { row: 5, count: 6, speed: 8 },
       }
     }, manager);
     this.mesh.position.y = 1.2; // flying
@@ -750,15 +747,16 @@ export class DeathKnight extends Enemy {
       xp: 600,
       size: 2.6,
       spritePath: '/assets/sprites/death_knight.png',
-      rows: 3,
+      rows: 6,
       cols: 6,
       anims: {
         idle:    { row: 0, count: 6, speed: 6 },
-        chase:   { row: 0, count: 6, speed: 8 },
-        windup:  { row: 1, count: 3, speed: 6 },
-        attack:  { row: 1, count: 6, speed: 12 },
+        chase:   { row: 1, count: 6, speed: 8 },
+        windup:  { row: 2, count: 4, speed: 6 },
+        attack:  { row: 3, count: 6, speed: 12 },
+        slam:    { row: 4, count: 6, speed: 10 },
         recover: { row: 0, count: 1, speed: 1 },
-        dead:    { row: 2, count: 6, speed: 5 },
+        dead:    { row: 5, count: 6, speed: 5 },
       }
     }, manager);
     this.isBoss = true;
@@ -1051,3 +1049,94 @@ export class ChampionOrc extends Enemy {
     }
   }
 }
+
+export class Minotaur extends Enemy {
+  constructor(scene, audio, manager = null) {
+    super(scene, audio, {
+      type: 'minotaur',
+      hp: 99999, // Massive HP: unkillable at beginning of game as requested
+      speed: 5.4,
+      damage: 65,
+      range: 3.2,
+      detect: 70,
+      telegraph: 0.42,
+      recover: 0.60,
+      atkCD: 1.2,
+      score: 0,
+      xp: 0,
+      size: 3.2,
+      spritePath: '/assets/sprites/minotaur.png',
+      rows: 6,
+      cols: 6,
+      anims: {
+        idle:    { row: 0, count: 6, speed: 5 },
+        chase:   { row: 1, count: 6, speed: 11 },
+        roar:    { row: 2, count: 6, speed: 8 },
+        attack:  { row: 3, count: 6, speed: 13 },
+        slam:    { row: 4, count: 6, speed: 10 },
+        recover: { row: 0, count: 1, speed: 1 },
+        dead:    { row: 5, count: 6, speed: 4 },
+      }
+    }, manager);
+    this.isBoss = false;
+    this.isMinotaurStalker = true;
+    this._roarCooldown = 0;
+  }
+
+  takeDamage(amount, isHeavy = false) {
+    if (this.isMinotaurStalker) {
+      // Wandering nemesis stalker: virtually immune to damage; cannot be staggered
+      this.health = Math.max(1, this.health - 1);
+      this._hitTimer = 0.1;
+      if (this.material) {
+        this.material.emissive.setRGB(1.0, 0.1, 0.1);
+        this.material.emissiveIntensity = 2.0;
+      }
+    } else {
+      // Secret boss Asterion: takes full weapon damage, can be staggered and slain
+      super.takeDamage(amount, isHeavy);
+    }
+  }
+
+  update(dt, playerPos) {
+    if (this.dead) return;
+
+    if (this._roarCooldown > 0) this._roarCooldown -= dt;
+
+    // Glowing red predatory eyes pulse
+    if (this.material) {
+      const pulse = Math.sin(Date.now() * 0.01) * 0.3 + 0.7;
+      this.material.emissive.setRGB(0.9 * pulse, 0.05 * pulse, 0.05 * pulse);
+      this.material.emissiveIntensity = 1.0;
+    }
+
+    // If player reaches the beach/entrance (Z <= 2) or safe shelter, Minotaur retreats
+    if (playerPos && playerPos.z <= 2) {
+      if (this.state !== 'retreat') {
+        this.state = 'retreat';
+        this.setAnimation('idle');
+        if (this.audio) this.audio.playSFX('bossRoar', 1.4);
+      }
+      // Turn around and move deeper back into the maze (Z >= 35)
+      this.mesh.position.z += 6.0 * dt;
+      return;
+    }
+
+    super.update(dt, playerPos);
+  }
+
+  _executeAttack(playerPos, dist) {
+    if (this.audio) {
+      this.audio.playSFX('boom', 1.3);
+      this.audio.playSFX('heavySwing', 1.2);
+    }
+    if (this.player && dist <= this.attackRange * 1.4) {
+      this.player.takeDamage(this.damage, this.mesh.position);
+      if (this.audio) this.audio.playSFX('playerHurt', 1.2);
+      if (this.player.input && typeof this.player.input.playRumble === 'function') {
+        this.player.input.playRumble('heavy');
+      }
+    }
+  }
+}
+

@@ -27,7 +27,7 @@ export class AudioManager {
       
       this._noiseBuffers = {};
       for (const [key, def] of Object.entries(this._sfxDefs)) {
-        if (def.gen === 'noise' || def.gen === 'boom') {
+        if (def.gen === 'noise' || def.gen === 'boom' || def.gen === 'breathe') {
           const bufLen = Math.floor(this._ctx.sampleRate * def.duration);
           const buf = this._ctx.createBuffer(1, bufLen, this._ctx.sampleRate);
           const data = buf.getChannelData(0);
@@ -93,6 +93,10 @@ export class AudioManager {
       uiClick:     { gen: 'tone', type: 'sine', freq: 440, duration: 0.06, attack: 0.005, decay: 0.055 },
       // Level up triumphant chord
       levelUp:     { gen: 'chord', freqs: [440, 554, 659, 880, 1108], duration: 1.8, attack: 0.05, decay: 1.75 },
+      // Minotaur Stalker (Alien: Isolation procedural cues)
+      minotaurBreathe: { gen: 'breathe', duration: 1.5, attack: 0.25, decay: 1.25, filter: 260 },
+      heartbeat:       { gen: 'heartbeat', duration: 0.65, attack: 0.02, decay: 0.63 },
+      minotaurTaunt:   { gen: 'taunt', duration: 2.2, attack: 0.1, decay: 2.1 },
     };
   }
 
@@ -185,6 +189,55 @@ export class AudioManager {
         osc.start(now);
         osc.stop(now + def.duration + 0.01);
       }
+
+    } else if (def.gen === 'breathe') {
+      // Alien: Isolation style raspy breathing inhalation and exhalation
+      const src = ctx.createBufferSource();
+      src.buffer = this._noiseBuffers[name];
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(160, now);
+      filter.frequency.linearRampToValueAtTime(360, now + def.duration * 0.45);
+      filter.frequency.exponentialRampToValueAtTime(140, now + def.duration);
+      filter.Q.value = 1.6;
+      src.connect(filter);
+      filter.connect(gainNode);
+      src.start(now);
+
+    } else if (def.gen === 'heartbeat') {
+      // Sub-bass double-lub heartbeat
+      [0, 0.16].forEach((offset, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        const f = idx === 0 ? 54 : 46;
+        osc.frequency.setValueAtTime(f, now + offset);
+        osc.frequency.exponentialRampToValueAtTime(32, now + offset + 0.22);
+        g.gain.setValueAtTime(0, now + offset);
+        g.gain.linearRampToValueAtTime(0.65, now + offset + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.25);
+        osc.connect(g);
+        g.connect(gainNode);
+        osc.start(now + offset);
+        osc.stop(now + offset + 0.26);
+      });
+
+    } else if (def.gen === 'taunt') {
+      // Ominous resonant voice growl
+      const osc = ctx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80, now);
+      osc.frequency.linearRampToValueAtTime(45, now + def.duration);
+
+      const f = ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.setValueAtTime(320, now);
+      f.frequency.linearRampToValueAtTime(120, now + def.duration);
+
+      osc.connect(f);
+      f.connect(gainNode);
+      osc.start(now);
+      osc.stop(now + def.duration + 0.01);
     }
   }
 

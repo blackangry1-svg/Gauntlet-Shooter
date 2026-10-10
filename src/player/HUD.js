@@ -54,7 +54,10 @@ export class HUD {
     }
 
     if (this._flaskText && player.flasks !== undefined) {
-      this._flaskText.textContent = `Flasks: ${player.flasks}/${player.maxFlasks} [Q]`;
+      const isGp = player.input && player.input.isGamepadActive;
+      this._flaskText.textContent = isGp
+        ? `Flasks: ${player.flasks}/${player.maxFlasks} [D-Pad ↑]`
+        : `Flasks: ${player.flasks}/${player.maxFlasks} [Q]`;
     }
 
     // Low health pulsing
@@ -67,7 +70,11 @@ export class HUD {
 
   showInteractPrompt(text = 'INTERACT') {
     if (this._interactPrompt) {
-      this._interactText.textContent = text;
+      let displayText = text;
+      if (window.GAME?.player?.input?.isGamepadActive) {
+        displayText = text.replace(/\[E\]/g, '[◯]').replace(/\[F\]/g, '[◯]').replace(/\[Q\]/g, '[D-Pad ↑]');
+      }
+      this._interactText.textContent = displayText;
       this._interactPrompt.classList.remove('hidden');
     }
   }

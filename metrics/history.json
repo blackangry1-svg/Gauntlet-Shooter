@@ -14781,5 +14781,3360 @@
     },
     "total_passed": 22,
     "total_tests": 22
+  },
+  {
+    "timestamp": "2026-09-26T23:39:26.943Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 55,
+    "mean_frametime_ms": 18.35,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 33.2,
+    "p99_frametime_ms": 50.2,
+    "frames_over_20ms": 10,
+    "frames_over_33ms": 7,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": -140
+          },
+          "posMoved": {
+            "x": -3.0371240618854347e-16,
+            "z": -137.5199999999996
+          },
+          "distMoved": 2.4800000000003877,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.2466666666666667,
+          "stamBefore": 100.96666666666674,
+          "stamAfter": 78.96666666666674
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 2,
+            "projCountAfter": 2
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5,
+            "manaRegened": 16.99999999999998,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 1.9999999999999787
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-09-26T23:45:45.641Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 56,
+    "mean_frametime_ms": 17.93,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 33.3,
+    "p99_frametime_ms": 33.4,
+    "frames_over_20ms": 9,
+    "frames_over_33ms": 9,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": -140
+          },
+          "posMoved": {
+            "x": -2.6452370861582825e-16,
+            "z": -137.83999999999966
+          },
+          "distMoved": 2.1600000000003376,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.2466666666666667,
+          "stamBefore": 109.8333333333335,
+          "stamAfter": 87.8333333333335
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 2,
+            "projCountAfter": 2
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5.8000000000000025,
+            "manaRegened": 17.799999999999976,
+            "regenGain": 11.999999999999973,
+            "resumed": true,
+            "finalMana": 2.799999999999976
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-09-26T23:48:30.398Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 59,
+    "mean_frametime_ms": 17.09,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 17.3,
+    "p99_frametime_ms": 33.5,
+    "frames_over_20ms": 3,
+    "frames_over_33ms": 3,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": -140
+          },
+          "posMoved": {
+            "x": -3.820898013339739e-16,
+            "z": -136.8799999999995
+          },
+          "distMoved": 3.1200000000004877,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.23000000000000004,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 2,
+            "projCountAfter": 2
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5.8000000000000025,
+            "manaRegened": 17.799999999999976,
+            "regenGain": 11.999999999999973,
+            "resumed": true,
+            "finalMana": 2.799999999999976
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 114,
+            "hpAfter": 104,
+            "hpLost": 10,
+            "stamBefore": 77.90000000000002,
+            "stamAfter": 59.90000000000002,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-09-26T23:50:49.748Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 54,
+    "mean_frametime_ms": 18.35,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 33.4,
+    "p99_frametime_ms": 48.7,
+    "frames_over_20ms": 10,
+    "frames_over_33ms": 9,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": -140
+          },
+          "posMoved": {
+            "x": -3.624954525476163e-16,
+            "z": -137.03999999999954
+          },
+          "distMoved": 2.9600000000004627,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.2466666666666667,
+          "stamBefore": 108.56666666666682,
+          "stamAfter": 87.20000000000016
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 2,
+            "projCountAfter": 2
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5.8000000000000025,
+            "manaRegened": 17.799999999999976,
+            "regenGain": 11.999999999999973,
+            "resumed": true,
+            "finalMana": 2.799999999999976
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-09-27T00:11:14.155Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 55,
+    "mean_frametime_ms": 18.21,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 33.3,
+    "p99_frametime_ms": 50.3,
+    "frames_over_20ms": 9,
+    "frames_over_33ms": 9,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": -140
+          },
+          "posMoved": {
+            "x": -3.526982781544375e-16,
+            "z": 2.8800000000000012
+          },
+          "distMoved": 142.88,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.2466666666666667,
+          "stamBefore": 102.86666666666676,
+          "stamAfter": 81.5000000000001
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 1,
+            "projCountAfter": 1
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5,
+            "manaRegened": 16.99999999999998,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 1.9999999999999787
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-09-27T00:14:56.704Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 57,
+    "mean_frametime_ms": 17.65,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 21.6,
+    "p99_frametime_ms": 33.7,
+    "frames_over_20ms": 7,
+    "frames_over_33ms": 5,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": -140
+          },
+          "posMoved": {
+            "x": -3.624954525476163e-16,
+            "z": 2.9600000000000013
+          },
+          "distMoved": 142.96,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.26333333333333336,
+          "stamBefore": 105.40000000000012,
+          "stamAfter": 83.40000000000012
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 65,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 1,
+            "projCountAfter": 1
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5,
+            "manaRegened": 16.99999999999998,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 1.9999999999999787
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-10-06T15:11:31.533Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 55,
+    "mean_frametime_ms": 18.06,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 33.2,
+    "p99_frametime_ms": 50.1,
+    "frames_over_20ms": 7,
+    "frames_over_33ms": 6,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 0
+          },
+          "posMoved": {
+            "x": -3.1350958058172227e-16,
+            "z": 2.560000000000001
+          },
+          "distMoved": 2.560000000000001,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 144,
+          "playerHpAfter": 119
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.21333333333333337,
+          "stamBefore": 101.60000000000008,
+          "stamAfter": 79.60000000000008
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 1,
+            "projCountAfter": 1
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5,
+            "manaRegened": 16.99999999999998,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 1.9999999999999787
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-10-06T15:18:13.501Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 59,
+    "mean_frametime_ms": 16.95,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 17,
+    "p99_frametime_ms": 33.4,
+    "frames_over_20ms": 2,
+    "frames_over_33ms": 2,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": -140
+          },
+          "posMoved": {
+            "x": -4.898587196589408e-16,
+            "z": 4.000000000000002
+          },
+          "distMoved": 144,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 128,
+          "playerHpAfter": 103
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.21333333333333337,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 1,
+            "projCountAfter": 1
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5,
+            "manaRegened": 16.99999999999998,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 1.9999999999999787
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-10-06T15:38:46.601Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 55,
+    "mean_frametime_ms": 18.08,
+    "p50_frametime_ms": 16.8,
+    "p95_frametime_ms": 31.8,
+    "p99_frametime_ms": 51,
+    "frames_over_20ms": 8,
+    "frames_over_33ms": 4,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 0
+          },
+          "posMoved": {
+            "x": -3.0371240618854347e-16,
+            "z": 2.480000000000001
+          },
+          "distMoved": 2.480000000000001,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 128,
+          "playerHpAfter": 103
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.1966666666666667,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 1,
+            "projCountAfter": 1
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5,
+            "manaRegened": 16.99999999999998,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 1.9999999999999787
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-10-06T15:55:33.925Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 57,
+    "mean_frametime_ms": 17.51,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 17.2,
+    "p99_frametime_ms": 49.9,
+    "frames_over_20ms": 4,
+    "frames_over_33ms": 4,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 0
+          },
+          "posMoved": {
+            "x": -2.7432088300900705e-16,
+            "z": 2.2400000000000007
+          },
+          "distMoved": 2.2400000000000007,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 128,
+          "playerHpAfter": 103
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.08000000000000007,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 2,
+            "projCountAfter": 2
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5.133333333333334,
+            "manaRegened": 17.13333333333331,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 2.1333333333333115
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
+  },
+  {
+    "timestamp": "2026-10-06T15:59:33.263Z",
+    "iteration": 1,
+    "milestone": 22,
+    "mean_fps": 56,
+    "mean_frametime_ms": 17.79,
+    "p50_frametime_ms": 16.7,
+    "p95_frametime_ms": 33.3,
+    "p99_frametime_ms": 49.8,
+    "frames_over_20ms": 6,
+    "frames_over_33ms": 6,
+    "test_results": {
+      "BOOT_TEST": {
+        "pass": true,
+        "details": {
+          "title": "⚔️ Gauntlet Legends Shooter",
+          "hasCanvas": true,
+          "isThreeLoaded": true,
+          "errors": []
+        }
+      },
+      "MOVEMENT_TEST": {
+        "pass": true,
+        "details": {
+          "posStart": {
+            "x": 0,
+            "z": 0
+          },
+          "posMoved": {
+            "x": -3.0371240618854347e-16,
+            "z": 2.480000000000001
+          },
+          "distMoved": 2.480000000000001,
+          "movedForward": true
+        }
+      },
+      "COLLISION_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "posAfterWall": -4.640000000000001
+        }
+      },
+      "COMBAT_TEST": {
+        "pass": true,
+        "details": {
+          "enemyHpBefore": 60,
+          "enemyHpAfter": 34
+        }
+      },
+      "DAMAGE_TEST": {
+        "pass": true,
+        "details": {
+          "playerHpBefore": 128,
+          "playerHpAfter": 103
+        }
+      },
+      "DODGE_TEST": {
+        "pass": true,
+        "details": {
+          "isDodging": true,
+          "iframes": 0.2466666666666667,
+          "stamBefore": 110,
+          "stamAfter": 88
+        }
+      },
+      "RESPAWN_TEST": {
+        "pass": true,
+        "details": {
+          "isCheckpointActive": true,
+          "playerHpFull": true
+        }
+      },
+      "DOOR_TEST": {
+        "pass": true,
+        "details": {
+          "gateBefore": false,
+          "gateAfter": true
+        }
+      },
+      "AI_TEST": {
+        "pass": true,
+        "details": {
+          "state": "idle",
+          "hp": 240,
+          "hasTelegraph": true
+        }
+      },
+      "BOSS_TEST": {
+        "pass": true,
+        "details": {
+          "bossTriggered": true,
+          "bossBarVisible": true,
+          "fogWallExists": true
+        }
+      },
+      "WIN_TEST": {
+        "pass": true,
+        "details": {
+          "victoryVisible": true,
+          "phaseVictory": true
+        }
+      },
+      "DEATH_TEST": {
+        "pass": true,
+        "details": {
+          "gameOverVisible": true
+        }
+      },
+      "RESTART_TEST": {
+        "pass": true,
+        "details": {
+          "retryPhase": "playing",
+          "retryHp": 160
+        }
+      },
+      "HEAVY_ATTACK_TEST": {
+        "pass": true,
+        "details": {
+          "damageDealt": 44,
+          "stamCost": 27,
+          "stateAfter": "stagger"
+        }
+      },
+      "MULTI_CLASS_MANA_TEST": {
+        "pass": true,
+        "details": {
+          "char": "wizard",
+          "weapon": "staff",
+          "initMana": 140,
+          "manaAfter": 125,
+          "projCount": 1,
+          "manaDeducted": 15
+        }
+      },
+      "ENEMY_PROJECTILE_TEST": {
+        "pass": true,
+        "details": {
+          "initialCount": 0,
+          "countAfter": 1,
+          "spawned": true
+        }
+      },
+      "PROJECTILE_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "diedAtWall": true
+        }
+      },
+      "ENEMY_WALL_TEST": {
+        "pass": true,
+        "details": {
+          "wallCount": 73,
+          "finalX": -5.560000000000001
+        }
+      },
+      "BOSS_VARIETY_TEST": {
+        "pass": true,
+        "details": {
+          "p1Attack": "cleave",
+          "p2Phase": 2,
+          "hasVariety": true,
+          "speed": 3.5
+        }
+      },
+      "ELF_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "elfStats": {
+            "charType": "elf",
+            "baseSpeed": 5.6,
+            "maxHealth": 100,
+            "maxStamina": 120,
+            "maxMana": 90,
+            "currentWeapon": "bow",
+            "availableWeapons": [
+              "bow",
+              "sword"
+            ]
+          },
+          "elfSpeedResult": {
+            "dist": 1.9712000000000174,
+            "speed": 5.6
+          },
+          "elfCombatResult": {
+            "hpBefore": 60,
+            "hpAfterFirst": 48,
+            "arrowSpawned": true,
+            "arrowSpeed": 28,
+            "arrowDamage": 12,
+            "hitFirst": true
+          },
+          "elfKiteResult": {
+            "hpBeforeKite": 48,
+            "enemyDead": false,
+            "playerHp": 100,
+            "playerMaxHp": 100,
+            "secondary": "sword",
+            "primaryRestored": "bow"
+          },
+          "elfBossResult": {
+            "bossTriggered": true,
+            "bossAlive": false
+          },
+          "elfVictory": true
+        }
+      },
+      "WIZARD_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "wizStats": {
+            "charType": "wizard",
+            "maxHealth": 90,
+            "maxMana": 140,
+            "mana": 140,
+            "currentWeapon": "staff",
+            "weaponType": "magic",
+            "manaCost": 15,
+            "damage": 22,
+            "heavyDamage": 36
+          },
+          "wizCast1": {
+            "mana0": 140,
+            "manaAfter": 125,
+            "deducted": 15,
+            "hasLight": true,
+            "speed": 18,
+            "damage": 22
+          },
+          "wizExhaustion": {
+            "manaDrained": 5,
+            "rejected": true,
+            "projCountBefore": 1,
+            "projCountAfter": 1
+          },
+          "wizRecovery": {
+            "manaBeforeRegen": 5,
+            "manaRegened": 16.99999999999998,
+            "regenGain": 11.999999999999979,
+            "resumed": true,
+            "finalMana": 1.9999999999999787
+          },
+          "wizPersistence": {
+            "maxMana": 140,
+            "manaAfterCheckpoint": 140,
+            "checkpointRestored": true,
+            "savedMana": 75,
+            "savedRoom": 1,
+            "savePersisted": true,
+            "manaAfterRespawn": 140,
+            "respawnRestored": true
+          },
+          "wizCombat": {
+            "enemyHp": 24
+          },
+          "wizVictory": true
+        }
+      },
+      "VALKYRIE_PLAYTHROUGH_TEST": {
+        "pass": true,
+        "details": {
+          "valkStats": {
+            "charType": "valkyrie",
+            "maxHealth": 130,
+            "maxStamina": 100,
+            "baseSpeed": 5.2,
+            "currentWeapon": "spear",
+            "spearRange": 3.6,
+            "spearDamage": 22,
+            "availableWeapons": [
+              "spear",
+              "shield"
+            ]
+          },
+          "spearHitResult": {
+            "shieldMissed": true,
+            "hpAfter": 38,
+            "damaged": true,
+            "damageDealt": 22
+          },
+          "shieldDefenseResult": {
+            "isBlocking": true,
+            "hpBefore": 130,
+            "hpAfter": 120,
+            "hpLost": 10,
+            "stamBefore": 76,
+            "stamAfter": 58,
+            "stamLost": 18
+          },
+          "guardBreakResult": {
+            "stunned": true,
+            "blockBroken": true
+          },
+          "weaponSwitchResult": {
+            "slot1Name": "spear",
+            "slot2Name": "shield"
+          },
+          "valkVictory": true
+        }
+      }
+    },
+    "total_passed": 22,
+    "total_tests": 22
   }
 ]

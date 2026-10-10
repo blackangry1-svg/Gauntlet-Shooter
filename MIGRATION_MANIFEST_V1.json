@@ -1,0 +1,1487 @@
+{
+  "date": "2026-10-10",
+  "status": "MIGRATED_AND_RUNTIME_VERIFIED",
+  "canonical_project": "godot/project.godot",
+  "repository": "blackangry1-svg/Gauntlet-Shooter",
+  "branch": "codex/godot-takeover",
+  "local_history_head": "b19de8ea5552ee7378f24c01ad2070544bfcc0e8",
+  "remote_main_at_capture": "28de50b1f283cc5046ff4b2f616fb70f17af3767",
+  "backup": ".codex-local\\backups\\Gauntlet_Before_Codex_2026-10-10.zip",
+  "backup_entries": 426,
+  "backup_sha256": "21c9419d031202e202acc5acc8772d7bd2904e09b76d1882e4e51a643a358197",
+  "files": [
+    {
+      "group": "browser",
+      "path": "assets/sprites/champion_orc.png",
+      "bytes": 1274507,
+      "sha256": "337f21f8531d57c2dd0bc60683a133beb3fd11a9d52569bcaf5ddf270ec0615a"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/dark_acolyte.png",
+      "bytes": 752447,
+      "sha256": "bc9692f37266746893ee3bbad430f9254cf8712952cf0f52d49b78dfed7bfcc3"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/death_bat.jpg",
+      "bytes": 763382,
+      "sha256": "12282d647e9b48a26d4eed17e2eb7b6bad48be7b6a61f662a7e32090401e1014"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/death_bat.png",
+      "bytes": 863139,
+      "sha256": "328934eaa8eea8f453809a65e946f3d53b44a97beaf2a74ce3db52e52827e84f"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/death_knight.jpg",
+      "bytes": 837567,
+      "sha256": "fe2197ae87853e218550b83a81d1b94c1aa9b4d64ae2a4ec24d0db19eea34db8"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/death_knight.png",
+      "bytes": 960536,
+      "sha256": "c90abfb418d6496b88cca8997175209e6dde78f4414576d26e2976f6ec4424af"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/elf.jpg",
+      "bytes": 875015,
+      "sha256": "8e1315b8e342672a053e1de55d66b232f754134c43332e926269021f06d20e7b"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/elf.png",
+      "bytes": 797873,
+      "sha256": "2bb72574e1db4979c878726bdaf5d3c09be6909a979ef01fd280c0cb274fab6c"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/lava_golem.png",
+      "bytes": 955720,
+      "sha256": "75032515fdd4278994974c31ebe2528b61c600d08b311f12e8e5bab3f09beff5"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/minotaur.png",
+      "bytes": 1069312,
+      "sha256": "8d9d5108b9fc0a36f37a46aba7041d31d7bfa308a40eca231982d5dc33aebab3"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/orc_grunt.jpg",
+      "bytes": 959283,
+      "sha256": "e137058bb6fdb79f75ae0b371ffe59c5e1d5335e1d8d170119d435cea4945054"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/orc_grunt.png",
+      "bytes": 949451,
+      "sha256": "f84563b64b60c580030e6b7caa55a3d2c18ce3133bbf667eb1b020d240190cbb"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/pickups.jpg",
+      "bytes": 508026,
+      "sha256": "cc1857e083016bfa06a7b69013314e6e426f2c4d279a6b01fc635fe7363f93f2"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/pickups.png",
+      "bytes": 522317,
+      "sha256": "ac37f3b91ba11da45e0691a0bfc4b08418f5f4ca045b2ade8b4c900d38e32584"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/skeleton_archer.jpg",
+      "bytes": 838914,
+      "sha256": "6ac7e5a403bcf3528111d5d16abf0ff1c49edeb44af2c7c9e0e271db447a9be2"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/skeleton_archer.png",
+      "bytes": 979757,
+      "sha256": "74ce265eae9f77f842b9d1827970b31769631c9df5672463aae2a7a36f80dce5"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/stone_golem.jpg",
+      "bytes": 956356,
+      "sha256": "0d0fe78c0d6ce1c0a64def64b83551725d9a158e15dc23af96d9eb1c3e641544"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/stone_golem.png",
+      "bytes": 1075688,
+      "sha256": "a2d986b68da299e88b5d76b6db3d34ddedbb997067b6d2ed57a163f4f70d8e11"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/storm_harpy.png",
+      "bytes": 731997,
+      "sha256": "d5d62bb2eb01881969e95d37f8ff2d92ed161f22a69f8d839c74f8bc45b8ae17"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/valkyrie.jpg",
+      "bytes": 1017074,
+      "sha256": "7debbb8b28ac7d8563979d9579b201371fc74b64e5658ac20715a324010b5fa9"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/valkyrie.png",
+      "bytes": 745916,
+      "sha256": "01f71f5f5ce4d09ef9a15eca45da347aec76136a277c306378dd0c8ce41b3ccf"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/warrior.jpg",
+      "bytes": 766977,
+      "sha256": "5f08aa7282b9029f2fd53be13979b8719ead8d88a51100c149eea2c155e160b6"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/warrior.png",
+      "bytes": 706760,
+      "sha256": "95c8dfed824aad1e2be4182084df4e7cf8f6c238f8f0635aec6ae96c1771d0f6"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/wizard.jpg",
+      "bytes": 785815,
+      "sha256": "27d15bc068ed5115691865db84a07e078bb8178e68f23569df61ac09ad5588d5"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites/wizard.png",
+      "bytes": 852611,
+      "sha256": "51bcd09db5c7b6f11b047f0e0bcd71103a36c4b18583a84bc866bbca2b74283d"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/champion_orc.png",
+      "bytes": 1266673,
+      "sha256": "afc37e7d9ee4d11c4770334f7e4c902e8c5e1873d474fbdf90e7c5f8c226e678"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/dark_acolyte.png",
+      "bytes": 783212,
+      "sha256": "a3a54ee6378f9bc796a3583aae125ef42582d703c163d6e1d53bc0ef422cda2f"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/death_bat.png",
+      "bytes": 1564207,
+      "sha256": "a1008200403872f7c83b87dfd1cb04e1022fd60e46350b0266cf841e45667dd4"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/death_knight.png",
+      "bytes": 1651469,
+      "sha256": "c9c67618529eaee6136c3870af8c7aaed625b2c771e3945a40473af304c2d56c"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/elf.png",
+      "bytes": 1606307,
+      "sha256": "9d7e625efeb3aa7ddac5bae74830753b26d30dac14a11995ee9c3c6d9f574711"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/lava_golem.png",
+      "bytes": 1144692,
+      "sha256": "aee83678adeab929100ef1f684a94a5178cfc25f5aeb7960e3ac1790930c2700"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/minotaur.png",
+      "bytes": 1575225,
+      "sha256": "339d883de3b7f9c3fc87b0dd4bd7be4a84c3629ada8e78dd0160a236e928f90a"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/orc_grunt.png",
+      "bytes": 1845848,
+      "sha256": "d1a77f5e547c7e1bc21c088429421150090edffa2235f448d3aa0aad45092837"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/pickups.png",
+      "bytes": 1112484,
+      "sha256": "f1cdf8b56e62954585226865680ad37fac4ed3909fd213c196bcb8e4e83eb6ff"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/skeleton_archer.png",
+      "bytes": 1615937,
+      "sha256": "2f2c823c85865054d500e081c0231c6e13e1dfbf04f045ddd9ba6823438eec2e"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/stone_golem.png",
+      "bytes": 1908209,
+      "sha256": "48f99184b51b383f607120f03a90e6a69d2fc7df57dedf001f223fe653b2a6d9"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/storm_harpy.png",
+      "bytes": 944045,
+      "sha256": "cc6a3fac6fa01bd779e9d15cc7280f0758710921e15435ce308f971852ea4e60"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/valkyrie.png",
+      "bytes": 2025363,
+      "sha256": "aee8acdc37cc0b0a770ad77095d770f215e2c0fb39d489dd1599d3296eb6bee2"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/warrior.png",
+      "bytes": 1517266,
+      "sha256": "86c13ce7722a703c2b5530a9521657cf454dc0a91159fdcac38960507e1c7a83"
+    },
+    {
+      "group": "browser",
+      "path": "assets/sprites_backup/wizard.png",
+      "bytes": 1607244,
+      "sha256": "3ff754a1f281bca8c275c74673576dacb7062bb9cb2c0e33340bece1f54bc279"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/aqueduct_floor.jpg",
+      "bytes": 1153265,
+      "sha256": "0b1fa549382cca4afb873bafd6f92afc08d2c10dee961625f5d8c17e450ec07b"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/aqueduct_wall.jpg",
+      "bytes": 1027853,
+      "sha256": "d523de3e47a780ccb16e151dbbff4573ef52f0f743efb694fdf1b34cffbb4a03"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/floor.jpg",
+      "bytes": 980297,
+      "sha256": "42cb6b0b4d70149c8b3bd8d375a35614bb6c60bb677f809d4da99c8abe54923b"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/forge_floor.jpg",
+      "bytes": 1124303,
+      "sha256": "0078811f5c66dbe364ec91e7872ede05633d0a7a0656040be2ad1ead07f65c3c"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/forge_wall.jpg",
+      "bytes": 1191887,
+      "sha256": "6ef33c1d0f890625d2f068f11602068a0b38088d4b29210438a78a16079bb5d2"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/gale_floor.jpg",
+      "bytes": 1472033,
+      "sha256": "edb222d87f8491501f25f6b4fa90f3de1eac6eb017fe1ef5d53c33ebfaab6f02"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/gale_wall.jpg",
+      "bytes": 1091109,
+      "sha256": "7b0f0fa9333886f0c46f5e2fa174cfd447ea635de9178647685b8c2cd22b51ea"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/throne_floor.jpg",
+      "bytes": 1028213,
+      "sha256": "1dc199e04510146177d2934f32f2d36eb3828bf93973a4ffa0206f7557fc9f3e"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/throne_wall.jpg",
+      "bytes": 1013129,
+      "sha256": "b8f5dac79f6959a17f67099089a6b9f4f13d50d7d83d5f4333e8621d4b3331e0"
+    },
+    {
+      "group": "browser",
+      "path": "assets/textures/wall.jpg",
+      "bytes": 1013737,
+      "sha256": "3e10aedbd8e972af724e00f6abbbf4db33305595e8ff0d74e56d86a606677414"
+    },
+    {
+      "group": "browser",
+      "path": "assets/ui/hud_frame.jpg",
+      "bytes": 775505,
+      "sha256": "cf54df83583480f51057b19e2a9e0ef48325445e2a3396572c96d7fa6565aa86"
+    },
+    {
+      "group": "browser",
+      "path": "assets/ui/key_icon.jpg",
+      "bytes": 207918,
+      "sha256": "fde985fa754c067f2373e71591fda4e95b1b60c6c2af5387ae4f98527c1f4b67"
+    },
+    {
+      "group": "browser",
+      "path": "assets/ui/level_up_crest.png",
+      "bytes": 1402784,
+      "sha256": "f09464c669682216004dfa0d3aa9cb48621854b3a17ce73ba7c0e842fc601e89"
+    },
+    {
+      "group": "browser",
+      "path": "assets/ui/relic_crest.png",
+      "bytes": 1664663,
+      "sha256": "b70f92d59de6e189070c9e8c339ccb3b88db9f49db3c35ebc7dd997a607875a2"
+    },
+    {
+      "group": "browser",
+      "path": "assets/ui/sword_fp.jpg",
+      "bytes": 595971,
+      "sha256": "4ed17682dc8688b8374d040d8dfadc7ef47632966f4454d771b802a87188a73e"
+    },
+    {
+      "group": "browser",
+      "path": "assets/ui/title_bg.jpg",
+      "bytes": 869113,
+      "sha256": "e32bc83d18d14026cea656a434e06e2c7525a50d5b8ffc16c515cbcc25aeac4e"
+    },
+    {
+      "group": "browser",
+      "path": "docs/ASSET_MANIFEST.md",
+      "bytes": 1306,
+      "sha256": "b970cd99c80a48f996438c2ba4ea04250b8ed32e925dcd85e5a382dae00e11be"
+    },
+    {
+      "group": "browser",
+      "path": "docs/COMPLETION_GATES.md",
+      "bytes": 1898,
+      "sha256": "8e158558a35ab074686f18c8b43132cf73a20932a3f95ad10634e75786bbcf86"
+    },
+    {
+      "group": "browser",
+      "path": "docs/DECISIONS.md",
+      "bytes": 4742,
+      "sha256": "496ff946d496a2a93efd2ee364d6a2da47c8aba798b0153d9bf671ffa190be61"
+    },
+    {
+      "group": "browser",
+      "path": "docs/GAUNTLET_STATE.md",
+      "bytes": 4257,
+      "sha256": "be9421b3a61c49537296c6f5645e63c7added45a69f4117d98fea1206a505bc0"
+    },
+    {
+      "group": "browser",
+      "path": "docs/INITIAL_PROJECT_SETUP_SONNET.md",
+      "bytes": 7318,
+      "sha256": "fb3166fb69265cb938b4415b760f0f4fe0690d83e4bc066679e77f78fd53a41b"
+    },
+    {
+      "group": "browser",
+      "path": "docs/INITIAL_WALKTHROUGH_SONNET.md",
+      "bytes": 4291,
+      "sha256": "e71a689cecb1ab781b5e743f4e1d5b07caaed4992d89383c80403c51a2f0b14f"
+    },
+    {
+      "group": "browser",
+      "path": "docs/KNOWN_ISSUES.md",
+      "bytes": 5235,
+      "sha256": "0aa1f32b876e03f1bfdb5bc5ddf554a8b9b251d505ac75cc711d55353cf48e68"
+    },
+    {
+      "group": "browser",
+      "path": "docs/PERFORMANCE.md",
+      "bytes": 1395,
+      "sha256": "0131eff17afac26bfcbf6076fac6eeeb17b795bb082fb6b0fc1b718429f4ce3f"
+    },
+    {
+      "group": "browser",
+      "path": "docs/PLAYTEST.md",
+      "bytes": 3710,
+      "sha256": "cdc16926696b56d3005d45fb19826c49228ba2b62d6b62b971f1106814e2054f"
+    },
+    {
+      "group": "browser",
+      "path": "index.html",
+      "bytes": 17721,
+      "sha256": "438619b85da68b529689e4ac259f09e3c2d9171d3d7dd6c695390682dda98484"
+    },
+    {
+      "group": "browser",
+      "path": "last_transcript.txt",
+      "bytes": 19212,
+      "sha256": "e04d5b427d67058522532e3e055e74b3352621a83329624882a98836b9a246f9"
+    },
+    {
+      "group": "browser",
+      "path": "metrics/history.json",
+      "bytes": 443373,
+      "sha256": "25737dd51a95c8967bcdcbed94c760e167ea56af5668a4002068eefe8026106b"
+    },
+    {
+      "group": "browser",
+      "path": "metrics/latest.json",
+      "bytes": 6824,
+      "sha256": "4c4ce2b83de46bb820f24015ed0ee6dfc42d1221756e9d7c4c6a392d5e005c41"
+    },
+    {
+      "group": "browser",
+      "path": "package.json",
+      "bytes": 332,
+      "sha256": "d273410e0871f1fc6a40ef5f8f7eab8013674a21c8483fcf971f775ce036b4c5"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/00_baseline_menu.png",
+      "bytes": 725916,
+      "sha256": "a111be9e7d38a2e448cd40307c3b6d7bf029131185c3a9ab322a46bd3f240c6c"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/01_baseline_ingame.png",
+      "bytes": 579140,
+      "sha256": "8a72b5ea118855f4a76bf2a75efb25869182beeb44f88ccfbf246c4c77957f72"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/01_start.png",
+      "bytes": 711622,
+      "sha256": "6e0c349bb0f8a7f9204e53dca638c4b6f08e5d160e291d9f4c7ec80dc3bee9cd"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/02_first_hall.png",
+      "bytes": 524300,
+      "sha256": "607d254ee4816a4c509e8482962f2e3beb02742033df6e7460800731f4ba4d79"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/02_rpg_battle_arena.png",
+      "bytes": 122494,
+      "sha256": "52da8c9126f4a02015201a6f3e5bbc14a68792e01027999f0b99e38ce3871067"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/03_first_enemy.png",
+      "bytes": 403573,
+      "sha256": "cf14229a35c50e84caf64cc3d80117c95c1449dab1dd3faa91ec7aef46b2d733"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/04_combat.png",
+      "bytes": 398044,
+      "sha256": "c83c82ca71d3c32dce4aa92044634b831fee72bc683459adf83e1918ccf77c02"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/05_checkpoint.png",
+      "bytes": 236576,
+      "sha256": "ed6be7394dd29832d962dc021795b7edcf1f8db4b0135637fb34c977e4f98a95"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/06_shortcut.png",
+      "bytes": 362354,
+      "sha256": "698e1da03465a0caf055c072c1de829379a4904752cfbc14780ec5b287ea71f1"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/07_elite.png",
+      "bytes": 389449,
+      "sha256": "2265a6caaf7bf0ad6db49cc6501d11c6ef2964d19b85e08f48f4bf619abd6fdc"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/08_boss_intro.png",
+      "bytes": 419060,
+      "sha256": "8e497ce83196d13044c87b35ed8f864096e512d11555bf005a9ae21c78c3f06c"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/09_boss_combat.png",
+      "bytes": 353322,
+      "sha256": "b537cf87b28af5c2b047a4102e64cb63597e37bbf7e6a295d75d6b247696b060"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/10_victory.png",
+      "bytes": 233930,
+      "sha256": "c1de44b2a401538364934ebbd00a1c466b2178ebc799aa0f3bc5936f273d095b"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/11_elf_playthrough.png",
+      "bytes": 216407,
+      "sha256": "6b1649e7c5db37ae8233e6cc063e4668fe0ef26bec90d747fe9e58ff56c01ea9"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/12_wizard_playthrough.png",
+      "bytes": 214691,
+      "sha256": "77d028a86b88d9f64470c3d293907d8c2a5bd5e532919f1f4783fa8b71228a96"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/13_valkyrie_playthrough.png",
+      "bytes": 221296,
+      "sha256": "5e8623fd50b25fa1c6c21f9f6f8a6bcbdd50843bf433b46dee1916110f253c04"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/feat_3d_sprite_test_room.png",
+      "bytes": 110103,
+      "sha256": "433f7f40b88f4e2ad0a96beb167f1b09ad7cc05036f6312969e61b60e28d11ab"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/feat_floor2_grand_staircase.png",
+      "bytes": 764262,
+      "sha256": "1b911fbd50f744a73d584bd43e62f8e5ae2c9e46b1e2fe367f3b406b0505e654"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/feat_hero_battle_anim.png",
+      "bytes": 583837,
+      "sha256": "8a6f0719b43a1e6f4ed11f2f22d2ab937ea8fd25453645156b1f44c9f287ed52"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/feat_menu_hero_sprites.png",
+      "bytes": 726480,
+      "sha256": "dac046f0833b60df9b422935fffe89eb480fdda191ec159a74fd093e66b2f591"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/feat_minotaur_jumpscare.png",
+      "bytes": 317927,
+      "sha256": "6fad7a1bec5439a02b74187eac01f96a4bac1d939801f6618897e0f17620eba9"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/feat_weapon_attack_slash.png",
+      "bytes": 579236,
+      "sha256": "a2973d244468f7c269dbeb468e7151bad12863ad8cb4861c96d5b52d9841944f"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/review_frames/frame_0_15s.png",
+      "bytes": 228299,
+      "sha256": "c30674aea309e2d862ee03c07fc978c55fb2b9f43ffe07cd89e996c9066b2f9e"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/review_frames/frame_1_45s.png",
+      "bytes": 207821,
+      "sha256": "c2e186079c98da72c59a5fcfa80fd9875aeed3faef79492d558b5180db6b3861"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/review_frames/frame_2_90s.png",
+      "bytes": 384485,
+      "sha256": "f383274eec26598d129e55b38959d1c7e69b7b937c32c97f858d0ecb00b739e7"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/review_frames/frame_3_150s.png",
+      "bytes": 516234,
+      "sha256": "626703fbe35fabd5f722ac321b2405bafc396c0cc89773923df981d13e9e67da"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/review_frames/frame_4_210s.png",
+      "bytes": 524694,
+      "sha256": "e5478d11662499fa96910c83419ad1f9a524ee7b089e75e6802684b66a2fa4df"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/review_frames/frame_5_270s.png",
+      "bytes": 285198,
+      "sha256": "5a2e3b3e0cc68249e790c1dda2edcb2019a1b7be37b54d115796e16dc23c8b6d"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/review_frames/frame_6_330s.png",
+      "bytes": 340166,
+      "sha256": "cf2a8d7850536746518b439fad88b33330cf93a0fde5b3077f9a03712193b677"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/verify_enemy_visible.png",
+      "bytes": 544801,
+      "sha256": "48df31b5f5daf69e7a2763cf6bf1d60e8618bda75d03a10ab19d46d664d60d0c"
+    },
+    {
+      "group": "browser",
+      "path": "screenshots/verify_pause_menu.png",
+      "bytes": 245745,
+      "sha256": "1d90d3fbd098067aae6f320bd2d441b22d9ed264db8467bee67a03463113bbb0"
+    },
+    {
+      "group": "browser",
+      "path": "server.js",
+      "bytes": 1728,
+      "sha256": "6551827c2c1087273cc5ff8e6adc7526426728373345b3fa82358f28706d322d"
+    },
+    {
+      "group": "browser",
+      "path": "src/combat/HitDetection.js",
+      "bytes": 1531,
+      "sha256": "c44bc85a30f10f66e32aadb82ebcb68a5dc00aa0e7902caa82209cc354277e4f"
+    },
+    {
+      "group": "browser",
+      "path": "src/combat/ParticleSystem.js",
+      "bytes": 3279,
+      "sha256": "23a110cd2d4e80edb9e41e5eca0701f1c93552c305bc194d8e6be5595cf03b5d"
+    },
+    {
+      "group": "browser",
+      "path": "src/combat/PickupSystem.js",
+      "bytes": 4943,
+      "sha256": "59e6e4c46f578c80de501bba371f31fa4acb4717d2fb59c6dff8bebe49f07a8a"
+    },
+    {
+      "group": "browser",
+      "path": "src/enemies/Enemy.js",
+      "bytes": 36603,
+      "sha256": "8c649b865a3365864d51ea09e8afa2ab6faed1b87970e3ad7b2cc7d0441591f0"
+    },
+    {
+      "group": "browser",
+      "path": "src/enemies/EnemyManager.js",
+      "bytes": 6080,
+      "sha256": "5e9c8ee188ede665a6d29d4911a4e94ad7c08b7303428e5e3f2be7c2a2420106"
+    },
+    {
+      "group": "browser",
+      "path": "src/enemies/MinotaurStalker.js",
+      "bytes": 14909,
+      "sha256": "92fc743a039a3e3e1fcb1f1ee18c37521fe10ada2a4f840fb63e3aa9de326c54"
+    },
+    {
+      "group": "browser",
+      "path": "src/engine/AudioManager.js",
+      "bytes": 13379,
+      "sha256": "ce128d818d48f569cc4370e7f0d3f1cc0d16a57d448bc818385b0dc628ea4aa0"
+    },
+    {
+      "group": "browser",
+      "path": "src/engine/InputManager.js",
+      "bytes": 11666,
+      "sha256": "c8cb158e423c5b97687a56cf88fe034179d56207da1ebc594249599dcaa9c5cb"
+    },
+    {
+      "group": "browser",
+      "path": "src/engine/SaveManager.js",
+      "bytes": 979,
+      "sha256": "b6fe271b327c84385af2bee5480933cecdd85c414e7ca60da938d945e6b39995"
+    },
+    {
+      "group": "browser",
+      "path": "src/engine/ScreenFX.js",
+      "bytes": 1961,
+      "sha256": "564c5670c9bed69f4eef6f8b16d49b7e4a5ae95aa685e65e23928b4d6341901f"
+    },
+    {
+      "group": "browser",
+      "path": "src/main.js",
+      "bytes": 50004,
+      "sha256": "4825491383167161a4fc5f01fe27208db8442d8634233001bca06acbeff6bac8"
+    },
+    {
+      "group": "browser",
+      "path": "src/player/HUD.js",
+      "bytes": 7839,
+      "sha256": "f6163b785936cbff27637839a9bfc2ec79d924949d84a5736e64da565747d7ec"
+    },
+    {
+      "group": "browser",
+      "path": "src/player/Player.js",
+      "bytes": 22553,
+      "sha256": "25dc684373b3969e9d42406acfd148c75720d3527fbfc3718c212155b224a280"
+    },
+    {
+      "group": "browser",
+      "path": "src/player/Weapons.js",
+      "bytes": 23955,
+      "sha256": "c6f5ab1244d5e36442fc22cefe1ea7f230f2b5e59be3176de7dbd95652b18c39"
+    },
+    {
+      "group": "browser",
+      "path": "src/ui/MainMenu.js",
+      "bytes": 6082,
+      "sha256": "a28cf21d0051c5780614171247b9d7dd8d7a639cd3f1cc75ea89fd146000b04c"
+    },
+    {
+      "group": "browser",
+      "path": "src/world/MapLoader.js",
+      "bytes": 39964,
+      "sha256": "1d849dc90fa227ec6d595741774f55afb26a79330ea424b9b52757081530f47a"
+    },
+    {
+      "group": "browser",
+      "path": "src/world/SpriteTestRoom.js",
+      "bytes": 14473,
+      "sha256": "72a62ebb4491e9494b622ad2ec45a48aefcab04a0dbca755c042463662364233"
+    },
+    {
+      "group": "browser",
+      "path": "style.css",
+      "bytes": 26409,
+      "sha256": "18507bae1ad3c10bf9820f4bc39815b7c49c080074d1451c4e52cd546170f281"
+    },
+    {
+      "group": "browser",
+      "path": "tests/cdp_harness.js",
+      "bytes": 4177,
+      "sha256": "3d1b6800d91b4c4df51d7e3cd9af5ce91f4761c367b07dfc4afe4e03b0aaf540"
+    },
+    {
+      "group": "browser",
+      "path": "tests/debug_collision.js",
+      "bytes": 1620,
+      "sha256": "c83d42ae0c3ec268fd44f4f6c4da055dddeb750ac131201ab8ead3a15020e902"
+    },
+    {
+      "group": "browser",
+      "path": "tests/debug_death.js",
+      "bytes": 1055,
+      "sha256": "62c4155d0cea761afcc683b9aa0ddcc0c6ecadf4e6ea71fe2ce3d504950eb6a8"
+    },
+    {
+      "group": "browser",
+      "path": "tests/debug_eval.js",
+      "bytes": 1186,
+      "sha256": "6e09565d04da0091689727810d456cb608a90863d6d6e929930daba9479b667e"
+    },
+    {
+      "group": "browser",
+      "path": "tests/run_gauntlet_suite.js",
+      "bytes": 50248,
+      "sha256": "c5970e7eeb8be8baf523130a95a66de571ec4ce07eced24403df699c03eba2c5"
+    },
+    {
+      "group": "browser",
+      "path": "tests/test_boot.js",
+      "bytes": 2528,
+      "sha256": "4b2a630fe119bda42f19e3e9c7ee4bbcf53134d37d2a02949498d405b8cba23f"
+    },
+    {
+      "group": "browser",
+      "path": "tests/verify_features.js",
+      "bytes": 20036,
+      "sha256": "bf08d422834f92d4d63e78ff05a37386a7b8755c4ddea82cbdb1d1100defd5af"
+    },
+    {
+      "group": "browser",
+      "path": "tools/process_hero_sprites.py",
+      "bytes": 1393,
+      "sha256": "3e422e6996389873dd7012477421e359350548fe320c812f64490ab186a2032b"
+    },
+    {
+      "group": "browser",
+      "path": "tools/process_sprites.py",
+      "bytes": 3087,
+      "sha256": "d5248f49d41ad45542d7074c33254e97ded29fb7a1b729890e688d7cabd7dccf"
+    },
+    {
+      "group": "browser",
+      "path": "tools/reprocess_all_sprites.py",
+      "bytes": 8995,
+      "sha256": "b1e22207f19860fa3669cc02557046d630dae461664bc36201a1e02180e46b17"
+    },
+    {
+      "group": "godot",
+      "path": "godot/ASSET_BLUEPRINT_V1.md",
+      "bytes": 4617,
+      "sha256": "d20fad899c41a096d93e344cee78c420b6211a92032f391e412dbe7acbaa8765"
+    },
+    {
+      "group": "godot",
+      "path": "godot/ASSET_DELIVERY_MANIFEST_V1.json",
+      "bytes": 75606,
+      "sha256": "3ffbbb2878b762479a1ff11e385716dc98883c8e49d7ca72dc3a6e6c88b82477"
+    },
+    {
+      "group": "godot",
+      "path": "godot/ASSET_DELIVERY_VERIFICATION_V1.json",
+      "bytes": 6236,
+      "sha256": "5c9bad5db16ad016e0f31f3a06d7d28bdfc21d99bbb2658392d61628008b350c"
+    },
+    {
+      "group": "godot",
+      "path": "godot/ASSET_HANDOFF_V1.md",
+      "bytes": 6843,
+      "sha256": "8b4cf908031e8c0e702b13e18bddeb38a23201d139ac39850fc7eef23368bdb3"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/biomes/aether_labyrinth_concept_v1.png",
+      "bytes": 3670056,
+      "sha256": "cce9baaa3c6ce4ae141e3b467b9c79e0274f53a0bcdd909f15745d95d7187fb5"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/biomes/air_labyrinth_concept_v1.png",
+      "bytes": 3998429,
+      "sha256": "850248405924c448542dbfa8b35ca54e5e95cd5af8289cd02bd08803e2a1e1cc"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/biomes/earth_labyrinth_concept_v1.png",
+      "bytes": 3934114,
+      "sha256": "8332f88e22d4a832f3261151c7fc0b7fefc028b99fca73010ed5ab97fcf860f0"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/biomes/fire_labyrinth_concept_v1.png",
+      "bytes": 3695190,
+      "sha256": "9f9091b8ea96186adae445cd9f20c43d366689328150f9c412c5c49b4d8e5fdb"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/biomes/water_labyrinth_concept_v1.png",
+      "bytes": 3724325,
+      "sha256": "80d88d9ff3be1ecc43e49b4190633957b80f4fcdb0b95a6e53580311069d4cc0"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/abbess_of_the_tide_source_v1.png",
+      "bytes": 2667111,
+      "sha256": "0df9885b43dd1b776e58d5e4422f505f66f2857937656bf23aa89cff7b115f9f"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/ash_zealot_source_v1.png",
+      "bytes": 2190665,
+      "sha256": "926268561ddcd96ed9250ad5d8cadf30c1703b2564299167b32932728db46872"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/asterion_source_v1.png",
+      "bytes": 2508705,
+      "sha256": "9f65e59ad1497924e2f8f5209403e5e055c5d2947caac2940eab10b698525d71"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/barrow_knight_source_v1.png",
+      "bytes": 2423316,
+      "sha256": "295acd0acb55f4e8dda2b0636ca7324e40ff0e09fb5d60a333884e1637d845ca"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/bellows_wyrm_source_v1.png",
+      "bytes": 2749411,
+      "sha256": "f0ff68ef570435cdd869d41a2ba022394ff63bd57855874cf5508adda84edb00"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/cave_spider_source_v1.png",
+      "bytes": 2333915,
+      "sha256": "0c1cccb316389bb9d8d7112e78f17c1a1230c5a7d7f695ed518f9e76ed86ffb0"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/champion_orc.png",
+      "bytes": 1274507,
+      "sha256": "337f21f8531d57c2dd0bc60683a133beb3fd11a9d52569bcaf5ddf270ec0615a"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/dark_acolyte.png",
+      "bytes": 752447,
+      "sha256": "bc9692f37266746893ee3bbad430f9254cf8712952cf0f52d49b78dfed7bfcc3"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/death_bat.jpg",
+      "bytes": 763382,
+      "sha256": "12282d647e9b48a26d4eed17e2eb7b6bad48be7b6a61f662a7e32090401e1014"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/death_bat.png",
+      "bytes": 863139,
+      "sha256": "328934eaa8eea8f453809a65e946f3d53b44a97beaf2a74ce3db52e52827e84f"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/death_knight.jpg",
+      "bytes": 837567,
+      "sha256": "fe2197ae87853e218550b83a81d1b94c1aa9b4d64ae2a4ec24d0db19eea34db8"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/death_knight.png",
+      "bytes": 960536,
+      "sha256": "c90abfb418d6496b88cca8997175209e6dde78f4414576d26e2976f6ec4424af"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/elf.jpg",
+      "bytes": 875015,
+      "sha256": "8e1315b8e342672a053e1de55d66b232f754134c43332e926269021f06d20e7b"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/elf.png",
+      "bytes": 797873,
+      "sha256": "2bb72574e1db4979c878726bdaf5d3c09be6909a979ef01fd280c0cb274fab6c"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/elf_questor_source_v1.png",
+      "bytes": 2390207,
+      "sha256": "5df611ea963f5f99d27a8460c8a1acab8fe1450f6b9b029457acf8cfb3c14366"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/ember_imp_source_v1.png",
+      "bytes": 2309488,
+      "sha256": "679626d0e1e52c886a1cffc40d851118eeddb664c014fc889028026340401abd"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/frost_wraith_source_v1.png",
+      "bytes": 2588055,
+      "sha256": "d6b0429379e7973838dada2521f3dec46fbacf2896d47705d2982ab860da68e6"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/lava_golem.png",
+      "bytes": 955720,
+      "sha256": "75032515fdd4278994974c31ebe2528b61c600d08b311f12e8e5bab3f09beff5"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/magister_of_glass_source_v1.png",
+      "bytes": 2540924,
+      "sha256": "a3fc40c25ac9058067f6cb573e3aee06090519e298e9fe711f2185b18490e99a"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/minotaur.png",
+      "bytes": 1069312,
+      "sha256": "8d9d5108b9fc0a36f37a46aba7041d31d7bfa308a40eca231982d5dc33aebab3"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/minotaur_stalker_source_v1.png",
+      "bytes": 2286434,
+      "sha256": "a188072a8008f35713dab758a8e4a32746df90d47641f2c6a1b908a7d35aefed"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/mire_hag_source_v1.png",
+      "bytes": 2663755,
+      "sha256": "8302e6bf299b63128de9e672c5cc7ca883888797cf12f777bb544f9d475932f1"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/mirror_duelist_source_v1.png",
+      "bytes": 2333839,
+      "sha256": "c4ef4e5f8dc6761c6418c59155c4a157681122755d4cadaec8f74d6da16ef62a"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/moss_troll_source_v1.png",
+      "bytes": 2644017,
+      "sha256": "81ddcd5f0bcf88c57d22512f636cd1a82bb7b6afbd5c6a776911fd3e222875f3"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/orc_grunt.jpg",
+      "bytes": 959283,
+      "sha256": "e137058bb6fdb79f75ae0b371ffe59c5e1d5335e1d8d170119d435cea4945054"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/orc_grunt.png",
+      "bytes": 949451,
+      "sha256": "f84563b64b60c580030e6b7caa55a3d2c18ce3133bbf667eb1b020d240190cbb"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/orc_grunt_source_v1.png",
+      "bytes": 2284386,
+      "sha256": "72a3a174ca74ed1dc52c665bd605171f13adb52e482b4408fa4d5a006c0f2b14"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/pickups.jpg",
+      "bytes": 508026,
+      "sha256": "cc1857e083016bfa06a7b69013314e6e426f2c4d279a6b01fc635fe7363f93f2"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/pickups.png",
+      "bytes": 522317,
+      "sha256": "ac37f3b91ba11da45e0691a0bfc4b08418f5f4ca045b2ade8b4c900d38e32584"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/roc_of_the_broken_sky_source_v1.png",
+      "bytes": 2704856,
+      "sha256": "6d35642cdf1490ef580f144ac5784d32eb81969950c18373787e065abe94380c"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/rune_sentinel_source_v1.png",
+      "bytes": 2312919,
+      "sha256": "934de5affc937e11cd9e7743ef09e3662b6ab2b61d072b3661c896777edf7541"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/skeleton_archer.jpg",
+      "bytes": 838914,
+      "sha256": "6ac7e5a403bcf3528111d5d16abf0ff1c49edeb44af2c7c9e0e271db447a9be2"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/skeleton_archer.png",
+      "bytes": 979757,
+      "sha256": "74ce265eae9f77f842b9d1827970b31769631c9df5672463aae2a7a36f80dce5"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/skeleton_archer_source_v1.png",
+      "bytes": 2343705,
+      "sha256": "5cd909868552653b06d6ee2fee6800969b0a427d85f7d85819f2823f2fe15e58"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/stone_golem.jpg",
+      "bytes": 956356,
+      "sha256": "0d0fe78c0d6ce1c0a64def64b83551725d9a158e15dc23af96d9eb1c3e641544"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/stone_golem.png",
+      "bytes": 1075688,
+      "sha256": "a2d986b68da299e88b5d76b6db3d34ddedbb997067b6d2ed57a163f4f70d8e11"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/stonehart_regent_source_v1.png",
+      "bytes": 2738461,
+      "sha256": "8bfb481a0cd1225808e1f49f0a5db4528c4d49d404f2c5883a35fbdce366c203"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/storm_gargoyle_source_v1.png",
+      "bytes": 2930184,
+      "sha256": "bdc69c948a27d670483b506c330204ce5eb3124ad86c940dc2806e60d321405b"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/storm_harpy.png",
+      "bytes": 731997,
+      "sha256": "d5d62bb2eb01881969e95d37f8ff2d92ed161f22a69f8d839c74f8bc45b8ae17"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/tempest_harpy_source_v1.png",
+      "bytes": 2551097,
+      "sha256": "926427e51724012d1290257113be6802f309be8aa6db17408d6ce1aad532606c"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/thornbound_revenant_source_v1.png",
+      "bytes": 2336596,
+      "sha256": "a50f168b0c13c8c527c14b53bcc8cf522c7b63c89025147683b45060a30578c3"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/valkyrie.jpg",
+      "bytes": 1017074,
+      "sha256": "7debbb8b28ac7d8563979d9579b201371fc74b64e5658ac20715a324010b5fa9"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/valkyrie.png",
+      "bytes": 745916,
+      "sha256": "01f71f5f5ce4d09ef9a15eca45da347aec76136a277c306378dd0c8ce41b3ccf"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/valkyrie_thyra_source_v1.png",
+      "bytes": 2482297,
+      "sha256": "2df009cfdbc72dc2a1cd261143e905b0d9b6259eefcfc38e5324c8cc5b087baa"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/warrior.jpg",
+      "bytes": 766977,
+      "sha256": "5f08aa7282b9029f2fd53be13979b8719ead8d88a51100c149eea2c155e160b6"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/warrior.png",
+      "bytes": 706760,
+      "sha256": "95c8dfed824aad1e2be4182084df4e7cf8f6c238f8f0635aec6ae96c1771d0f6"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/warrior_thor_source_v1.png",
+      "bytes": 2593881,
+      "sha256": "bafe18d5209b234c836a403598712ade5e1be56fc02276afde2d19f311e2dfee"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/wizard.jpg",
+      "bytes": 785815,
+      "sha256": "27d15bc068ed5115691865db84a07e078bb8178e68f23569df61ac09ad5588d5"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/wizard.png",
+      "bytes": 852611,
+      "sha256": "51bcd09db5c7b6f11b047f0e0bcd71103a36c4b18583a84bc866bbca2b74283d"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/sprites/wizard_merlin_source_v1.png",
+      "bytes": 2525119,
+      "sha256": "ef77030198725754205eb341158ce4ebeaf7fd5fd052ef101c9a420395d838d1"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/aqueduct_floor.jpg",
+      "bytes": 1153265,
+      "sha256": "0b1fa549382cca4afb873bafd6f92afc08d2c10dee961625f5d8c17e450ec07b"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/aqueduct_wall.jpg",
+      "bytes": 1027853,
+      "sha256": "d523de3e47a780ccb16e151dbbff4573ef52f0f743efb694fdf1b34cffbb4a03"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/floor.jpg",
+      "bytes": 980297,
+      "sha256": "42cb6b0b4d70149c8b3bd8d375a35614bb6c60bb677f809d4da99c8abe54923b"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/forge_floor.jpg",
+      "bytes": 1124303,
+      "sha256": "0078811f5c66dbe364ec91e7872ede05633d0a7a0656040be2ad1ead07f65c3c"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/forge_wall.jpg",
+      "bytes": 1191887,
+      "sha256": "6ef33c1d0f890625d2f068f11602068a0b38088d4b29210438a78a16079bb5d2"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/gale_floor.jpg",
+      "bytes": 1472033,
+      "sha256": "edb222d87f8491501f25f6b4fa90f3de1eac6eb017fe1ef5d53c33ebfaab6f02"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/gale_wall.jpg",
+      "bytes": 1091109,
+      "sha256": "7b0f0fa9333886f0c46f5e2fa174cfd447ea635de9178647685b8c2cd22b51ea"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/throne_floor.jpg",
+      "bytes": 1028213,
+      "sha256": "1dc199e04510146177d2934f32f2d36eb3828bf93973a4ffa0206f7557fc9f3e"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/throne_wall.jpg",
+      "bytes": 1013129,
+      "sha256": "b8f5dac79f6959a17f67099089a6b9f4f13d50d7d83d5f4333e8621d4b3331e0"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/textures/wall.jpg",
+      "bytes": 1013737,
+      "sha256": "3e10aedbd8e972af724e00f6abbbf4db33305595e8ff0d74e56d86a606677414"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/ui/hud_frame.jpg",
+      "bytes": 775505,
+      "sha256": "cf54df83583480f51057b19e2a9e0ef48325445e2a3396572c96d7fa6565aa86"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/ui/key_icon.jpg",
+      "bytes": 207918,
+      "sha256": "fde985fa754c067f2373e71591fda4e95b1b60c6c2af5387ae4f98527c1f4b67"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/ui/level_up_crest.png",
+      "bytes": 1402784,
+      "sha256": "f09464c669682216004dfa0d3aa9cb48621854b3a17ce73ba7c0e842fc601e89"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/ui/relic_crest.png",
+      "bytes": 1664663,
+      "sha256": "b70f92d59de6e189070c9e8c339ccb3b88db9f49db3c35ebc7dd997a607875a2"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/ui/sword_fp.jpg",
+      "bytes": 595971,
+      "sha256": "4ed17682dc8688b8374d040d8dfadc7ef47632966f4454d771b802a87188a73e"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/ui/title_bg.jpg",
+      "bytes": 869113,
+      "sha256": "e32bc83d18d14026cea656a434e06e2c7525a50d5b8ffc16c515cbcc25aeac4e"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/weapons/bow_source_v1.png",
+      "bytes": 1997003,
+      "sha256": "99008d2ac9cb77175c4fcc279d397b2f754560099fc7ee9174170f9a651b5482"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/weapons/broadsword_source_v1.png",
+      "bytes": 2108213,
+      "sha256": "410aa1aea87b97050794cdc257fca6bdbaf59aee2cca7246c497eee451b4370c"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/weapons/shield_source_v1.png",
+      "bytes": 2186243,
+      "sha256": "1912c74b79310e3c13343e97bac121d6c1927b0fb87369d5f556fe570d88d2fc"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/weapons/shield_source_v2.png",
+      "bytes": 2232150,
+      "sha256": "9640643fa50d115abf86dad3564377645238075ab5f86a0c0c41b6ed3b4811e1"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/weapons/spear_source_v1.png",
+      "bytes": 2051298,
+      "sha256": "3b9d8d2bf4b09426a9845751bcc2b3ddcc93563f49d09990d1959530f3f844af"
+    },
+    {
+      "group": "godot",
+      "path": "godot/assets/weapons/staff_source_v1.png",
+      "bytes": 1836031,
+      "sha256": "d18250a1dedebf8b371f55960d2f350a5a41c2c793a47d5d026382b39994958b"
+    },
+    {
+      "group": "godot",
+      "path": "godot/ELEMENTAL_LABYRINTHS_V1.html",
+      "bytes": 29956,
+      "sha256": "cd74ee113f9c8581e5e260572d7653ec309ac063b5df609ad2f7a69f3d099273"
+    },
+    {
+      "group": "godot",
+      "path": "godot/ELEMENTAL_LABYRINTHS_V1.json",
+      "bytes": 76362,
+      "sha256": "5d0b5a2e480dcddd286c6c18d44589c8c4cdddb9629b8e6e537ee8e26eca8095"
+    },
+    {
+      "group": "godot",
+      "path": "godot/ELEMENTAL_STAGE_DESIGN_V1.md",
+      "bytes": 8533,
+      "sha256": "7543c72fc89f5b729ee447e60b203b00ea5fab71844a5c2617f1be461f871a8d"
+    },
+    {
+      "group": "godot",
+      "path": "godot/EXPANSION_BLUEPRINT_V1.md",
+      "bytes": 3580,
+      "sha256": "6aa4d785bce739d71a31b18c0ee0f4bce0cd599d7b8a7a9d5d0b83d13da8c0df"
+    },
+    {
+      "group": "godot",
+      "path": "godot/EXPANSION_HANDOFF_V1.md",
+      "bytes": 7625,
+      "sha256": "b91d71b15660ea215ddcccacdf5123ab75333a6e60cfc37e58448a9f3ec42ae6"
+    },
+    {
+      "group": "godot",
+      "path": "godot/EXPANSION_MANIFEST_V1.json",
+      "bytes": 110058,
+      "sha256": "f4ef9aa2e1dc2db789942a22b0d44d2d3d1acc5a1c70f3c71eb8265402d017cb"
+    },
+    {
+      "group": "godot",
+      "path": "godot/EXPANSION_VERIFICATION_V1.json",
+      "bytes": 15957,
+      "sha256": "1de65f701c0886168c54093cb465423c8d862340a4c78db1dd6aacfd2cb38e18"
+    },
+    {
+      "group": "godot",
+      "path": "godot/launch_game.bat",
+      "bytes": 1304,
+      "sha256": "873f118c0f78e12f5707d176854f7b16b4f4367e40fa0b94e42e8ad1bee56fe4"
+    },
+    {
+      "group": "godot",
+      "path": "godot/project.godot",
+      "bytes": 428,
+      "sha256": "cbfd7789c8acdc34d335c9f5959dcea742fa5aa27fceaf11f357ecb8eb3ded14"
+    },
+    {
+      "group": "godot",
+      "path": "godot/README.md",
+      "bytes": 4206,
+      "sha256": "5123afd610ebee63d51311d2fea7d3c8b7925d1bf25463e344d5ed5883ed4581"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scenes/main.tscn",
+      "bytes": 169,
+      "sha256": "db057226a45ac85ab681260949f17e3eb5657b6a89cb9a64163d3215d983e292"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/asterion_boss.gd",
+      "bytes": 9518,
+      "sha256": "1038e819ae753111ba5f69f6e518cee15676ac5d70f0c43dce86f1cddd2e35ac"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/audio_synth.gd",
+      "bytes": 6181,
+      "sha256": "19eae69885f4a9d499c3c45732752cb88c61c439dff6592b0b9cae1786882ee6"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/citadel_floors.gd",
+      "bytes": 11733,
+      "sha256": "5c221c976c90360203fceb610f665059e17026f79534553ad4fbc75307c40ce5"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/enemy.gd",
+      "bytes": 15279,
+      "sha256": "6e139be37cdfa2abc8bc42e307e87172c54cbcdf3ea86659b6d0694690ec77de"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/global.gd",
+      "bytes": 5271,
+      "sha256": "810a47623e6e44e88be89b0c4c7faf72fcd7b8c1c042f984ecbcf312ef5c1df9"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/hero_classes.gd",
+      "bytes": 4508,
+      "sha256": "db00b5a56070c7e50385d80f58f27be979b8a58767a4333a5302c9f92a908161"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/hud.gd",
+      "bytes": 8283,
+      "sha256": "d9c5a3a2a82668dd6240fb48042ab8a85b3f840f75e0a4e51299a50224ad714b"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/main.gd",
+      "bytes": 3182,
+      "sha256": "9d1f7ff9918441d7fc90a6f47cdd5dd050e738ddb1aa0ffd5e2e86be16bd147d"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/player.gd",
+      "bytes": 18514,
+      "sha256": "c3f307ffa299fcb488e0eb7f7d9f2156553aae2b55b6346e2391e8be92c4a730"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/projectile.gd",
+      "bytes": 6766,
+      "sha256": "d39ba8d691c0b3db2f007ddd78755224244ae436a2603b80af79d2058af8c7b9"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/sanctuary.gd",
+      "bytes": 2853,
+      "sha256": "e5b872ab3f8e912eb965a95a5aecf96ff4af311c8730f1a04208e538b03084ec"
+    },
+    {
+      "group": "godot",
+      "path": "godot/scripts/stalker_minotaur.gd",
+      "bytes": 9384,
+      "sha256": "aa25af272f51f76dcb16209c96f293ee57c7aa58ade17cf8b7cdb79efddfdd9a"
+    },
+    {
+      "group": "godot",
+      "path": "godot/tests/test_suite.gd",
+      "bytes": 22575,
+      "sha256": "55dd85535dae27564fb318e814c5bb67666cb8d4483f09b5a2def52cf80d6dc2"
+    }
+  ],
+  "preserved_originals_verified": 425,
+  "selected_artwork_verification": {
+    "status": "PASS",
+    "selected_sources": 35,
+    "old_shield_preserved": true,
+    "old_shield_sha256": "1912c74b79310e3c13343e97bac121d6c1927b0fb87369d5f556fe570d88d2fc"
+  },
+  "runtime_checks": {
+    "godot_version": "4.7.2.stable.official.ed1daf0bf",
+    "project": "godot/project.godot",
+    "checks": [
+      {
+        "check": "import",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 59.219,
+        "engine_errors": [],
+        "warnings": []
+      },
+      {
+        "check": "tests",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 5.047,
+        "engine_errors": [],
+        "warnings": [],
+        "assertions_passed": 94,
+        "assertions_total": 94,
+        "assertions_failed": 0
+      },
+      {
+        "check": "scene_boot",
+        "passed": true,
+        "exit_code": 0,
+        "seconds": 3.718,
+        "engine_errors": [],
+        "warnings": []
+      }
+    ],
+    "passed": true,
+    "scope": "Headless import, existing gameplay assertions and bounded scene boot"
+  },
+  "documented_migration_changes": [
+    {
+      "path": "godot/launch_game.bat",
+      "reason": "Replaced original absolute machine/project path with portable Codex launcher",
+      "migrated_sha256": "14f53506863a73ed9d7894af1b1c28e9cca9748c43dd79f1f82dd976c573a8c5"
+    }
+  ],
+  "generated_engine_metadata": "Godot produced asset .import and script .uid metadata; .godot caches excluded from Git.",
+  "independent_integrity_review": {
+    "copied_files": 235,
+    "unchanged_copies": 234,
+    "authorized_launcher_replacement": 1,
+    "selected_artwork_sha256_matches": 35,
+    "preserved_shield_v1": true,
+    "backup_entries_sha256_and_size_matches": 425,
+    "original_live_files_checked": 408,
+    "authorized_workspace_blueprint_update": 1,
+    "volatile_userdata_files_verified_in_backup_only": 17,
+    "baseline_whitespace": "Whitespace present in imported source is preserved; new takeover tooling receives a scoped diff check."
+  },
+  "tooling_readback": "Exact normalized text readback, with migration-helper Python AST equivalence verified after GEN9 quote normalization."
+}

@@ -2,7 +2,7 @@ import { CDPHarness } from './cdp_harness.js';
 
 async function run() {
   console.log('--- Starting CDP Harness ---');
-  const harness = new CDPHarness({ port: 9222 });
+  const harness = new CDPHarness({ port: 9230 });
   try {
     await harness.launch();
     console.log('Chrome launched, navigating to http://localhost:3000/...');

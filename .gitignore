@@ -1,0 +1,11 @@
+/.codex-local/
+**/.godot/
+**/__pycache__/
+node_modules/
+.env
+.env.*
+!.env.example
+/last_transcript.txt
+/assets/sprites_backup/
+/screenshots/review_frames/
+/godot/override.cfg

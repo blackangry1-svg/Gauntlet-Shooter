@@ -100,6 +100,7 @@ export class EnemyManager {
   update(dt, playerPos) {
     let bossAlive = false;
     let bossHpPct = 0;
+    let activeBoss = null;
 
     this._frameCount++;
 
@@ -108,8 +109,11 @@ export class EnemyManager {
       if (!enemy.dead) {
         if (enemy.isBoss) {
           enemy.update(dt, playerPos);
-          bossAlive = true;
-          bossHpPct = Math.max(0, enemy.health / enemy.maxHealth);
+          if (!activeBoss || (playerPos && enemy.mesh.position.distanceTo(playerPos) < activeBoss.mesh.position.distanceTo(playerPos))) {
+            activeBoss = enemy;
+            bossAlive = true;
+            bossHpPct = Math.max(0, enemy.health / enemy.maxHealth);
+          }
           continue;
         }
 
@@ -159,7 +163,7 @@ export class EnemyManager {
     }
 
     if (this.onBossHealthChange) {
-      this.onBossHealthChange(bossAlive, bossHpPct);
+      this.onBossHealthChange(bossAlive, bossHpPct, activeBoss);
     }
   }
 

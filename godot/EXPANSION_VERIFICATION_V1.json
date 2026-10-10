@@ -1,0 +1,395 @@
+{
+  "date": "2026-10-09",
+  "status": "VERIFIED_EXPANSION_DELIVERY",
+  "source_count": 22,
+  "regular_enemy_sheets": 12,
+  "boss_sheets": 5,
+  "biome_concept_images": 5,
+  "total_source_bytes": 62040723,
+  "new_artwork_source_review": "PASS; root and independent reviewers; processing notes recorded",
+  "original_imported_assets_checked": 41,
+  "original_imported_assets_changed": [],
+  "previously_selected_sources_checked": 13,
+  "previously_selected_sources_changed": [],
+  "superseded_shield_v1_preserved": true,
+  "documents": [
+    {
+      "file": "EXPANSION_BLUEPRINT_V1.md",
+      "normalized_chars": 3531,
+      "exact_readback_matches": true
+    },
+    {
+      "file": "ELEMENTAL_STAGE_DESIGN_V1.md",
+      "normalized_chars": 8450,
+      "exact_readback_matches": true
+    },
+    {
+      "file": "ELEMENTAL_LABYRINTHS_V1.json",
+      "normalized_chars": 71701,
+      "exact_readback_matches": true
+    },
+    {
+      "file": "ELEMENTAL_LABYRINTHS_V1.html",
+      "normalized_chars": 29904,
+      "exact_readback_matches": true
+    },
+    {
+      "file": "EXPANSION_MANIFEST_V1.json",
+      "normalized_chars": 108063,
+      "exact_readback_matches": true
+    },
+    {
+      "file": "EXPANSION_HANDOFF_V1.md",
+      "normalized_chars": 7577,
+      "exact_readback_matches": true
+    }
+  ],
+  "asset_checks": [
+    {
+      "asset": "thornbound_revenant",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\thornbound_revenant_source_v1.png",
+      "sha256": "a50f168b0c13c8c527c14b53bcc8cf522c7b63c89025147683b45060a30578c3",
+      "bytes": 2336596,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "barrow_knight",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\barrow_knight_source_v1.png",
+      "sha256": "295acd0acb55f4e8dda2b0636ca7324e40ff0e09fb5d60a333884e1637d845ca",
+      "bytes": 2423316,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "mire_hag",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\mire_hag_source_v1.png",
+      "sha256": "8302e6bf299b63128de9e672c5cc7ca883888797cf12f777bb544f9d475932f1",
+      "bytes": 2663755,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "frost_wraith",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\frost_wraith_source_v1.png",
+      "sha256": "d6b0429379e7973838dada2521f3dec46fbacf2896d47705d2982ab860da68e6",
+      "bytes": 2588055,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "ember_imp",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\ember_imp_source_v1.png",
+      "sha256": "679626d0e1e52c886a1cffc40d851118eeddb664c014fc889028026340401abd",
+      "bytes": 2309488,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "ash_zealot",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\ash_zealot_source_v1.png",
+      "sha256": "926268561ddcd96ed9250ad5d8cadf30c1703b2564299167b32932728db46872",
+      "bytes": 2190665,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "storm_gargoyle",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\storm_gargoyle_source_v1.png",
+      "sha256": "bdc69c948a27d670483b506c330204ce5eb3124ad86c940dc2806e60d321405b",
+      "bytes": 2930184,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "tempest_harpy",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\tempest_harpy_source_v1.png",
+      "sha256": "926427e51724012d1290257113be6802f309be8aa6db17408d6ce1aad532606c",
+      "bytes": 2551097,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "rune_sentinel",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\rune_sentinel_source_v1.png",
+      "sha256": "934de5affc937e11cd9e7743ef09e3662b6ab2b61d072b3661c896777edf7541",
+      "bytes": 2312919,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "mirror_duelist",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\mirror_duelist_source_v1.png",
+      "sha256": "c4ef4e5f8dc6761c6418c59155c4a157681122755d4cadaec8f74d6da16ef62a",
+      "bytes": 2333839,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "cave_spider",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\cave_spider_source_v1.png",
+      "sha256": "0c1cccb316389bb9d8d7112e78f17c1a1230c5a7d7f695ed518f9e76ed86ffb0",
+      "bytes": 2333915,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "moss_troll",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\moss_troll_source_v1.png",
+      "sha256": "81ddcd5f0bcf88c57d22512f636cd1a82bb7b6afbd5c6a776911fd3e222875f3",
+      "bytes": 2644017,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "stonehart_regent",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\stonehart_regent_source_v1.png",
+      "sha256": "8bfb481a0cd1225808e1f49f0a5db4528c4d49d404f2c5883a35fbdce366c203",
+      "bytes": 2738461,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "abbess_of_the_tide",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\abbess_of_the_tide_source_v1.png",
+      "sha256": "0df9885b43dd1b776e58d5e4422f505f66f2857937656bf23aa89cff7b115f9f",
+      "bytes": 2667111,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "bellows_wyrm",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\bellows_wyrm_source_v1.png",
+      "sha256": "f0ff68ef570435cdd869d41a2ba022394ff63bd57855874cf5508adda84edb00",
+      "bytes": 2749411,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "roc_of_the_broken_sky",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\roc_of_the_broken_sky_source_v1.png",
+      "sha256": "6d35642cdf1490ef580f144ac5784d32eb81969950c18373787e065abe94380c",
+      "bytes": 2704856,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "magister_of_glass",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\magister_of_glass_source_v1.png",
+      "sha256": "a3fc40c25ac9058067f6cb573e3aee06090519e298e9fe711f2185b18490e99a",
+      "bytes": 2540924,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "earth_labyrinth",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\earth_labyrinth_concept_v1.png",
+      "sha256": "8332f88e22d4a832f3261151c7fc0b7fefc028b99fca73010ed5ab97fcf860f0",
+      "bytes": 3934114,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "water_labyrinth",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\water_labyrinth_concept_v1.png",
+      "sha256": "80d88d9ff3be1ecc43e49b4190633957b80f4fcdb0b95a6e53580311069d4cc0",
+      "bytes": 3724325,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "fire_labyrinth",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\fire_labyrinth_concept_v1.png",
+      "sha256": "9f9091b8ea96186adae445cd9f20c43d366689328150f9c412c5c49b4d8e5fdb",
+      "bytes": 3695190,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "air_labyrinth",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\air_labyrinth_concept_v1.png",
+      "sha256": "850248405924c448542dbfa8b35ca54e5e95cd5af8289cd02bd08803e2a1e1cc",
+      "bytes": 3998429,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    },
+    {
+      "asset": "aether_labyrinth",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\aether_labyrinth_concept_v1.png",
+      "sha256": "cce9baaa3c6ce4ae141e3b467b9c79e0274f53a0bcdd909f15745d95d7187fb5",
+      "bytes": 3670056,
+      "hash_matches": true,
+      "dimensions_match": true,
+      "rgb_mode_matches": true
+    }
+  ],
+  "maze_grid_checks": [
+    {
+      "element": "earth",
+      "key_accessible_while_locked": true,
+      "boss_locked_until_key": true,
+      "exit_locked_until_key": true,
+      "boss_and_lever_reachable_after_key": true,
+      "exit_reachable_after_victory_without_shortcut": true,
+      "all_unlocked_tiles_connected": true,
+      "cycles_before_gate": 5,
+      "cycles_with_key_and_shortcut_closed": 8,
+      "cycles_with_shortcut_open": 9,
+      "boss_circuit_cells": 26,
+      "reported_graph_checks": {
+        "all_cells_connected_when_unlocked": true,
+        "key_reachable_before_gate": true,
+        "boss_locked_before_key": true,
+        "exit_locked_before_key": true,
+        "lever_reachable_after_key": true,
+        "boss_reachable_after_key": true,
+        "shortcut_not_required_for_completion": true,
+        "key_has_no_mandatory_hazard": true,
+        "exit_has_safe_backbone": true,
+        "boss_circuit_closed": true,
+        "navigation_cycles_before_gate": 5,
+        "navigation_cycles_in_boss_domain": 3
+      }
+    },
+    {
+      "element": "water",
+      "key_accessible_while_locked": true,
+      "boss_locked_until_key": true,
+      "exit_locked_until_key": true,
+      "boss_and_lever_reachable_after_key": true,
+      "exit_reachable_after_victory_without_shortcut": true,
+      "all_unlocked_tiles_connected": true,
+      "cycles_before_gate": 5,
+      "cycles_with_key_and_shortcut_closed": 8,
+      "cycles_with_shortcut_open": 9,
+      "boss_circuit_cells": 36,
+      "reported_graph_checks": {
+        "all_cells_connected_when_unlocked": true,
+        "key_reachable_before_gate": true,
+        "boss_locked_before_key": true,
+        "exit_locked_before_key": true,
+        "lever_reachable_after_key": true,
+        "boss_reachable_after_key": true,
+        "shortcut_not_required_for_completion": true,
+        "key_has_no_mandatory_hazard": true,
+        "exit_has_safe_backbone": true,
+        "boss_circuit_closed": true,
+        "navigation_cycles_before_gate": 5,
+        "navigation_cycles_in_boss_domain": 3
+      }
+    },
+    {
+      "element": "fire",
+      "key_accessible_while_locked": true,
+      "boss_locked_until_key": true,
+      "exit_locked_until_key": true,
+      "boss_and_lever_reachable_after_key": true,
+      "exit_reachable_after_victory_without_shortcut": true,
+      "all_unlocked_tiles_connected": true,
+      "cycles_before_gate": 5,
+      "cycles_with_key_and_shortcut_closed": 8,
+      "cycles_with_shortcut_open": 9,
+      "boss_circuit_cells": 44,
+      "reported_graph_checks": {
+        "all_cells_connected_when_unlocked": true,
+        "key_reachable_before_gate": true,
+        "boss_locked_before_key": true,
+        "exit_locked_before_key": true,
+        "lever_reachable_after_key": true,
+        "boss_reachable_after_key": true,
+        "shortcut_not_required_for_completion": true,
+        "key_has_no_mandatory_hazard": true,
+        "exit_has_safe_backbone": true,
+        "boss_circuit_closed": true,
+        "navigation_cycles_before_gate": 5,
+        "navigation_cycles_in_boss_domain": 3
+      }
+    },
+    {
+      "element": "air",
+      "key_accessible_while_locked": true,
+      "boss_locked_until_key": true,
+      "exit_locked_until_key": true,
+      "boss_and_lever_reachable_after_key": true,
+      "exit_reachable_after_victory_without_shortcut": true,
+      "all_unlocked_tiles_connected": true,
+      "cycles_before_gate": 5,
+      "cycles_with_key_and_shortcut_closed": 8,
+      "cycles_with_shortcut_open": 9,
+      "boss_circuit_cells": 46,
+      "reported_graph_checks": {
+        "all_cells_connected_when_unlocked": true,
+        "key_reachable_before_gate": true,
+        "boss_locked_before_key": true,
+        "exit_locked_before_key": true,
+        "lever_reachable_after_key": true,
+        "boss_reachable_after_key": true,
+        "shortcut_not_required_for_completion": true,
+        "key_has_no_mandatory_hazard": true,
+        "exit_has_safe_backbone": true,
+        "boss_circuit_closed": true,
+        "navigation_cycles_before_gate": 5,
+        "navigation_cycles_in_boss_domain": 3
+      }
+    },
+    {
+      "element": "aether",
+      "key_accessible_while_locked": true,
+      "boss_locked_until_key": true,
+      "exit_locked_until_key": true,
+      "boss_and_lever_reachable_after_key": true,
+      "exit_reachable_after_victory_without_shortcut": true,
+      "all_unlocked_tiles_connected": true,
+      "cycles_before_gate": 5,
+      "cycles_with_key_and_shortcut_closed": 8,
+      "cycles_with_shortcut_open": 9,
+      "boss_circuit_cells": 58,
+      "reported_graph_checks": {
+        "all_cells_connected_when_unlocked": true,
+        "key_reachable_before_gate": true,
+        "boss_locked_before_key": true,
+        "exit_locked_before_key": true,
+        "lever_reachable_after_key": true,
+        "boss_reachable_after_key": true,
+        "shortcut_not_required_for_completion": true,
+        "key_has_no_mandatory_hazard": true,
+        "exit_has_safe_backbone": true,
+        "boss_circuit_closed": true,
+        "navigation_cycles_before_gate": 5,
+        "navigation_cycles_in_boss_domain": 3
+      }
+    }
+  ],
+  "browser_ui_checks": {
+    "stages_checked": 5,
+    "gate_shortcut_and_victory_controls": "PASS",
+    "key_reset_recloses_gate_and_resets_controls": "PASS",
+    "biome_previews_loaded": "PASS; all5 showed natural dimensions1536x1024"
+  },
+  "game_scripts_changed_by_delivery": false,
+  "save_mutation_by_delivery": false,
+  "runtime_validation": "NOT_RUN; Antigravity processing and Godot wiring pending",
+  "production_rgba_import_readiness": "NOT_ESTABLISHED"
+}
+

@@ -1,0 +1,1117 @@
+{
+  "schema_version": 1,
+  "project": "Gauntlet Godot",
+  "created_date": "2026-10-09",
+  "scope": "13 original green-screen artwork source PNGs; source review accepted; final transparency, extraction, assembly and Godot integration pending",
+  "source_count": 13,
+  "weapon_count": 5,
+  "character_count": 8,
+  "review": {
+    "method": "root inspection plus independent visual QA agent",
+    "all_13_sources_accepted": true,
+    "production_import_readiness": "NOT_YET_ESTABLISHED",
+    "hardware_performance": "NOT_TESTED"
+  },
+  "blueprint_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\ASSET_BLUEPRINT_V1.md",
+  "handoff_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\ASSET_HANDOFF_V1.md",
+  "copy_verification_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\ASSET_DELIVERY_VERIFICATION_V1.json",
+  "assets": [
+    {
+      "asset": "broadsword",
+      "category": "weapon",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\broadsword_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-5979ac56-ac9f-45b6-92e7-f782d2c2a25a.png",
+      "sha256": "410aa1aea87b97050794cdc257fca6bdbaf59aee2cca7246c497eee451b4370c",
+      "bytes": 2108213,
+      "actual_dimensions": [
+        1983,
+        793
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "integer_cell_dimensions": null,
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1024,
+        256
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "ready",
+        "right windup",
+        "right-to-left slash",
+        "recovery"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          18,
+          240,
+          16
+        ],
+        [
+          19,
+          241,
+          16
+        ],
+        [
+          7,
+          246,
+          11
+        ],
+        [
+          4,
+          246,
+          6
+        ],
+        [
+          4,
+          246,
+          4
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Two-handed grip and runic fuller corrected.",
+        "Second-frame left forearm reaches across nominal quarter; isolate at intended viewport edge, preserve both hands."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: production first-person weapon animation strip for Gauntlet Godot. Create ONE PNG image, wide horizontal aspect, intended 2048 by 512 pixels, divided invisibly into exactly FOUR equal 512x512 cells in a SINGLE row. Each cell contains exactly one first-person RIGHT HAND in battered iron gauntlet holding the SAME iron broadsword, viewed through the player's eyes; hands enter from the bottom, no body or external camera. Sword has plain weathered steel, chipped edges, modest iron crossguard and dark leather grip, with consistent dimensions and detailing across all four cells. Frame 1 leftmost: ready stance, hand lower-right and blade angled upward-left. Frame 2: clearly distinct right-side windup with sword raised toward upper-right. Frame 3: clearly distinct right-to-left slash crossing the center in follow-through, blade angled toward upper-left; no motion trails. Frame 4 rightmost: recovery returning low-right toward ready. Preserve common first-person camera, identical scale and pixel density; no sword or hand may cross its cell boundary; generous green clearance around tips and sides, wrists may enter only their own bottom edge. Four poses occupy identical virtual viewport rectangles without visible separators. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. Output is a usable sprite strip, not a labeled instruction sheet.",
+        "revision_prompts": [
+          "Edit this broadsword animation strip only. Preserve the gritty outlined hand-pixeled iron-and-leather art style and four equal horizontal frame locations on green. Correct the grip in ALL FOUR frames: this is a TWO-HANDED knightly broadsword, with two separate battered armored gauntlets grasping a longer leather-wrapped hilt from the player's first-person viewpoint; both forearms enter from the bottom of their own frame. Add consistent small engraved runes along the blade's central fuller. Correct frame THREE specifically into unmistakable right-to-left cutting FOLLOW-THROUGH: sword nearly horizontal across its own viewport, tip toward upper-left and two hands at lower-right, a short hard-edged white pixel speed arc confined to that cell. Frames 1 ready, 2 raised right windup, 3 slash, 4 returning recovery must be visibly distinct and preserve sword length, armor detailing, view and hand scale. Nothing crosses its frame boundary; tips have clear margin. Replace EVERY background pixel with a completely flat uniform solid pure RGB(0,255,0) #00FF00: no texture, noise, shading, gradient, vignette, grid lines, labels or borders. Intentional surface pixel shading exists only inside the weapon and hands. Requested output 2048x512 PNG, 4 equal square 512x512 virtual cells. No additional objects or characters.",
+          "Edit ONLY the SECOND of the four horizontal weapon frames. Preserve frames 1, 3 and 4, their placement and background, the existing runes, gritty pixel texture and sword anatomy. Frame 2 must show BOTH HANDS on the extended leather sword grip: keep the existing right armored gauntlet nearest the crossguard, and add the LEFT armored gauntlet clearly visible around the lower grip close to the pommel, with its forearm entering from the BOTTOM LEFT of frame 2. Both hands grasp the SAME sword in a believable TWO-HANDED raised windup. Do not add a second sword, third hand, disconnected fingers or detached arm. Ensure the whole pose remains inside the second quarter of the image. All four hands/weapon poses match one scale and first-person camera. Also make the background completely uniform pure #00FF00, without any noise or vignette. Do not change the other poses or introduce gridlines/text."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "shield",
+      "category": "weapon",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\shield_source_v2.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-fe3f4aec-0135-4d3e-b36a-43e69cedf18f.png",
+      "sha256": "9640643fa50d115abf86dad3564377645238075ab5f86a0c0c41b6ed3b4811e1",
+      "bytes": 2232150,
+      "actual_dimensions": [
+        2172,
+        724
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 3,
+        "rows": 1
+      },
+      "integer_cell_dimensions": [
+        724,
+        724
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        768,
+        256
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "low guard",
+        "high block",
+        "bash / block reaction"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          20,
+          242,
+          19
+        ],
+        [
+          5,
+          248,
+          9
+        ],
+        [
+          15,
+          242,
+          14
+        ],
+        [
+          2,
+          248,
+          7
+        ],
+        [
+          3,
+          248,
+          9
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Direction correction accepted: all three poses show the wearer-facing wooden interior and handgrip; outward griffin face stays away from camera.",
+        "Independent visual QA passed orientation, coherent left-hand grip and arm placement.",
+        "Three-pose artwork source remains subject to reviewed chroma-key removal, boundary extraction and anchor normalization before runtime import."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: first-person production weapon animation strip for Gauntlet Godot. Create ONE wide horizontal PNG sprite strip. THREE horizontal frames of a heavy left-handed iron-rimmed TOWER SHIELD / heater shield with battle-scarred dark iron plate and a consistent golden GRIFFIN CREST. Frame1 low-left ready guard; frame2 raised central defensive guard with left gauntlet grip visible; frame3 forward shield bash/block reaction, perspective foreshortened and bright orange hard-edged deflection sparks limited to shield vicinity. Wrist enters each cell from its own bottom-left edge. Same shield dimensions, crest and iron rim throughout. The player's viewpoint sees the back/interior and angled outer edge naturally; crest may show on outward-angled front in raised/bashing pose, do not turn into a detached heraldic illustration. Exactly THREE separate equal virtual cells, intended1536x512 strip. No fourth pose. Each frame has identical viewport size, camera and subject pixel density; only poses change. Every blade, bow tip, staff, spearhead, ornament and effect stays fully inside its own virtual cell, with generous top/side green safety margin. Hands and forearms may enter only at their own cell's bottom edge. No body, no full character. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The green outside silhouettes MUST be a single exact solid #00FF00 fill, no pixel texture or dithering. Match the reference broadsword's outlined weathered pixel-art treatment. Use reference for ART STYLE ONLY; include no sword unless specifically named in this weapon brief.",
+        "revision_prompts": [
+          "Use case: precise-object-edit. Edit target: this three-frame horizontal first-person shield sprite strip. Correct the SHIELD ORIENTATION in every frame so it is physically seen from the WEARER'S EYES, standing BEHIND the shield. The current first frame's wooden INTERIOR, handgrip and leather straps demonstrate the correct side; use that interior as the reference for ALL THREE poses. In frames2and3 the decorated golden-griffin front face is incorrectly looking back at the player: replace those front-facing surfaces with the SAME dark wooden interior boards, metal inner rim, rear rivets, leather forearm strap and central vertical grip. The griffin stays on the outward-facing enemy-side surface and MUST NOT be visible to the player in any frame. Do not mirror the griffin or simply horizontally flip the old image: redraw the correct BACK FACE in the poses. Keep the same worn heater/tower shield outline, weathered iron rim, gritty outlined pixel-art style, dark brown/iron palette, single armored LEFT HAND and left forearm entering from BOTTOM LEFT, same shield size and camera. Left hand naturally grips the handle, forearm is secured through the leather strap behind the shield, palm/fingers anatomically coherent; no extra limb or detached hand. EXACTLY THREE equal horizontal virtual viewports lefttoright: 1 low-left ready guard, interior tilted slightly toward wearer; 2 shield RAISED in front to block, broad interior now covers the center and left of the view, left hand/grip and rear straps still visible; 3 forward shield BASH with the same interior slightly foreshortened/tilted and left forearm extending, a few hard-edged orange deflection sparks around the FORWARD OUTER EDGE, with no outer face revealed. The outward-facing crest/front points AWAY FROM CAMERA toward enemies in ALL THREE, never turns to face camera between frames. Preserve common first-person viewpoint, iron-gauntlet scale, silhouette and three actions; keep complete top and side edges within each frame and generous green gutters. No fullcharacter or externalcamera. Completely flat solid GREEN SCREEN #00FF00 throughout background, no scenery, castshadows, gradients, numbers, text, borders or gridlines. Output one wide PNG strip, requested2172x724 (3equal724x724 viewports), matching the original source dimensions."
+        ],
+        "transparent_background": false
+      },
+      "supersedes": {
+        "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\shield_source_v1.png",
+        "sha256": "1912c74b79310e3c13343e97bac121d6c1927b0fb87369d5f556fe570d88d2fc",
+        "reason": "User requested shield facing correction; high block and bash previously exposed exterior face to wearer.",
+        "preserved": true
+      },
+      "revision": 2,
+      "revision_date": "2026-10-09"
+    },
+    {
+      "asset": "bow",
+      "category": "weapon",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\bow_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-280eb931-aee0-42c9-9f27-0ba07b9eb732.png",
+      "sha256": "99008d2ac9cb77175c4fcc279d397b2f754560099fc7ee9174170f9a651b5482",
+      "bytes": 1997003,
+      "actual_dimensions": [
+        2172,
+        724
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "integer_cell_dimensions": [
+        543,
+        724
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1024,
+        256
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "nocked ready",
+        "full draw",
+        "release",
+        "re-nock"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          18,
+          242,
+          20
+        ],
+        [
+          15,
+          240,
+          16
+        ],
+        [
+          5,
+          247,
+          12
+        ],
+        [
+          4,
+          249,
+          8
+        ],
+        [
+          4,
+          248,
+          6
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Four temporal states reviewed; margin revision applied.",
+        "Arrow tip reaches beyond nominal divider; lower forearms touch at panel transitions. Custom masks and intended viewport cropping required; do not claim fully isolated equal-quarter frames."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: first-person production weapon animation strip for Gauntlet Godot. Create ONE wide horizontal PNG sprite strip. FOUR horizontal frames of an ELVEN RECURVE LONGBOW in polished dark YEW WOOD with fine SILVER FILIGREE, broadhead hunting arrows with muted olive-green fletching (never key-green). Player first-person left hand holds bow at left, right hand draws string. Frame1 vertical left-side bow with arrow nocked; frame2 full draw, bent limbs, right hand pulling string toward camera; frame3 arrow release with relaxed string snapping forward and tiny hard-edged kinetic stroke pointing toward viewport center; frame4 right hand bringing new arrow toward riser to re-nock. Same bow length, design, hands and viewpoint; correct bowstring connection. Exactly FOUR equal virtual cells in a single row, intended2048x512. Each frame has identical viewport size, camera and subject pixel density; only poses change. Every blade, bow tip, staff, spearhead, ornament and effect stays fully inside its own virtual cell, with generous top/side green safety margin. Hands and forearms may enter only at their own cell's bottom edge. No body, no full character. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The green outside silhouettes MUST be a single exact solid #00FF00 fill, no pixel texture or dithering. Match the reference broadsword's outlined weathered pixel-art treatment. Use reference for ART STYLE ONLY; include no sword unless specifically named in this weapon brief.",
+        "revision_prompts": [
+          "Edit this first-person four-frame bow animation strip only to fix cell overlap. Keep all four frame actions (nocked ready, full draw, release, re-nock), bow identity, dark yew, silver filigree, hands, olive fletching, style and camera. In the SECOND frame, the fully drawn arrow's leading tip and left forearm currently extend into the FIRST frame's right side. Recompose the entire second-frame pose inside its own second quarter, with the arrowhead clearly to the RIGHT of the second quarter's left boundary and the right forearm clearly to the LEFT of its right boundary. Use believable first-person foreshortening, not a broken arrow or cropped arm. Keep all complete bowtips with green top/side margin. If needed give all four poses modestly more uniform green spacing while preserving common scale. NO pose, arrow, effect or limb may cross any of the three virtual quarter boundaries. Hands enter bottom edge only. Preserve exact four horizontal frames, no fifth image, no gridline/border/text. Backgroundcompletelyflatpure#00FF00."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "staff",
+      "category": "weapon",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\staff_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-b8bebb9e-8bf1-4f9b-bda9-ec0dc9a91b8f.png",
+      "sha256": "d18250a1dedebf8b371f55960d2f350a5a41c2c793a47d5d026382b39994958b",
+      "bytes": 1836031,
+      "actual_dimensions": [
+        2172,
+        724
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "integer_cell_dimensions": [
+        543,
+        724
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1024,
+        256
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "ready",
+        "charge",
+        "casting thrust",
+        "recovery"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          16,
+          241,
+          14
+        ],
+        [
+          15,
+          241,
+          13
+        ],
+        [
+          6,
+          248,
+          6
+        ],
+        [
+          5,
+          249,
+          4
+        ],
+        [
+          6,
+          247,
+          2
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Violet crystal and cyan rune identity reviewed.",
+        "Casting aura extends outside nominal quarter; preserve full effect through reviewed extraction."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: first-person production weapon animation strip for Gauntlet Godot. Create ONE wide horizontal PNG sprite strip. FOUR horizontal frames of a first-person right-handed ARCANE WIZARD STAFF: gnarled dark ASHWOOD shaft, exactly THREE BRONZE TALONS cradling a VIOLET CRYSTAL, consistent cyan engraved shaft runes. A pale aged hand in midnight-blue gold-trimmed sleeve grips lower shaft. Frame1 angled ready, violet crystal restrained; frame2 staff raised, cyan runes illuminated, hard-edged violet spark clusters; frame3 forward casting thrust with compact blazing violet-gold fireball muzzle discharge and hard-edged shock ring toward viewport center; frame4 returning ready, crystal dimming with a few opaque pale pixel wisps, no diffuse smoke gradients. Exactly FOUR equal virtual cells in a single row, intended2048x512. Hands always enter bottom-right. Each frame has identical viewport size, camera and subject pixel density; only poses change. Every blade, bow tip, staff, spearhead, ornament and effect stays fully inside its own virtual cell, with generous top/side green safety margin. Hands and forearms may enter only at their own cell's bottom edge. No body, no full character. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The green outside silhouettes MUST be a single exact solid #00FF00 fill, no pixel texture or dithering. Match the reference broadsword's outlined weathered pixel-art treatment. Use reference for ART STYLE ONLY; include no sword unless specifically named in this weapon brief.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "spear",
+      "category": "weapon",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\spear_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-5e790c33-3f12-4761-adf6-a32720ac0ba9.png",
+      "sha256": "3b9d8d2bf4b09426a9845751bcc2b3ddcc93563f49d09990d1959530f3f844af",
+      "bytes": 2051298,
+      "actual_dimensions": [
+        2048,
+        768
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 4,
+        "rows": 1
+      },
+      "integer_cell_dimensions": [
+        512,
+        768
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1024,
+        256
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "ready",
+        "pull-back",
+        "thrust",
+        "retraction"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          23,
+          241,
+          17
+        ],
+        [
+          19,
+          240,
+          15
+        ],
+        [
+          6,
+          246,
+          7
+        ],
+        [
+          6,
+          249,
+          5
+        ],
+        [
+          5,
+          247,
+          3
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Two hands, gilded wing collar and steel tip reviewed.",
+        "Thrust changes projected length through first-person foreshortening."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: first-person production weapon animation strip for Gauntlet Godot. Create ONE wide horizontal PNG sprite strip. FOUR horizontal frames of a CELESTIAL VALKYRIE SPEAR seen strictly first-person, TWO silver-armored hands gripping ashwood shaft, gilded NORDIC WING ORNAMENT beneath broad LEAF-SHAPED STEEL SPEARHEAD. Frame1 held low-right pointing into center distance; frame2 drawn back in a clear coiled windup, arms pulled closer; frame3 forceful straight forward piercing thrust, foreshortened spearhead centered, one sharp hard-edged white kinetic pixel stab trace; frame4 retraction, arms and tip return toward ready but pose distinct from frame1. Same spear length, ornament, hands and viewpoint. Exactly FOUR equal virtual cells in a single row, intended2048x512. No third-person hands posed from outside. Each frame has identical viewport size, camera and subject pixel density; only poses change. Every blade, bow tip, staff, spearhead, ornament and effect stays fully inside its own virtual cell, with generous top/side green safety margin. Hands and forearms may enter only at their own cell's bottom edge. No body, no full character. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The green outside silhouettes MUST be a single exact solid #00FF00 fill, no pixel texture or dithering. Match the reference broadsword's outlined weathered pixel-art treatment. Use reference for ART STYLE ONLY; include no sword unless specifically named in this weapon brief.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "minotaur_stalker",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\minotaur_stalker_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-eb4052bb-391b-4f02-8fc1-2b2dc927c685.png",
+      "sha256": "a188072a8008f35713dab758a8e4a32746df90d47641f2c6a1b908a7d35aefed",
+      "bytes": 2286434,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "stalking walk",
+        "roar / axe windup",
+        "axe cleave",
+        "stagger",
+        "exhausted retreat / collapse"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          19,
+          242,
+          24
+        ],
+        [
+          14,
+          240,
+          18
+        ],
+        [
+          5,
+          248,
+          15
+        ],
+        [
+          5,
+          249,
+          12
+        ],
+        [
+          4,
+          247,
+          9
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Axe continuity and outer-canvas clipping corrected; complete extremities reviewed.",
+        "Temporary exhaustion, not permanent death. Normalize anchors using world reference and preserve full axe."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: The unkillable Minotaur Stalker: an imposing nine-foot muscular bull-man with dark brown fur, curved BLACK horns, brass septum nose ring, broken iron wrist shackles with short chains, red eyes, hoof feet and a massive blood-notched DOUBLE-BLADED executioner axe. No armor except shackles and rugged dark waistcloth. The same exact horns, anatomy, chain placement and axe in every frame. Row 0 (top): Heavy idle breathing: six different chest-heaving/snorting stages, no big background smoke. Row 1: Menacing stalking walk: six distinct alternating stomping hoof poses, not running. Row 2: Terrifying roar windup: six stages opening jaw and raising axe overhead, pose expands but stays fully in cell. Row 3: Devastating downward axe cleave: six distinct stages from overhead through slam and follow-through; no drawn ground or impact shadow. Row 4: Six stages of impact flinch and stagger backward, then recovery. Row 5 (bottom): Exhausted RETREAT and temporary collapse: six stages slowing, kneeling, lowering axe, collapsing to rest, still visibly alive. No gore, corpse dissolution or permanent death. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. CRITICAL: the green background outside all silhouettes is a single completely flat #00FF00 fill; do not dither, texture or shade the background. All animation frames have ample evenly spaced green gutters, no pedestal, no shadow. Match the reference sword's crisp dark outlines and restrained gritty materials; reference is STYLE ONLY, do not include that sword or first-person hands in the character sheet.",
+        "revision_prompts": [
+          "Edit this 36-frame 6x6 Minotaur Stalker sprite sheet, preserving its layout, all character poses, black horns, darkfur, nose ring, shackles, alive exhausted-collapse final row, pixel palette and viewpoint. Correct ONLY the double-bladed axe continuity. It must be exactly the SAME axe with the SAME long dark wooden haft and the SAME broad double-bladed notched head in EVERY frame; currently the idle axe looks short-hafted and the overhead swing is long-hafted. Use a consistent full-length haft suitable for his two-handed overhead strike, carrying it low and diagonally in the idle/walk/flinch frames so it stays within each cell. In the THIRD cell of the fifth (stagger) row (zero-based row4,col2), keep the axe visibly in his right hand; do not drop it temporarily then conjure it back. Final exhausted kneeling/collapse poses may rest the axe on the ground naturally, with head and haft complete inside their own cells. No weapon disappearance, no weapon elongation during swings, no extra axe. Preserve generous green margins around horns and axe tips and use a completely flat uniform pure #00FF00 background, no shadows or labels. Retain 6 rows x6 columns and all current temporal phases.",
+          "Correct only sprite safety margins in this 6x6 Minotaur Stalker source atlas. Preserve ALL 36 poses, character/axe identity, clothing, colors, outlines, row phase order and uniform six-row/six-column grid. The double-axe tips in FIRST COLUMN of idle and walk touch or clip the OUTER LEFT image edge. Restore the entire axe outline and both blade tips, with visible green space to the left; no missing tip. Give EVERY frame a generous visible green gap on all sides by uniformly reducing each full sprite-and-equipment pose to about90 percent of its current scale INSIDE its existing cell, centered and anchored to the same nominal ground coordinate. This is per-cell padding, not resizing the whole sheet or adding a outer border. All characters maintain one equal scale across all36frames; collapsebodystillfitsitsowncell. No new motions, no gear changes, no weapon disappearance. Completely flat solid #00FF00 outside subjects, no labels, no shadows, no drawn grids."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "asterion",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\asterion_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-535dfee5-2d96-4145-8d7c-07795532391c.png",
+      "sha256": "9f65e59ad1497924e2f8f5209403e5e055c5d2947caac2940eab10b698525d71",
+      "bytes": 2508705,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "regal idle",
+        "armored march",
+        "gold telegraph",
+        "hammer smash",
+        "posture break",
+        "gold dissolution"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          18,
+          242,
+          16
+        ],
+        [
+          17,
+          243,
+          14
+        ],
+        [
+          5,
+          248,
+          6
+        ],
+        [
+          4,
+          249,
+          4
+        ],
+        [
+          4,
+          248,
+          4
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Bronze armor, hammer and gold-dissolution sequence reviewed.",
+        "Posture-break row ends on knees; integration needs explicit recovery transition or selected reverse segment."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: Asterion, regal Minotaur King and ancient Greek demigod: noble muscular bull-man, chestnut fur, Greek bronze chestplate engraved with labyrinth patterns, gold rings and caps on horns, ceremonial bronze greaves, a glowing runic BRONZE WAR HAMMER. Noble guardian rather than demonic pursuer; same exact armor, labyrinth motif, horn ornaments and hammer throughout. Row 0 (top): Regal idle breathing, hammer resting on shoulder; six subtle breathing stages. Row 1: Heavy armored forward marching loop, six distinct footfall stages. Row 2: Golden telegraph charge: six stages raising the hammer high with restrained hard-edged gold runic particles. Row 3: Explosive hammer smash: six progressing overhead-to-ground strike and radial cleave poses, sparse gold pixel arc kept within the cell, no floor or cast shadow. Row 4: Six stages of posture break, recoil and descent onto one knee. Row 5 (bottom): Six-stage dramatic defeat: fall to both knees, bow head, begin gold dissolution, fading armor silhouette, sparse gold fragments, final faint divine remnant. Each effect stays inside its cell. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The ENTIRE background must be one exact flat #00FF00 color, including gutters; no texture or dithering in background. No frame labels, no grid strokes, no pedestals. Match the reference character's pixel density, outline and hand-shaded palette, without copying its identity or equipment. Reference is ART STYLE and LAYOUT ONLY.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "skeleton_archer",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\skeleton_archer_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-d0687dac-b8ea-43d3-89a6-182f16346e17.png",
+      "sha256": "5cd909868552653b06d6ee2fee6800969b0a427d85f7d85819f2823f2fe15e58",
+      "bytes": 2343705,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle rattle",
+        "walk",
+        "draw / aim",
+        "release",
+        "recovering stagger",
+        "bone collapse"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          19,
+          242,
+          17
+        ],
+        [
+          17,
+          240,
+          16
+        ],
+        [
+          5,
+          247,
+          8
+        ],
+        [
+          5,
+          249,
+          6
+        ],
+        [
+          4,
+          246,
+          4
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Stagger corrected to retain bow and recover to standing guard.",
+        "Death row scatters bones and skull; preserve world anchor through collapse."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: An ancient undead Skeleton Archer with cracked ivory bones, ragged charcoal hooded cowl, small ribcage chainmail, dark wooden SHORTBOW, quiver and violet-glowing arrowheads. Full visible skeletal legs and feet, crisp readable ribs and skull. Same skull, robe tears, bow shape and proportions in every frame. Row 0 (top): Eerie idle rattle: six subtly shifting rib/skull poses while feet remain anchored. Row 1: Clattering skeletal walk cycle: six distinct alternate footfall stages. Row 2: Six-stage bowstring draw and aim windup; violet arrowhead intensifies, hands and string are anatomically coherent. Row 3: Six stages of arrow release, bowstring twang and recoil, no duplicate full-draw poses. Row 4: Six stages of bone-shattering impact flinch, cracked fragments limited to cell, still recognizable. Row 5 (bottom): Six progressive destruction stages: buckle, lose bow, ribs fall, bones scatter, skull rolls, final compact pile of bones and skull. No background floor. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The ENTIRE background must be one exact flat #00FF00 color, including gutters; no texture or dithering in background. No frame labels, no grid strokes, no pedestals. Match the reference character's pixel density, outline and hand-shaded palette, without copying its identity or equipment. Reference is ART STYLE and LAYOUT ONLY.",
+        "revision_prompts": [
+          "Edit ONLY the FIFTH ROW (zero-based row4, stagger/hit animation) of this 6x6 Skeleton Archer sheet. Preserve all other rows, cell positions, scale, hood/chainmail/bones, wooden shortbow, violet arrows, complete silhouettes and pixel style. This stagger is a nonlethal hit FLINCH that RECOVERS; it must not end in death or permanent knockdown, since the following sixth row is the real destruction. Six frames left-to-right should show: impact recoil with bow still grasped; stronger recoil; brief one-knee dip; pushing back up while keeping bow; regaining standing balance; final standing guarded ready pose holding the same bow. Restore bow continuity; no bow disappearance and no changing size. Keep feet at the original standing ground reference and all equipment inside each virtual cell. Preserve the bottom DEATH row exactly with scattering bones/skull. Background completely flat uniform #00FF00, no shadows, labels or grid. Do not change the 6x6 layout or add frames."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "orc_grunt",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\orc_grunt_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-eb61ea08-16b5-4434-b079-0009e1462f8e.png",
+      "sha256": "72a3a174ca74ed1dc52c665bd605171f13adb52e482b4408fa4d5a006c0f2b14",
+      "bytes": 2284386,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "charge run",
+        "cleaver windup",
+        "slash / shield bash",
+        "recovering stagger",
+        "death collapse"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          21,
+          241,
+          16
+        ],
+        [
+          18,
+          241,
+          13
+        ],
+        [
+          6,
+          248,
+          7
+        ],
+        [
+          5,
+          250,
+          5
+        ],
+        [
+          4,
+          247,
+          3
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Cleaver disappearance corrected across attack and stagger.",
+        "Source foot baseline varies between some rows; per-pose anchor normalization required. Protect muted olive skin during keying."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: A muscular dungeon-vanguard orc with muted olive-green skin (NOT bright key-green), protruding tusks, spiked iron helmet, studded leather armor, jagged rusty cleaver in right hand and iron-rimmed studded shield in left. The same exact face, tusks, helmet, cleaver, shield, armor and proportions in all frames. Row 0 (top): Menacing idle breathing and baring tusks, subtle six-phase chest movement; feet stay planted. Row 1: Heavy forward charge run cycle: six distinct alternating footfall poses returning to first for a loop. Row 2: Progressive overhead cleaver raise, leaning back and baring tusks, eyes reddening; six clearly changing warning poses. Row 3: Six temporal stages of vicious downward cleaver slash then shield bash and follow-through, each stays within cell. Row 4: Six stages of heavy stagger from impact: flinch, recoil, bend, regain balance, settle. Row 5 (bottom): Six progressive death stages: buckle, lose cleaver, fall to knee, fall onto side, roll flat, final still corpse. Preserve cell ground reference. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. CRITICAL: the green background outside all silhouettes is a single completely flat #00FF00 fill; do not dither, texture or shade the background. All animation frames have ample evenly spaced green gutters, no pedestal, no shadow. Match the reference sword's crisp dark outlines and restrained gritty materials; reference is STYLE ONLY, do not include that sword or first-person hands in the character sheet.",
+        "revision_prompts": [
+          "Edit this 6x6 Orc Grunt animation sheet, preserving its 36-frame layout, camera, complete silhouettes, muted olive skin, iron helmet, round shield, anatomy, style, and existing action sequences. Correct ONLY equipment continuity: the SAME full rusty CLEAVER must remain grasped in the orc's RIGHT hand in all stagger row frames (row 4 zero-based, the fifth row), columns 0 through 4. It currently disappears and reappears; restore the full blade as carried low or outward naturally during each flinch, not just a handle. Also correct the fifth cell of the ATTACK row (row 3 zero-based,column4): show full connected cleaver blade in believable foreshortening. Every cleaver has the same recognizable shape and blade length. In the last death row, the dropped cleaver may remain on the ground INSIDE its own cell. Preserve all other action poses. Maintain uniform front three-quarter view; align the standing ground reference consistently per cell while leaving collapse pose reference intact. Keep enough puregreen gap at cell edges so no blade, shield or foot is clipped. Background is a completely flat exact #00FF00, no gradients or cast shadows. No labels/grid/borders."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "warrior_thor",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\warrior_thor_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-2dfd1dda-cfce-4840-9917-79085dddffcc.png",
+      "sha256": "bafe18d5209b234c836a403598712ade5e1be56fc02276afde2d19f311e2dfee",
+      "bytes": 2593881,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "heavy run",
+        "sword windup",
+        "slash",
+        "stagger",
+        "death collapse"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          21,
+          242,
+          15
+        ],
+        [
+          17,
+          241,
+          10
+        ],
+        [
+          7,
+          249,
+          7
+        ],
+        [
+          6,
+          250,
+          3
+        ],
+        [
+          5,
+          249,
+          3
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Winged steel helmet, chainmail, red fur cape, sword and round shield reviewed.",
+        "Normalize anchors and temporal pacing against actual controller."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: Thor the human Warrior hero: winged STEEL helmet, chainmail hauberk, red fur cape, leather belt and boots, weathered iron runic broadsword in right hand, round metal shield in left. Same helmet wings, beard/face, chainmail, cape, sword and round shield in all frames. Row 0 (top): Six-stage planted idle breathing, sword ready and shield low. Row 1: Six-stage heavy run loop with distinct alternating footfalls and controlled cape movement. Row 2: Six-stage heavy sword windup, pulling blade back for a readable strike. Row 3: Six-stage forceful sword slash and follow-through, shield stays on left arm. Row 4: Six-stage impact recoil and stagger flinch, then attempting to recover. Row 5 (bottom): Six progressive death-collapse poses, buckle to knees then fall to side with cape folding; weapon may drop within its cell. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The ENTIRE background must be one exact flat #00FF00 color, including gutters; no texture or dithering in background. No frame labels, no grid strokes, no pedestals. Match the reference character's pixel density, outline and hand-shaded palette, without copying its identity or equipment. Reference is ART STYLE and LAYOUT ONLY.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "elf_questor",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\elf_questor_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-9b3e099b-f6d3-492f-9624-4a5d3b2ec0bf.png",
+      "sha256": "5df611ea963f5f99d27a8460c8a1acab8fe1450f6b9b029457acf8cfb3c14366",
+      "bytes": 2390207,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "agile run",
+        "aim windup",
+        "arrow release",
+        "recovering stagger",
+        "death collapse"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          18,
+          241,
+          19
+        ],
+        [
+          18,
+          242,
+          19
+        ],
+        [
+          5,
+          248,
+          11
+        ],
+        [
+          5,
+          249,
+          7
+        ],
+        [
+          4,
+          248,
+          6
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Bow continuity corrected in stagger; all six cells reviewed and recovery returns to standing guard.",
+        "Protect forest-green clothing and olive fletching during chromakey removal."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: Questor the Elf ranger hero: pointed ears, blonde hair, muted forest-green tunic (never chromakey green), brown leather bracers and boots, yew-and-silver RECURVE LONGBOW, quiver and dark olive-green fletching. Agile lean adult build; same face, outfit, bow, hair and quiver in every frame. Row 0 (top): Six stages of idle rest with bow held low and subtle breathing. Row 1: Six-stage agile run loop, clear alternating footfalls; bow and quiver remain consistent. Row 2: Six-stage aiming windup with arrow nock and bowstring progressively drawn. Row 3: Six-stage arrow-release shot and bow recoil, string and hands coherent. Row 4: Six-stage dodge stagger and hit recoil, returning balance. Row 5 (bottom): Six-stage death collapse: flinch, buckle, one knee, fall, settle onto side, still final pose; complete bow and limbs in cell. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The ENTIRE background must be one exact flat #00FF00 color, including gutters; no texture or dithering in background. No frame labels, no grid strokes, no pedestals. Match the reference character's pixel density, outline and hand-shaded palette, without copying its identity or equipment. Reference is ART STYLE and LAYOUT ONLY.",
+        "revision_prompts": [
+          "Edit ONLY the FIFTH ROW (zero-based row4, hit stagger) of this 6x6 Questor Elf ranger sheet. Preserve the entire layout, scale, fixed three-quarter view, blonde face/hair, forestgreen cloak and tunic, leatherbracers, quiver, pixel palette, and ALL OTHER ROWS. In stagger row cells1through4 (zero-basedcolumns0through3), keep the SAME YEW RECURVE LONGBOW visibly GRASPED IN THE ELF'S LEFT HAND through every flinch/crouch. The bow currently disappears then suddenly reappears; fix that continuity. Bow can be carried low or tilted during impact, but it must never be detached, missing, shrunk, duplicated or dropped in the stagger animation. Six stages: hitflinch, recoil, bentknees, recoveringbalance, standingguard, settledready withbow. All bowtips, fingers and boots remain inside eachvirtualcell withgreenmargin. Preserve bottom deathrow's droppedbow and collapseexactly. Backgroundflatuniformpure#00FF00 withno label/grid/shadow. Do not alter the 6rowsx6columns or any other pose."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "wizard_merlin",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\wizard_merlin_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-27ae96c5-c893-4fb2-9d20-06946070d6c7.png",
+      "sha256": "ef77030198725754205eb341158ce4ebeaf7fd5fd052ef101c9a420395d838d1",
+      "bytes": 2525119,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "hover glide",
+        "spell charge",
+        "fireball cast",
+        "barrier stagger",
+        "robe collapse"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          18,
+          242,
+          14
+        ],
+        [
+          18,
+          243,
+          14
+        ],
+        [
+          6,
+          250,
+          6
+        ],
+        [
+          4,
+          250,
+          3
+        ],
+        [
+          4,
+          249,
+          3
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Robes, silver beard, crystal staff and projected cast poses reviewed.",
+        "Some spell effects cross nominal cell boundaries; use reviewed masks and preserve full effects. Hover uses fixed nominal ground reference."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: Merlin the human Wizard hero: midnight-blue hooded robes with gold trim, long SILVER beard, gnarled dark ashwood runic staff with bronze talons holding a violet crystal, aged face and pale hands. Same beard, robes, gold embroidery and crystal staff across every frame. Ground reference consistent even when hovering. Row 0 (top): Six-stage idle, subtle breathing and hovering staff, robe hem slightly above nominal floor anchor. Row 1: Six-stage hover-glide locomotion: robe folds and body sway form a loop, no footsteps or floor shadow. Row 2: Six-stage spell-charge windup with restrained cyan runes and violet hard-edged pixels around crystal. Row 3: Six-stage fireball casting staff thrust, small hard-edged violet-gold magical discharge inside cell; no large background glow. Row 4: Six-stage barrier stagger and impact recoil with compact blue-violet pixel shards. Row 5 (bottom): Six-stage death-collapse with body lowering, knees fold and empty blue robe settling; no vanishing scale or scenery. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The ENTIRE background must be one exact flat #00FF00 color, including gutters; no texture or dithering in background. No frame labels, no grid strokes, no pedestals. Match the reference character's pixel density, outline and hand-shaded palette, without copying its identity or equipment. Reference is ART STYLE and LAYOUT ONLY.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "valkyrie_thyra",
+      "category": "character",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\valkyrie_thyra_source_v1.png",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-00a3b3d0-ac8b-4167-a720-7c10bbc2c26a.png",
+      "sha256": "2df009cfdbc72dc2a1cd261143e905b0d9b6259eefcfc38e5324c8cc5b087baa",
+      "bytes": 2482297,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "hard_grid_slicing_certified": false,
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "shield run",
+        "spear coil",
+        "lunge",
+        "block stagger",
+        "death fall"
+      ],
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "sampled_background_rgb": [
+        [
+          20,
+          243,
+          16
+        ],
+        [
+          14,
+          240,
+          13
+        ],
+        [
+          6,
+          249,
+          9
+        ],
+        [
+          5,
+          250,
+          5
+        ],
+        [
+          4,
+          248,
+          4
+        ]
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; requires reviewed key mask; equality-only key insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Winged tiara, spear collar/butt cap and gold shield reviewed.",
+        "Attack row first three lunges cross nominal cell edges with rear leg or shaft; wider reviewed masks and anchor normalization required. Hard 6x6 slicing will cut poses."
+      ],
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Create ONE square PNG image, intended 1536x1536 pixels, a character animation atlas with EXACTLY SIX ROWS and EXACTLY SIX COLUMNS, 36 full-body frames in a mathematically uniform square arrangement. Use an invisible grid: six equal 256px columns and six equal 256px rows, no drawn separators. Columns are animation TIME, not directions. Fixed FRONT THREE-QUARTER orthographic view with the subject facing slightly toward viewer's left; camera never changes between cells, including walk, stagger and collapse. All 36 instances preserve identical anatomical proportions, costume, weapon, palette and scale. Within each imaginary cell nominal standing feet are at y=224 and centerline x=128, preserving that WORLD ground anchor throughout poses. Keep 16px green safety margin at every cell edge, including extended weapons; complete horns, hands, tips, legs and hooves, no clipping. No frame may bleed into another. Pose sequence is played left to right across each row. This is genuine crisp pixel art, not a montage of illustrations. Character: Thyra the Valkyrie shieldmaiden hero: adult athletic woman, golden WINGED TIARA, silver plate armor, ashwood LONG SPEAR with gilded wing ornament and broad leaf-shaped steel head, golden ROUND SHIELD, sturdy boots. Same face, hair, tiara, armor, spear and shield in every frame; no armor costume changes. Row 0 (top): Six-stage poised idle ready stance, spear low-right and shield forward. Row 1: Six-stage shield-forward run loop with distinct alternating footfalls and held spear. Row 2: Six-stage spear-thrust coil windup, progressively pulling weapon back. Row 3: Six-stage long spear lunge, extending then retracting without changing weapon length; keep every spear tip within its cell. Row 4: Six-stage shield block stagger and recoil, shield stays on left arm. Row 5 (bottom): Six-stage Valhalla fall death: buckle, knees, tip to side, land, settle, still final pose. Full spear and shield remain within cell. Original dark-fantasy arcade game art: crisp, visibly hand-pixeled 1990s 32-bit style, dark 1-2-pixel outlines, rich restrained hand-shaded ramps, gritty weathered materials, sharp silhouette. No smooth painted gradients, airbrushing, glossy plastic, photorealism, soft 3D rendering, ambient occlusion, bloom, motion blur, or antialiasing. Source background is completely uniform pure chroma green RGB(0,255,0), hex #00FF00. No cast shadows, floor, scenery, labels, numbers, lettering, border, or drawn grid lines. Exact key green must never occur on subject pixels. The ENTIRE background must be one exact flat #00FF00 color, including gutters; no texture or dithering in background. No frame labels, no grid strokes, no pedestals. Match the reference character's pixel density, outline and hand-shaded palette, without copying its identity or equipment. Reference is ART STYLE and LAYOUT ONLY.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    }
+  ],
+  "last_revision": {
+    "date": "2026-10-09",
+    "asset": "shield",
+    "selected_source_version": 2,
+    "reason": "Correct wearer-facing shield direction in ready, block and bash poses."
+  }
+}
+

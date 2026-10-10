@@ -35,6 +35,7 @@ export class MapLoader {
     // Chest & Checkpoint
     this.isChestOpened = false;
     this.isCheckpointActive = false;
+    this.secretBossMinotaur = null;
   }
 
   buildContinuousLevel(materials, player, audio, hud) {
@@ -59,6 +60,7 @@ export class MapLoader {
     this._buildFloor3_Forges(forgeWall, forgeFloor, ceilMat, audio, hud);
     this._buildFloor4_GaleSpire(galeWall, galeFloor, ceilMat, player, audio, hud);
     this._buildFloor5_Throne(throneWall, throneFloor, ceilMat);
+    this._buildSecretMinotaurLair(wallMat, floorMat, ceilMat, player, audio, hud);
 
     if (player && typeof player.setFloorRamps === 'function') {
       player.setFloorRamps(this.floorRamps);
@@ -264,39 +266,60 @@ export class MapLoader {
     };
     this.interactables.push(this.shelterInteractable);
 
-    // Driftwood logs
-    for (let i = 0; i < 5; i++) {
-       const lx = -20 + Math.random() * 40;
-       const lz = -130 + Math.random() * 60;
-       const log = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 1.5, 8), new THREE.MeshLambertMaterial({color: 0x5c4033}));
+    // Driftwood logs — 20 logs scattered along shoreline and beach dunes (Z: -145 to -20)
+    const logPositions = [
+      { x: -18, z: -140 }, { x: -8, z: -135 }, { x: 12, z: -138 }, { x: 22, z: -130 },
+      { x: -28, z: -120 }, { x: -14, z: -115 }, { x: 4, z: -118 }, { x: 18, z: -112 },
+      { x: -35, z: -100 }, { x: -22, z: -95 },  { x: 15, z: -92 },  { x: 30, z: -98 },
+      { x: -12, z: -80 },  { x: 2, z: -75 },   { x: 25, z: -70 },  { x: -25, z: -60 },
+      { x: -5, z: -50 },   { x: 14, z: -45 },  { x: -18, z: -35 }, { x: 8, z: -25 },
+    ];
+
+    for (let i = 0; i < logPositions.length; i++) {
+       const lp = logPositions[i];
+       const lx = lp.x + (Math.random() * 4 - 2);
+       const lz = lp.z + (Math.random() * 4 - 2);
+       const log = new THREE.Mesh(
+         new THREE.CylinderGeometry(0.22, 0.26, 1.8, 8),
+         new THREE.MeshLambertMaterial({ color: 0x5c4033, roughness: 0.85 })
+       );
        log.rotation.z = Math.PI / 2;
        log.rotation.y = Math.random() * Math.PI;
-       log.position.set(lx, 0.2, lz);
+       log.position.set(lx, 0.22, lz);
        this.scene.add(log);
        this._meshes.push(log);
 
        const interactObj = {
-         position: new THREE.Vector3(lx, 0.2, lz),
-         radius: 3.0,
+         position: new THREE.Vector3(lx, 0.22, lz),
+         radius: 3.2,
          active: true,
-         prompt: 'GATHER DRIFTWOOD [E]',
+         prompt: 'GATHER DRIFTWOOD [E] / [O]',
          onInteract: () => {
             if (!interactObj.active) return;
             interactObj.active = false;
             log.visible = false;
+            let currentWood = 0;
             if (window.GAME && window.GAME.player) {
               if (!window.GAME.player.woodCount) window.GAME.player.woodCount = 0;
               window.GAME.player.woodCount++;
+              currentWood = window.GAME.player.woodCount;
             }
-            // if (window.GAME && window.GAME.audio) window.GAME.audio.playSFX('woodChop'); // optional sound if not throwing error
+            if (window.GAME && window.GAME.audio) window.GAME.audio.playSFX('pickup', 0.8);
             const hudEl = document.querySelector('#checkpoint-banner'); 
             if (hudEl) {
               hudEl.classList.remove('hidden');
               const bTxt = hudEl.querySelector('.banner-text');
               const bSub = hudEl.querySelector('.banner-sub');
-              if (bTxt) bTxt.textContent = 'RESOURCE GATHERED';
-              if (bSub) bSub.textContent = '+1 ISLAND WOOD (TOTAL: ' + (window.GAME.player.woodCount || 1) + ')';
-              setTimeout(() => hudEl.classList.add('hidden'), 2000);
+              if (bTxt) bTxt.textContent = '🪵 DRIFTWOOD GATHERED';
+              if (bSub) bSub.textContent = `+1 Island Wood (${currentWood}/10 needed to build Shelter)`;
+              setTimeout(() => hudEl.classList.add('hidden'), 2200);
+            }
+            if (this.shelterInteractable && !this.shelterInteractable.isBuilt) {
+              if (currentWood >= 10) {
+                this.shelterInteractable.prompt = 'BUILD ICARUS SHELTER [READY] [E] / [O]';
+              } else {
+                this.shelterInteractable.prompt = `BUILD SHELTER (${currentWood}/10 WOOD) [E] / [O]`;
+              }
             }
          }
        };
@@ -340,6 +363,28 @@ export class MapLoader {
        };
        this.interactables.push(fishObj);
     }
+
+    // 3D Sprite Test Chamber Portal Monolith at (10, 0, -80)
+    const monolithGeo = new THREE.BoxGeometry(1.6, 3.2, 0.8);
+    const monolithMat = new THREE.MeshStandardMaterial({ color: 0x224466, roughness: 0.4, metalness: 0.7 });
+    const monolithMesh = new THREE.Mesh(monolithGeo, monolithMat);
+    monolithMesh.position.set(10, 1.6, -80);
+    this.scene.add(monolithMesh);
+    this._meshes.push(monolithMesh);
+
+    this._addTorch(10, 2.5, -79.5, 0x00ccff, 2.0, 12);
+
+    this.interactables.push({
+      position: new THREE.Vector3(10, 1.0, -80),
+      radius: 3.5,
+      active: true,
+      prompt: 'ENTER 3D SPRITE TEST CHAMBER [E]',
+      onInteract: () => {
+        if (window.GAME && window.GAME.spriteTestRoom && player) {
+          window.GAME.spriteTestRoom.teleportPlayerToRoom(player);
+        }
+      }
+    });
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -358,7 +403,9 @@ export class MapLoader {
     // Outer walls for maze
     this._addWall(-60, 60, 2, 120, wallMat, floorY, false, 4.2);
     this._addWall(60, 60, 2, 120, wallMat, floorY, false, 4.2);
-    this._addWall(0, 120, 120, 2, wallMat, floorY, false, 4.2); // North boundary
+    // North boundary portal flanking Grand Staircase 1 (Opening at X: -6..6)
+    this._addWall(-33, 120, 54, 2, wallMat, floorY, false, 4.2);
+    this._addWall(33, 120, 54, 2, wallMat, floorY, false, 4.2);
     
     // Original entrance corridor so early tests pass
     this._addWall(-6, 9, 2, 24, wallMat, floorY);
@@ -383,8 +430,9 @@ export class MapLoader {
     this._addWall(-30, 90, 2, 40, wallMat, floorY, false, 4.2);
     this._addWall(30, 90, 2, 40, wallMat, floorY, false, 4.2);
     
-    // Hide a small passage to the stairs
-    this._addWall(0, 110, 80, 2, wallMat, floorY, false, 4.2);
+    // Nave passage leading directly to Grand Staircase 1 portal
+    this._addWall(-26, 110, 36, 2, wallMat, floorY, false, 4.2);
+    this._addWall(26, 110, 36, 2, wallMat, floorY, false, 4.2);
 
     // Torches
     this._addTorch(0, 2.5, 8);
@@ -439,11 +487,12 @@ export class MapLoader {
 
         // Smoothly animate lid swing backwards
         let angle = 0;
-        const openAnim = setInterval(() => {
+        const stepOpen = () => {
           angle += 0.08;
           lidGroup.rotation.x = -Math.min(Math.PI * 0.55, angle);
-          if (angle >= Math.PI * 0.55) clearInterval(openAnim);
-        }, 16);
+          if (angle < Math.PI * 0.55) requestAnimationFrame(stepOpen);
+        };
+        requestAnimationFrame(stepOpen);
 
         // Golden light erupts from chest
         const lootLight = new THREE.PointLight(0xffea44, 3.0, 10);
@@ -475,6 +524,25 @@ export class MapLoader {
     // North portal walls flanking Staircase 1 (Z: 120, stairs at X: -4..4)
     this._addWall(-6.5, 120, 5, 2, wallMat, 0);
     this._addWall(6.5, 120, 5, 2, wallMat, 0);
+
+    // Grand Stone Archway framing the portal to Floor 2
+    const archPillarGeo = new THREE.BoxGeometry(1.2, 5.0, 1.2);
+    const archMat = new THREE.MeshStandardMaterial({ color: 0x3a4555, roughness: 0.6, metalness: 0.2 });
+    const pLeft = new THREE.Mesh(archPillarGeo, archMat);
+    pLeft.position.set(-4.5, 2.5, 119.5);
+    const pRight = new THREE.Mesh(archPillarGeo, archMat);
+    pRight.position.set(4.5, 2.5, 119.5);
+    const pLintel = new THREE.Mesh(new THREE.BoxGeometry(10.2, 0.9, 1.4), archMat);
+    pLintel.position.set(0, 4.6, 119.5);
+    this.scene.add(pLeft);
+    this.scene.add(pRight);
+    this.scene.add(pLintel);
+    this._meshes.push(pLeft, pRight, pLintel);
+
+    // Glowing Azure Torches illuminating the Grand Ascent to Floor 2
+    this._addTorch(-4.5, 2.8, 119, 0x44bbff, 2.2, 16);
+    this._addTorch(4.5, 2.8, 119, 0x44bbff, 2.2, 16);
+    this._addTorch(0, 3.2, 128, 0x55ccff, 2.0, 18);
 
     // Grand Staircase 1: Rising from Floor 1 (Y=0, Z=120) to Floor 2 (Y=4, Z=138)
     this._addStaircase(0, 120, 138, 8, 0, 4, floorMat, wallMat);
@@ -680,12 +748,11 @@ export class MapLoader {
     this._addTorch(15, floorY + 3.0, 362, 0xaa22ff, 2.0);
   }
 
-  sealBossArena(triggerZ = 254, triggerY = 16) {
+  sealBossArena(triggerZ = 326, triggerY = 16) {
     if (this.bossFogMesh) return;
     const THREE = window.THREE;
-    const isTestMode = triggerZ <= 247;
-    const fogZ = isTestMode ? 230 : 326;
-    const fogY = isTestMode ? (triggerY > 4.0 ? 8 : 0) : 16;
+    const fogZ = 326;
+    const fogY = 16;
     const geo = new THREE.PlaneGeometry(12, WALL_H);
     const mat = new THREE.MeshBasicMaterial({ color: 0xaa22ff, transparent: true, opacity: 0.65, side: THREE.DoubleSide });
     this.bossFogMesh = new THREE.Mesh(geo, mat);
@@ -696,6 +763,177 @@ export class MapLoader {
     const aabb = { x: 0, z: fogZ, w: 12, d: 1.0, floorY: fogY, wallH: WALL_H, isFogWall: true };
     this.walls.push(aabb);
     this.bossFogWall = aabb;
+  }
+
+  _buildSecretMinotaurLair(wallMat, floorMat, ceilMat, player, audio, hud) {
+    const THREE = window.THREE;
+    const arenaX = -100;
+    const arenaZ = 60;
+    const size = 36;
+    const floorY = 0;
+
+    // Secret Labyrinth Heart Arena
+    this._addFloor(arenaX, arenaZ, size, size, floorMat, floorY);
+    this._addCeiling(arenaX, arenaZ, size, size, ceilMat, floorY);
+
+    this._addWall(arenaX - size / 2, arenaZ, 2, size, wallMat, floorY); // West
+    this._addWall(arenaX + size / 2, arenaZ, 2, size, wallMat, floorY); // East
+    this._addWall(arenaX, arenaZ + size / 2, size, 2, wallMat, floorY); // North
+    this._addWall(arenaX, arenaZ - size / 2, size, 2, wallMat, floorY); // South
+
+    // Arena colosseum pillars
+    this._addWall(arenaX - 8, arenaZ - 8, 2.5, 2.5, wallMat, floorY);
+    this._addWall(arenaX + 8, arenaZ - 8, 2.5, 2.5, wallMat, floorY);
+    this._addWall(arenaX - 8, arenaZ + 8, 2.5, 2.5, wallMat, floorY);
+    this._addWall(arenaX + 8, arenaZ + 8, 2.5, 2.5, wallMat, floorY);
+
+    // Blood-red sacrificial torches
+    this._addTorch(arenaX - 14, 2.8, arenaZ - 14, 0xee2200, 2.2, 18);
+    this._addTorch(arenaX + 14, 2.8, arenaZ - 14, 0xee2200, 2.2, 18);
+    this._addTorch(arenaX - 14, 2.8, arenaZ + 14, 0xee2200, 2.2, 18);
+    this._addTorch(arenaX + 14, 2.8, arenaZ + 14, 0xee2200, 2.2, 18);
+
+    // Floor 1 Entry Portal at (-30, 0, 90)
+    const portalArch = new THREE.Mesh(
+      new THREE.BoxGeometry(3.0, 4.2, 0.8),
+      new THREE.MeshStandardMaterial({ color: 0x442222, roughness: 0.6 })
+    );
+    portalArch.position.set(-30, 2.1, 90);
+    this.scene.add(portalArch);
+    this._meshes.push(portalArch);
+
+    this._addTorch(-30, 3.0, 89.5, 0xff1100, 2.0, 10);
+
+    this.interactables.push({
+      position: new THREE.Vector3(-30, 1.0, 90),
+      radius: 3.5,
+      active: true,
+      prompt: 'CHALLENGE THE MINOTAUR [E] (SECRET BOSS - ONLY FOR THE BRAVE)',
+      onInteract: () => {
+        if (player) {
+          if (typeof player.teleport === 'function') player.teleport(arenaX, 1.7, arenaZ - 12);
+          else {
+            player.camera.position.set(arenaX, 1.7, arenaZ - 12);
+            if (player.worldPos) player.worldPos.set(arenaX, 0, arenaZ - 12);
+          }
+          player.lookAt(arenaX, arenaZ);
+        }
+        if (audio) {
+          audio.playSFX('bossRoar', 1.6);
+          audio.setMusicState('boss');
+        }
+        if (hud && typeof hud.showCheckpointBanner === 'function') {
+          hud.showCheckpointBanner();
+          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+          if (bTxt) bTxt.textContent = '🐂 THE MINOTAUR\'S INNER LAIR';
+          if (bSub) bSub.textContent = 'Secret Ordeal · Slay the Guardian to claim the Legendary Aegis!';
+        }
+
+        // Spawn Secret Boss Minotaur if not already spawned
+        if (window.GAME && window.GAME.enemies && !this.secretBossMinotaur) {
+          import('../enemies/Enemy.js').then(({ Minotaur }) => {
+            const m = window.GAME.enemies.spawnEnemy(Minotaur, new THREE.Vector3(arenaX, 0, arenaZ + 4), player, player.camera);
+            if (m) {
+              m.isBoss = true;
+              m.isMinotaurStalker = false;
+              m.maxHealth = 900;
+              m.health = 900;
+              m.speed = 4.2;
+              m.xpValue = 0;
+              m.scoreValue = 2500;
+              this.secretBossMinotaur = m;
+
+              const bBar = document.getElementById('boss-bar');
+              if (bBar) bBar.classList.remove('hidden');
+              const bName = document.getElementById('boss-name');
+              if (bName) bName.textContent = 'ASTERION, GUARDIAN OF THE LABYRINTH';
+
+              const origOnDeath = m.onDeath;
+              m.onDeath = () => {
+                if (origOnDeath) origOnDeath();
+                this._spawnLegendaryArtifact(arenaX, arenaZ, player, audio, hud);
+              };
+            }
+          });
+        }
+      }
+    });
+
+    // Return Portal in Lair back to Labyrinth Corridor
+    this.interactables.push({
+      position: new THREE.Vector3(arenaX, 1.0, arenaZ - 15),
+      radius: 3.5,
+      active: true,
+      prompt: 'RETURN TO LABYRINTH CORRIDOR [E]',
+      onInteract: () => {
+        if (player) {
+          if (typeof player.teleport === 'function') player.teleport(-30, 1.7, 85);
+          else {
+            player.camera.position.set(-30, 1.7, 85);
+            if (player.worldPos) player.worldPos.set(-30, 0, 85);
+          }
+          player.lookAt(0, 100);
+        }
+        if (audio) audio.setMusicState('explore');
+      }
+    });
+  }
+
+  _spawnLegendaryArtifact(arenaX, arenaZ, player, audio, hud) {
+    const THREE = window.THREE;
+    const hornGeo = new THREE.ConeGeometry(0.35, 1.4, 8);
+    const hornMat = new THREE.MeshStandardMaterial({
+      color: 0xffd700,
+      metalness: 0.9,
+      roughness: 0.2,
+      emissive: 0xaa7700,
+      emissiveIntensity: 0.6
+    });
+    const artifactMesh = new THREE.Mesh(hornGeo, hornMat);
+    artifactMesh.position.set(arenaX, 1.0, arenaZ);
+    this.scene.add(artifactMesh);
+    this._meshes.push(artifactMesh);
+
+    const artifactLight = new THREE.PointLight(0xffcc00, 3.0, 12);
+    artifactLight.position.set(arenaX, 1.5, arenaZ);
+    this.scene.add(artifactLight);
+    this._meshes.push(artifactLight);
+
+    const artifactItem = {
+      position: new THREE.Vector3(arenaX, 1.0, arenaZ),
+      radius: 3.5,
+      active: true,
+      prompt: 'CLAIM AEGIS OF THE MINOTAUR [E]',
+      onInteract: () => {
+        if (!artifactItem.active) return;
+        artifactItem.active = false;
+        artifactMesh.visible = false;
+        artifactLight.visible = false;
+
+        if (player) {
+          player.hasAegis = true;
+          player.damageMultiplier = (1.0 + (player.level - 1) * 0.12) * 2.0;
+          player.damageReduction = 0.5;   // Halve incoming damage
+          player.health = player.maxHealth;
+          player.flasks = player.maxFlasks;
+        }
+
+        if (audio) {
+          audio.playSFX('levelUp', 1.6);
+          audio.playSFX('roomClear', 1.2);
+        }
+
+        if (hud && typeof hud.showCheckpointBanner === 'function') {
+          hud.showCheckpointBanner();
+          const bTxt = document.querySelector('#checkpoint-banner .banner-text');
+          const bSub = document.querySelector('#checkpoint-banner .banner-sub');
+          if (bTxt) bTxt.textContent = '🏆 AEGIS OF THE MINOTAUR CLAIMED!';
+          if (bSub) bSub.textContent = 'Legendary Blessing: Attack Damage x2 · Damage Taken -50% against Wizard King!';
+        }
+      }
+    };
+    this.interactables.push(artifactItem);
   }
 
   unlockShortcut(audio, hud) {

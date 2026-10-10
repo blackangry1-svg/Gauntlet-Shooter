@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-09-23T14:05:29.492Z",
+  "timestamp": "2026-10-06T15:59:33.263Z",
   "iteration": 1,
   "milestone": 22,
-  "mean_fps": 57,
-  "mean_frametime_ms": 17.6,
-  "p50_frametime_ms": 17.3,
-  "p95_frametime_ms": 17.7,
-  "p99_frametime_ms": 34.5,
-  "frames_over_20ms": 2,
-  "frames_over_33ms": 2,
+  "mean_fps": 56,
+  "mean_frametime_ms": 17.79,
+  "p50_frametime_ms": 16.7,
+  "p95_frametime_ms": 33.3,
+  "p99_frametime_ms": 49.8,
+  "frames_over_20ms": 6,
+  "frames_over_33ms": 6,
   "test_results": {
     "BOOT_TEST": {
       "pass": true,
@@ -24,20 +24,20 @@
       "details": {
         "posStart": {
           "x": 0,
-          "z": -140
+          "z": 0
         },
         "posMoved": {
-          "x": -3.1350958058172227e-16,
-          "z": -137.4399999999996
+          "x": -3.0371240618854347e-16,
+          "z": 2.480000000000001
         },
-        "distMoved": 2.5600000000004,
+        "distMoved": 2.480000000000001,
         "movedForward": true
       }
     },
     "COLLISION_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 63,
+        "wallCount": 73,
         "posAfterWall": -4.640000000000001
       }
     },
@@ -51,8 +51,8 @@
     "DAMAGE_TEST": {
       "pass": true,
       "details": {
-        "playerHpBefore": 120,
-        "playerHpAfter": 95
+        "playerHpBefore": 128,
+        "playerHpAfter": 103
       }
     },
     "DODGE_TEST": {
@@ -60,8 +60,8 @@
       "details": {
         "isDodging": true,
         "iframes": 0.2466666666666667,
-        "stamBefore": 100.3333333333334,
-        "stamAfter": 78.3333333333334
+        "stamBefore": 110,
+        "stamAfter": 88
       }
     },
     "RESPAWN_TEST": {
@@ -144,14 +144,14 @@
     "PROJECTILE_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 63,
+        "wallCount": 73,
         "diedAtWall": true
       }
     },
     "ENEMY_WALL_TEST": {
       "pass": true,
       "details": {
-        "wallCount": 63,
+        "wallCount": 73,
         "finalX": -5.560000000000001
       }
     },
@@ -231,8 +231,8 @@
         "wizExhaustion": {
           "manaDrained": 5,
           "rejected": true,
-          "projCountBefore": 2,
-          "projCountAfter": 2
+          "projCountBefore": 1,
+          "projCountAfter": 1
         },
         "wizRecovery": {
           "manaBeforeRegen": 5,

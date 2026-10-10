@@ -1,13 +1,13 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "date": "2026-10-10",
   "owner": "Codex",
   "status": "ACTIVE_CODEX",
   "canonical_game": "godot/project.godot",
   "legacy_browser": "repository root",
   "repository": "blackangry1-svg/Gauntlet-Shooter",
-  "branch": "codex/godot-takeover",
-  "base_branch": "main",
+  "branch": "codex/elemental-overhaul",
+  "base_branch": "codex/godot-takeover",
   "local_history_preserved": "b19de8ea5552ee7378f24c01ad2070544bfcc0e8",
   "remote_main_at_capture": "28de50b1f283cc5046ff4b2f616fb70f17af3767",
   "backup": ".codex-local\\backups\\Gauntlet_Before_Codex_2026-10-10.zip",
@@ -16,6 +16,64 @@
   "selected_artwork_hashes_verified": 35,
   "runtime": {
     "engine": "4.7.2.stable.official.ed1daf0bf",
+    "integrated_validation": "PASS",
+    "integrated_assertions_passed": 508,
+    "supplemental_campaign_assertions_passed": 81,
+    "low_power_render_assertions_passed": 12,
+    "errors": 0,
+    "warnings": 0,
+    "render": "PASS_REAL_OPENGL",
+    "hardware": "Intel Core i5-1035G1 / Intel UHD / about 12 GB RAM",
+    "default_render_scale": 0.75,
+    "default_frame_cap": 60,
+    "low_power_preset": "60 percent rendering / 45 FPS",
+    "standard_frame_ms_median_range": [
+      16.685,
+      17.291
+    ],
+    "standard_frame_ms_p95_range": [
+      18.234,
+      26.365
+    ],
+    "low_power_sample": {
+      "active_actors": 8,
+      "floor": 0,
+      "frame_ms_median": 22.681,
+      "frame_ms_p95": 37.443,
+      "max_draw_calls": 46,
+      "max_hostile_projectiles": 0,
+      "max_nodes": 488,
+      "physics_ms_p95": 11.671,
+      "process_ms_p95": 54.127,
+      "simulation": {
+        "ai_ticks": 100,
+        "bosses": 1,
+        "flow_build_max_usec": 3900,
+        "flow_build_usec": 2325,
+        "flow_builds": 4,
+        "hostile_projectiles": 0,
+        "path_cells": 160,
+        "projectiles": 0,
+        "regular_active": 8,
+        "regular_total": 8
+      }
+    },
+    "physical_input": "NOT_CERTIFIED",
+    "evidence": "OVERHAUL_ACCEPTANCE_V1.json"
+  },
+  "implementation_backlog": [
+    "Human frame-time acceptance under the user's normal application load",
+    "Physical controller feel and full-session balance playtest",
+    "Reviewed source artwork extraction and creature animation polish",
+    "Additional story and optional secrets after human campaign feedback"
+  ],
+  "next_milestone": "Human campaign playtest from fresh shore save; tune combat and polish visuals",
+  "handoff": "CODEX_HANDOFF.md",
+  "asset_catalog": "godot/ASSET_CATALOG_V1.json",
+  "migration_commit": "a6ea40e9dedab32c5e7ce31a8825bddfdbe02a43",
+  "active_scene": "godot/scenes/adventure.tscn",
+  "legacy_runtime": {
+    "engine": "4.7.2.stable.official.ed1daf0bf",
     "import": "PASS",
     "assertions_passed": 94,
     "assertions_total": 94,
@@ -23,12 +81,16 @@
     "errors": 0,
     "warnings": 0
   },
-  "implementation_backlog": [
-    "Reviewed source extraction, alpha cleanup and animation wiring",
-    "Five proposed elemental labyrinth stages",
-    "Rendered and physical-controller acceptance"
+  "implemented_milestone": "Five elemental labyrinths and single-hero utility campaign",
+  "implemented_features": [
+    "Shore driftwood opening; sword and buckler, finite bow/staff ammunition, spear",
+    "Five distinct 31x31 labyrinths with keys, gates, shortcuts, bosses and lift revisits",
+    "Tide Charm underwater key pocket; bow-triggered physical lava bridge",
+    "Aether Sight staff/spear seal revisits required before fifth floor",
+    "Captive merchant and upgrades to weapons, shield and traversal utilities",
+    "Isolated versioned adventure save with checksum and backup fallback",
+    "Bounded actors and projectiles, shared cached navigation, batched geometry",
+    "Relic tiers improve dive speed, fire protection, dodge economy and magical map sight"
   ],
-  "next_milestone": "Blueprint and implement one Earth labyrinth vertical slice",
-  "handoff": "CODEX_HANDOFF.md",
-  "asset_catalog": "godot/ASSET_CATALOG_V1.json"
+  "original_godot_files_hash_verified": 105
 }

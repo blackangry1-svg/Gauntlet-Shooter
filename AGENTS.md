@@ -10,7 +10,8 @@ Older handoffs assigning work to Antigravity are historical; their technical con
 
 ## Design workflow
 Blueprint mechanics, interfaces, preservation requirements and acceptance criteria before implementation.
-Keep four classes, Minotaur stalker, sanctuary, Asterion and Aegis unless a deliberate design revises them.
+The user's one-hero elemental exploration overhaul supersedes the four-class baseline.
+Follow OVERHAUL_BLUEPRINT_V1.md and ADVENTURE_INTERFACES_V1.md for current gameplay contracts.
 Every floor, transition, treasure area and boss encounter must remain a labyrinth.
 Use the five elemental proposals in godot/ELEMENTAL_STAGE_DESIGN_V1.md and ELEMENTAL_LABYRINTHS_V1.json.
 Keys precede gates; far-side levers open return shortcuts; boss victory releases the exit.

@@ -1,37 +1,67 @@
-# Gauntlet: Codex development checkout
+# Gauntlet: Elemental Tower
 
-The native Godot game now lives in **godot/project.godot**.
-Codex maintains this checkout and blackangry1-svg/Gauntlet-Shooter.
-The browser game at the repository root preserves the earlier Antigravity version.
+The active native game is **godot/project.godot**, maintained by Codex in this checkout.
+The adventure keeps the first-person perspective and replaces the active four-class game with one stranded hero.
+The original browser game, native scripts, source artwork and sibling projects remain preserved.
 
-## Open or play
-Use Godot 4.7.2 with GL Compatibility.
-- Run launch_godot.bat to play, or launch_godot.bat -Editor to open the editor.
-- Alternatively import godot/project.godot directly in Godot.
-- PowerShell accepts an explicit engine: ./launch_godot.ps1 -GodotPath <executable>.
-- GODOT_BIN can supply the engine path on another computer.
+## Play
 
-## Verify
-Run python tools/codex/check_godot.py --godot <Godot executable>.
-The check imports assets, runs godot/tests/test_suite.gd and boots the main scene headlessly.
-Local logs and JSON results live under .codex-local/validation.
-The original godot/README.md retains the existing gameplay and controls documentation.
+Double-click **PlayAdventure.cmd**, or import godot/project.godot in Godot 4.7.2.
+PlayAdventure.ps1 -Editor opens the editor; GODOT_BIN can specify another installation.
+The earlier launch_godot launchers also open the current native project.
 
-## Design and handoff
-Read CODEX_HANDOFF.md for the current state and next milestone.
-Read MIGRATION_BLUEPRINT_V1.md for the migration contract.
-The original Master_ Gauntlet_Guide.pdf and current Godot code define the baseline.
-godot/ASSET_HANDOFF_V1.md and EXPANSION_HANDOFF_V1.md describe delivered artwork.
-godot/ELEMENTAL_STAGE_DESIGN_V1.md defines five proposed elemental maze stages.
-Open godot/ELEMENTAL_LABYRINTHS_V1.html to explore their layouts offline.
+## The campaign
 
-## Current scope
-Four hero classes, five original floors, the Minotaur stalker, sanctuary and Asterion are preserved.
-The new source artwork and elemental maze designs await production extraction and gameplay integration.
-Every future floor, including its boss encounter, must remain a labyrinth.
+Every floor uses its supplied31-by-31 labyrinth, with actual walls, local keys, locked corridors,
+return levers, persistent shortcuts, supply secrets, a captive smith and a distinct guardian.
 
-## Repository history
-Migration work uses codex/godot-takeover and preserves GitHub main for review.
-The local Antigravity history is retained in antigravity remote references.
-A verified pre-migration backup is kept in .codex-local/backups.
-Local transcripts, runtime logs, imports and backups remain outside Git.
+| Floor | Traversal | Guardian reward |
+|---|---|---|
+| Earth: Rootbound Crown | Shore driftwood, sword/buckler chest, key gate | Bow and Tide Charm |
+| Water: Drowned Bellways | Tide Charm descent to a submerged key and return bubbles | Staff and Ember Sigil |
+| Fire: Ember Oathforge | Local key, elevated bow chain-ring lever, physical lava bridge | Valkyrie spear and Gale Mantle |
+| Air: Windglass Warrens | Storm barrier opened with Gale Mantle | Aether Sight |
+| Aether: Unwritten Labyrinth | Two earlier-floor seals, local key and true passage | Tower Heart |
+
+After Air, revisit Earth with the staff for the Sun Seal and Fire with the spear for the Moon Seal.
+Aether Sight reveals these wards. Both seals are required before the fifth floor opens.
+Earned equipment and opened passages survive death, floor changes and save reload.
+
+Arrows and staff charges are finite. Rest at a shrine to heal and recover a small owned-weapon supply.
+The rescued smith offers independent weapon, shield and utility upgrades with Embers.
+Large guardians have distinct attacks, readable windups, recovery windows, cover checks and stronger second phases.
+
+## Controls
+
+| Action | Keyboard/mouse | Controller |
+|---|---|---|
+| Move/look | WASD / mouse | Left/right sticks |
+| Light / heavy | Left / right mouse | R1 / Triangle |
+| Guard / dodge | Q / Space | L1 / Circle |
+| Interact / heal | E / F | Cross / Square |
+| Equipped weapon | 1–5 or brackets | D-pad left/right |
+| Sprint | Shift | Left stick press |
+| Journal / pause | Tab / Esc | Back / Start |
+| Save / performance | F5 / F9 | Pause menu |
+
+## Saves and performance
+
+The new adventure uses its own adventure_v1.json and validated backup in Godot user storage.
+It does not overwrite the legacy save. Tests use isolated files under .codex-local.
+Only one floor is active. Geometry is batched; wall collision is merged.
+AI uses a shared navigation cache at10Hz, at most8 regular actors plus1 boss, and24 combined projectiles.
+GL Compatibility, a 60 FPS cap, 75% render scale and shadow-free lighting are defaults.
+The pause menu offers 60%, 75% and 100% rendering.
+The low-power option also caps rendering at 45 FPS; balanced and native use 60 FPS.
+Relic upgrades improve dive speed, fire protection, dodge stamina cost and magical map sight.
+
+## Verify and continue
+
+Run python tools/codex/check_adventure.py --godot <executable> --render.
+It checks legacy regressions, state/player, physical world topology, combat, the whole progression,
+main-game transitions and real OpenGL rendering. Logs/captures are local under .codex-local/overhaul.
+See OVERHAUL_BLUEPRINT_V1.md, ADVENTURE_INTERFACES_V1.md and CODEX_HANDOFF.md.
+
+Current presentation uses inexpensive3D creature and weapon silhouettes plus ready environment textures.
+Delivered new art remains preserved for reviewed extraction and animation work.
+Physical controller feel and long-session balance still need human playtesting.

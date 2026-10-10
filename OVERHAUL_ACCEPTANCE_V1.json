@@ -1,0 +1,304 @@
+{
+  "schema": 1,
+  "date": "2026-10-10",
+  "branch": "codex/elemental-overhaul",
+  "base_branch": "codex/godot-takeover",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "integrated_assertions_passed": 508,
+  "integrated_validation": {
+    "schema": 1,
+    "godot_version": "4.7.2.stable.official.ed1daf0bf",
+    "checks": [
+      {
+        "name": "import",
+        "exit_code": 0,
+        "elapsed_seconds": 14.67,
+        "passed": true,
+        "assertions": 0,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\import.log"
+      },
+      {
+        "name": "legacy",
+        "exit_code": 0,
+        "elapsed_seconds": 3.12,
+        "passed": true,
+        "assertions": 94,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\legacy.log"
+      },
+      {
+        "name": "state_player",
+        "exit_code": 0,
+        "elapsed_seconds": 1.98,
+        "passed": true,
+        "assertions": 93,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\state_player.log"
+      },
+      {
+        "name": "world",
+        "exit_code": 0,
+        "elapsed_seconds": 4.48,
+        "passed": true,
+        "assertions": 160,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\world.log"
+      },
+      {
+        "name": "combat",
+        "exit_code": 0,
+        "elapsed_seconds": 7.66,
+        "passed": true,
+        "assertions": 52,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\combat.log"
+      },
+      {
+        "name": "campaign",
+        "exit_code": 0,
+        "elapsed_seconds": 8.91,
+        "passed": true,
+        "assertions": 80,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\campaign.log"
+      },
+      {
+        "name": "boot",
+        "exit_code": 0,
+        "elapsed_seconds": 5.44,
+        "passed": true,
+        "assertions": 0,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\boot.log"
+      },
+      {
+        "name": "render",
+        "exit_code": 0,
+        "elapsed_seconds": 52.34,
+        "passed": true,
+        "assertions": 29,
+        "errors": [],
+        "log": ".codex-local\\overhaul\\render.log"
+      }
+    ],
+    "passed": true,
+    "note": "Render flag runs real OpenGL capture and local bounded combat frame timings. User physical input and full campaign balance remain separate."
+  },
+  "supplemental_validation": {
+    "campaign": {
+      "assertions_passed": 81,
+      "exit_code": 0,
+      "errors": 0,
+      "scope": "Actual menu cycles native, low power and balanced; input/pause preserved; agent-run targeted check after HUD update"
+    },
+    "low_power_render": {
+      "assertions_passed": 12,
+      "exit_code": 0,
+      "errors": [],
+      "log": ".codex-local/overhaul/low_power_render.log",
+      "scope": "Actual 45 FPS / 60 percent renderer; Earth floor with eight active regular actors plus guardian"
+    }
+  },
+  "hardware": {
+    "cpu": "Intel Core i5-1035G1",
+    "gpu": "Intel UHD Graphics",
+    "driver": "31.0.101.2141",
+    "ram": "about 12 GB",
+    "other_godot_runtimes_preserved": 2
+  },
+  "standard_mode": {
+    "failures": 0,
+    "floors": [
+      {
+        "active_actors": 8,
+        "floor": 0,
+        "frame_ms_median": 16.82,
+        "frame_ms_p95": 26.365,
+        "max_draw_calls": 46,
+        "max_hostile_projectiles": 0,
+        "max_nodes": 488,
+        "physics_ms_p95": 4.249,
+        "process_ms_p95": 40.834,
+        "simulation": {
+          "ai_ticks": 71,
+          "bosses": 1,
+          "flow_build_max_usec": 3186,
+          "flow_build_usec": 1765,
+          "flow_builds": 4,
+          "hostile_projectiles": 0,
+          "path_cells": 160,
+          "projectiles": 0,
+          "regular_active": 8,
+          "regular_total": 8
+        }
+      },
+      {
+        "active_actors": 8,
+        "floor": 1,
+        "frame_ms_median": 16.742,
+        "frame_ms_p95": 18.578,
+        "max_draw_calls": 43,
+        "max_hostile_projectiles": 3,
+        "max_nodes": 528,
+        "physics_ms_p95": 3.387,
+        "process_ms_p95": 38.827,
+        "simulation": {
+          "ai_ticks": 140,
+          "bosses": 1,
+          "flow_build_max_usec": 3186,
+          "flow_build_usec": 2298,
+          "flow_builds": 7,
+          "hostile_projectiles": 0,
+          "path_cells": 192,
+          "projectiles": 0,
+          "regular_active": 8,
+          "regular_total": 8
+        }
+      },
+      {
+        "active_actors": 8,
+        "floor": 2,
+        "frame_ms_median": 16.838,
+        "frame_ms_p95": 20.406,
+        "max_draw_calls": 105,
+        "max_hostile_projectiles": 3,
+        "max_nodes": 530,
+        "physics_ms_p95": 3.752,
+        "process_ms_p95": 24.131,
+        "simulation": {
+          "ai_ticks": 207,
+          "bosses": 1,
+          "flow_build_max_usec": 4311,
+          "flow_build_usec": 4311,
+          "flow_builds": 10,
+          "hostile_projectiles": 1,
+          "path_cells": 457,
+          "projectiles": 1,
+          "regular_active": 8,
+          "regular_total": 8
+        }
+      },
+      {
+        "active_actors": 8,
+        "floor": 3,
+        "frame_ms_median": 17.291,
+        "frame_ms_p95": 24.986,
+        "max_draw_calls": 57,
+        "max_hostile_projectiles": 3,
+        "max_nodes": 459,
+        "physics_ms_p95": 4.667,
+        "process_ms_p95": 26.482,
+        "simulation": {
+          "ai_ticks": 273,
+          "bosses": 1,
+          "flow_build_max_usec": 4311,
+          "flow_build_usec": 2273,
+          "flow_builds": 12,
+          "hostile_projectiles": 0,
+          "path_cells": 170,
+          "projectiles": 0,
+          "regular_active": 8,
+          "regular_total": 8
+        }
+      },
+      {
+        "active_actors": 8,
+        "floor": 4,
+        "frame_ms_median": 16.685,
+        "frame_ms_p95": 18.234,
+        "max_draw_calls": 54,
+        "max_hostile_projectiles": 5,
+        "max_nodes": 514,
+        "physics_ms_p95": 3.136,
+        "process_ms_p95": 21.54,
+        "simulation": {
+          "ai_ticks": 338,
+          "bosses": 1,
+          "flow_build_max_usec": 4311,
+          "flow_build_usec": 2098,
+          "flow_builds": 14,
+          "hostile_projectiles": 0,
+          "path_cells": 214,
+          "projectiles": 0,
+          "regular_active": 8,
+          "regular_total": 8
+        }
+      }
+    ],
+    "note": "Scripted local rendering and bounded combat sample; physical user input not certified.",
+    "render_driver": "gl_compatibility",
+    "render_scale": 0.75,
+    "schema": 1,
+    "window": "(1280, 720)"
+  },
+  "low_power_mode": {
+    "failures": 0,
+    "floors": [
+      {
+        "active_actors": 8,
+        "floor": 0,
+        "frame_ms_median": 22.681,
+        "frame_ms_p95": 37.443,
+        "max_draw_calls": 46,
+        "max_hostile_projectiles": 0,
+        "max_nodes": 488,
+        "physics_ms_p95": 11.671,
+        "process_ms_p95": 54.127,
+        "simulation": {
+          "ai_ticks": 100,
+          "bosses": 1,
+          "flow_build_max_usec": 3900,
+          "flow_build_usec": 2325,
+          "flow_builds": 4,
+          "hostile_projectiles": 0,
+          "path_cells": 160,
+          "projectiles": 0,
+          "regular_active": 8,
+          "regular_total": 8
+        }
+      }
+    ],
+    "frame_cap": 45,
+    "low_power": true,
+    "note": "Scripted local rendering and bounded combat sample; physical user input not certified.",
+    "render_driver": "gl_compatibility",
+    "render_scale": 0.600000023841858,
+    "schema": 1,
+    "window": "(1280, 720)"
+  },
+  "preservation": {
+    "original_sibling_godot_files_hash_checked": 105,
+    "mismatches": 0,
+    "legacy_browser_and_godot_save_code_hashes_unchanged": true,
+    "adventure_uses_separate_save": true
+  },
+  "source_sha256_lf": {
+    "godot/scripts/adventure_boss.gd": "9d83108475394eb74db31b6951e4fcb5ebc93034ffec3b9a0dd6b112c7212d7b",
+    "godot/scripts/adventure_director.gd": "7bb3adb775ec33ddf9f2624a19f648348e24de0a980244efe6f3b0e4b4062c40",
+    "godot/scripts/adventure_enemy.gd": "f7cbdc0a61bc5e502a45f48706e9143d557a3c97f1f091886b5737d48f9d191f",
+    "godot/scripts/adventure_feature.gd": "345b5b1b1e8365f11465580129e378865ebc630f9f64b1883bc2149c765036ad",
+    "godot/scripts/adventure_hostile_projectile.gd": "b26620e53a99e5dbed1593f8fc2e07c05d788e714e423d5245114093061d55ab",
+    "godot/scripts/adventure_hud.gd": "0fa0354339e236bb3596f43036a4a09c83dd96a1a30d7228ce04fcbd0c3a5d77",
+    "godot/scripts/adventure_main.gd": "4f84ed5681734d22fc823d48fbb7093f9f39a710463effcccc2095cb6a0b55c2",
+    "godot/scripts/adventure_map.gd": "e913a63917ec431312a371192ba4465240a7be76abc63dc2a67c8013ff29e49e",
+    "godot/scripts/adventure_maze.gd": "e9f11cfe1a192997dd16d130d332ca3af8464ef9871f071594211877705046ff",
+    "godot/scripts/adventure_player.gd": "9d58e01d8bc4c7eeaac125426b42553678ea9001a1caa7a38be7fff13a7c66dd",
+    "godot/scripts/adventure_projectile.gd": "65ce1637002d0b1698a2d8ecbf7ef73881a225698977a8b7079a457d97f35fee",
+    "godot/scripts/adventure_state.gd": "5df1039a63d266235b5ff69ee58ca9a5a216986f8fe4bdfe396d2e4992904d94",
+    "godot/scripts/adventure_world.gd": "cba367d201dbe38fbef65a15b3ba882ae09574e0faa4ea06089ecd67ac02f7a4",
+    "godot/tests/render_adventure.gd": "3413c0fce93732cea82f0ea81a2f6b1a0bb73f940b06ad5713b2bc9b4ae78eb5",
+    "godot/tests/test_adventure_campaign.gd": "3f85cbb94cea7b33d6a8f26284f207da460ddd5901582c245787fdedc9c3010e",
+    "godot/tests/test_adventure_combat.gd": "b88b009973c5489155c753fca2e42cbede831c79ab5baf0dee07fb614440e98f",
+    "godot/tests/test_adventure_state.gd": "d6b0d7dbdf718bf13825235715e65c9a8428a0b679ecb4ca352ae195f3ff3d75",
+    "godot/tests/test_adventure_world.gd": "00543a1d9fb9dc8b6a0d69b115d878b5ed251cce53b4d54a81ff6e6a6df6352b",
+    "godot/project.godot": "2138313b3e6410c2ef602d8e0abe915a00d0eaa92d0414a750f285a9af0b8b5c",
+    "godot/scenes/adventure.tscn": "4fca05daa6dcfdf03d71c1f6839e1c263100d021ccae70b0a72ea9663b3f0a84"
+  },
+  "limits": [
+    "Graphics timings vary across repeated samples with other applications running; no locked frame rate is certified.",
+    "The standard full five-floor run precedes the low-power menu addition; the updated menu and capture harness passed the supplemental checks.",
+    "Physical controller feel and full-session combat balance require human playtesting.",
+    "Enemy meshes and weapon viewmodels are inexpensive prototypes; full production art and animation remain future work."
+  ]
+}

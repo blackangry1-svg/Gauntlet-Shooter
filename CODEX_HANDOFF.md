@@ -1,45 +1,50 @@
 # Codex project handoff
-Date: 2026-10-10
-Owner: Codex; takeover and local migration complete.
+Date: 2026-10-10. Owner: Codex. Native overhaul implemented and validated.
 
-## Canonical checkout
-Use this gauntlet_l repository, registered in Codex as Gauntlet Shooter.
-The native game is godot/project.godot. GitHub is blackangry1-svg/Gauntlet-Shooter.
-Development branch: codex/godot-takeover; migrate through its attached draft pull request.
-The root browser version preserves Antigravity's committed history and local work.
-Original sibling folders are preserved baselines; make future native edits in godot here.
+## Canonical project
+Work in this gauntlet_l checkout; the active game is godot/project.godot.
+GitHub repository: blackangry1-svg/Gauntlet-Shooter.
+Development branch: codex/elemental-overhaul; base: codex/godot-takeover.
+Draft review: GitHub PR #2, blackangry1-svg/Gauntlet-Shooter; migration is PR #1.
+The migration draft remains separate; do not merge or overwrite main without a user request.
+Original sibling Godot/browser folders, root browser history and old saves remain baselines.
 
-## Start and verify
-Run launch_godot.bat to play; append -Editor to open Godot.
-Use launch_godot.ps1 -GodotPath <executable> for a custom installation or set GODOT_BIN.
-Run python tools/codex/check_godot.py --godot <executable> for all baseline checks.
-Installed engine verified: 4.7.2.stable.official.ed1daf0bf, GL Compatibility.
-Local logs and results: .codex-local/validation/RESULTS.json.
+## Play and verify
+Double-click PlayAdventure.cmd; PlayAdventure.ps1 -Editor opens Godot.
+GODOT_BIN can select another local engine. Verified engine: Godot 4.7.2.
+Run python tools/codex/check_adventure.py --godot <executable> --render.
+Tests use isolated adventure save paths under .codex-local/overhaul.
+Use OVERHAUL_ACCEPTANCE_V1.json for tracked results; detailed logs and PNGs are local.
+Read OVERHAUL_BLUEPRINT_V1.md and ADVENTURE_INTERFACES_V1.md before changing mechanics.
 
-## Evidence
-Godot import passed in 59.219 seconds with zero engine errors or warnings.
-The existing 16 test groups passed all 94 assertions in 5.047 seconds.
-Main-scene headless boot completed 120 iterations in 3.718 seconds without errors or warnings.
-All 35 selected delivered artwork hashes and the preserved shield v1 are verified.
-425 original files were verified against the pre-migration capture.
-Backup: .codex-local/backups/Gauntlet_Before_Codex_2026-10-10.zip (426 entries).
-MIGRATION_MANIFEST_V1.json records copied files, hashes, baseline history and validation.
-Headless results do not certify rendered art, physical controllers or hardware performance.
-The preserved browser implementation was not replayed during this native migration.
+## Implemented campaign
+One first-person hero starts with driftwood on the Earth shore.
+Sword/buckler chest precedes the Earth guardian; its reward grants bow and Tide Charm.
+Water requires the Tide Charm to dive for a submerged key; its guardian grants staff and Ember Sigil.
+Fire requires a local key and a bow shot at the chain ring to lower the physical lava bridge.
+The Fire guardian grants the spear and Gale Mantle; Air requires crossing its storm ward.
+The Air guardian grants Aether Sight. Revisit Earth with staff for Sun Seal and Fire with spear for Moon Seal.
+Both seals unlock Aether; defeat its guardian for the Tower Heart.
+All five distinct 31x31 mazes have branching corridors, keys, persistent passages, secrets and refuge lifts.
+The captive smith upgrades owned weapons, buckler and traversal utilities with earned Embers.
+Relic tiers improve dive speed, fire protection, dodge stamina cost and magical map reveal radius.
+Checkpoints heal and provide a minimum reserve of finite bow/staff ammunition to prevent softlocks.
+The active four-class system is replaced. Legacy files remain for regression and recovery.
 
-## Authority and design backlog
-Read AGENTS.md, Master_ Gauntlet_Guide.pdf and the native gameplay code first.
-The native baseline retains four classes, five old floors, Minotaur stalker, sanctuary, Asterion and Aegis.
-Use godot/ASSET_CATALOG_V1.json for portable source paths and hashes.
-Historical source manifests and handoffs retain original Windows paths and generation prompts.
-Codex assumes extraction, wiring and verification previously assigned to Antigravity.
-Source sheets need reviewed masks, safe cell extraction, canonical RGBA and gameplay animation.
-Five ELEMENTAL labyrinth designs are proposals; they are not implemented in the current game.
-The latest package in Downloads preserves the thread's complete artwork generation history.
+## Save and hardware boundaries
+New saves use adventure_v1.json plus checksum/version validation and a backup; no legacy conversion.
+Only the current floor is built. Regular active actors cap at eight; combined shots cap at 24, hostile shots at 12.
+Enemy AI uses bounded updates and a shared navigation field cached by player cell and topology revision.
+GL Compatibility, 60 FPS cap, 75 percent rendering and shadow-free lighting are defaults.
+The final five-floor Intel UHD sample measured median frames 16.7-17.3 ms and 95th percentiles 18.2-26.4 ms.
+Repeated timing varied under other applications. Low-power mode uses 60 percent rendering with a 45 FPS cap.
+508 integrated assertions passed; post-menu campaign 81/81 and low-power rendered checks 12/12 passed.
+These are bounded scripted samples; locked frame rates, physical controller feel and long-session balance are not certified.
+Creature/viewmodel visuals are inexpensive prototypes with reviewed ready textures; production art is pending.
 
-## Next milestone
-Blueprint one Earth labyrinth vertical slice using ELEMENTAL_STAGE_DESIGN_V1.md.
-Resolve the intended elemental progression against existing baseline mechanics before replacing floors.
-Integrate one regular enemy, the corrected shield and reviewed animation states.
-Prove key-before-gate, return-lever shortcut, boss-exit release and wall collision for every creature.
-Validate rendered frames and controller play before extending all five stages.
+## Preservation and next work
+The original 105 sibling Godot files match their migration capture; preserved artwork was not re-extracted.
+Pre-migration backup: .codex-local/backups/Gauntlet_Before_Codex_2026-10-10.zip.
+MIGRATION_MANIFEST_V1.json retains the earlier 425-file capture and source history.
+Next: fresh-save human campaign playtest, then tune boss tells, combat feel, story and creature animation.
+Preserve the new player's progress when iterating. Never use unrelated Godot MCP projects for this game.

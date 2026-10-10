@@ -24,6 +24,17 @@ export class AudioManager {
       this._masterGain = this._ctx.createGain();
       this._masterGain.gain.value = this._volume;
       this._masterGain.connect(this._ctx.destination);
+      
+      this._noiseBuffers = {};
+      for (const [key, def] of Object.entries(this._sfxDefs)) {
+        if (def.gen === 'noise' || def.gen === 'boom' || def.gen === 'breathe') {
+          const bufLen = Math.floor(this._ctx.sampleRate * def.duration);
+          const buf = this._ctx.createBuffer(1, bufLen, this._ctx.sampleRate);
+          const data = buf.getChannelData(0);
+          for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+          this._noiseBuffers[key] = buf;
+        }
+      }
     } catch (e) {
       console.warn('[Audio] Web Audio not available:', e);
     }
@@ -62,6 +73,9 @@ export class AudioManager {
       roomClear:   { gen: 'chord', freqs: [523, 659, 784], duration: 0.8, attack: 0.05, decay: 0.75 },
       // Pickup — coin jingle
       pickup:      { gen: 'tone', type: 'sine', freq: 880, duration: 0.12, attack: 0.01, decay: 0.11 },
+      pickupHealth:{ gen: 'chord', freqs: [523, 659, 784], duration: 0.25, attack: 0.01, decay: 0.24 },
+      pickupMana:  { gen: 'chord', freqs: [587, 740, 880], duration: 0.25, attack: 0.01, decay: 0.24 },
+      pickupGold:  { gen: 'tone', type: 'triangle', freq: 987, duration: 0.18, attack: 0.005, decay: 0.175, slide: 1318 },
       // Bonfire / Checkpoint rest
       bonfireRest: { gen: 'chord', freqs: [440, 554, 659, 880], duration: 1.4, attack: 0.1, decay: 1.3 },
       // Lever pull / door opening
@@ -77,6 +91,12 @@ export class AudioManager {
       footstep:    { gen: 'hit', freq: 80, duration: 0.08, attack: 0.005, decay: 0.075 },
       // UI click
       uiClick:     { gen: 'tone', type: 'sine', freq: 440, duration: 0.06, attack: 0.005, decay: 0.055 },
+      // Level up triumphant chord
+      levelUp:     { gen: 'chord', freqs: [440, 554, 659, 880, 1108], duration: 1.8, attack: 0.05, decay: 1.75 },
+      // Minotaur Stalker (Alien: Isolation procedural cues)
+      minotaurBreathe: { gen: 'breathe', duration: 1.5, attack: 0.25, decay: 1.25, filter: 260 },
+      heartbeat:       { gen: 'heartbeat', duration: 0.65, attack: 0.02, decay: 0.63 },
+      minotaurTaunt:   { gen: 'taunt', duration: 2.2, attack: 0.1, decay: 2.1 },
     };
   }
 
@@ -106,12 +126,8 @@ export class AudioManager {
     }
 
     if (def.gen === 'noise') {
-      const bufLen = ctx.sampleRate * def.duration;
-      const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
       const src = ctx.createBufferSource();
-      src.buffer = buf;
+      src.buffer = this._noiseBuffers[name];
 
       // Bandpass filter for character
       const filter = ctx.createBiquadFilter();
@@ -142,12 +158,8 @@ export class AudioManager {
 
     } else if (def.gen === 'boom') {
       // Noise + sine layered
-      const bufLen = ctx.sampleRate * def.duration;
-      const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
       const src = ctx.createBufferSource();
-      src.buffer = buf;
+      src.buffer = this._noiseBuffers[name];
       const f = ctx.createBiquadFilter();
       f.type = 'lowpass';
       f.frequency.value = 200;
@@ -177,6 +189,55 @@ export class AudioManager {
         osc.start(now);
         osc.stop(now + def.duration + 0.01);
       }
+
+    } else if (def.gen === 'breathe') {
+      // Alien: Isolation style raspy breathing inhalation and exhalation
+      const src = ctx.createBufferSource();
+      src.buffer = this._noiseBuffers[name];
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(160, now);
+      filter.frequency.linearRampToValueAtTime(360, now + def.duration * 0.45);
+      filter.frequency.exponentialRampToValueAtTime(140, now + def.duration);
+      filter.Q.value = 1.6;
+      src.connect(filter);
+      filter.connect(gainNode);
+      src.start(now);
+
+    } else if (def.gen === 'heartbeat') {
+      // Sub-bass double-lub heartbeat
+      [0, 0.16].forEach((offset, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        const f = idx === 0 ? 54 : 46;
+        osc.frequency.setValueAtTime(f, now + offset);
+        osc.frequency.exponentialRampToValueAtTime(32, now + offset + 0.22);
+        g.gain.setValueAtTime(0, now + offset);
+        g.gain.linearRampToValueAtTime(0.65, now + offset + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.25);
+        osc.connect(g);
+        g.connect(gainNode);
+        osc.start(now + offset);
+        osc.stop(now + offset + 0.26);
+      });
+
+    } else if (def.gen === 'taunt') {
+      // Ominous resonant voice growl
+      const osc = ctx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80, now);
+      osc.frequency.linearRampToValueAtTime(45, now + def.duration);
+
+      const f = ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.setValueAtTime(320, now);
+      f.frequency.linearRampToValueAtTime(120, now + def.duration);
+
+      osc.connect(f);
+      f.connect(gainNode);
+      osc.start(now);
+      osc.stop(now + def.duration + 0.01);
     }
   }
 
@@ -228,8 +289,49 @@ export class AudioManager {
     }
   }
 
+  playBattleTransition(isBoss = false) {
+    if (!this._ctx) return;
+    const ctx = this._ctx;
+    const now = ctx.currentTime;
+
+    if (isBoss) {
+      const freqs = [45, 53.4, 63.5, 95];
+      freqs.forEach(f => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(f, now);
+        osc.frequency.exponentialRampToValueAtTime(f * 0.7, now + 1.2);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+        osc.connect(gain);
+        gain.connect(this._masterGain);
+        osc.start(now);
+        osc.stop(now + 1.2);
+      });
+    } else {
+      const drumBeats = [0, 0.12, 0.22, 0.36, 0.52];
+      const pitchPoles = [140, 95, 160, 110, 75];
+      drumBeats.forEach((timeOffset, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const pitch = pitchPoles[idx];
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(pitch, now + timeOffset);
+        osc.frequency.exponentialRampToValueAtTime(pitch * 0.45, now + timeOffset + 0.14);
+        gain.gain.setValueAtTime(0.4, now + timeOffset);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + 0.14);
+        osc.connect(gain);
+        gain.connect(this._masterGain);
+        osc.start(now + timeOffset);
+        osc.stop(now + timeOffset + 0.15);
+      });
+    }
+  }
+
   setVolume(vol) {
     this._volume = Math.max(0, Math.min(1, vol));
     if (this._masterGain) this._masterGain.gain.value = this._volume;
   }
 }
+

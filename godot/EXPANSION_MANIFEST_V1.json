@@ -1,0 +1,1995 @@
+{
+  "schema_version": 1,
+  "project": "Gauntlet Godot",
+  "date": "2026-10-09",
+  "scope": "Original mythic enemy expansion and five elemental labyrinth stage design; source artwork and proposals, no Godot code changes.",
+  "source_count": 22,
+  "regular_enemy_count": 12,
+  "boss_count": 5,
+  "biome_concept_count": 5,
+  "blueprint_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\EXPANSION_BLUEPRINT_V1.md",
+  "stage_design_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\ELEMENTAL_STAGE_DESIGN_V1.md",
+  "maze_data_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\ELEMENTAL_LABYRINTHS_V1.json",
+  "maze_planner_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\ELEMENTAL_LABYRINTHS_V1.html",
+  "handoff_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\EXPANSION_HANDOFF_V1.md",
+  "verification_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\EXPANSION_VERIFICATION_V1.json",
+  "original_selected_delivery_manifest": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\ASSET_DELIVERY_MANIFEST_V1.json",
+  "existing_selected_sources_preserved": [
+    {
+      "asset": "broadsword",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\broadsword_source_v1.png",
+      "sha256": "410aa1aea87b97050794cdc257fca6bdbaf59aee2cca7246c497eee451b4370c"
+    },
+    {
+      "asset": "shield",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\shield_source_v2.png",
+      "sha256": "9640643fa50d115abf86dad3564377645238075ab5f86a0c0c41b6ed3b4811e1"
+    },
+    {
+      "asset": "bow",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\bow_source_v1.png",
+      "sha256": "99008d2ac9cb77175c4fcc279d397b2f754560099fc7ee9174170f9a651b5482"
+    },
+    {
+      "asset": "staff",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\staff_source_v1.png",
+      "sha256": "d18250a1dedebf8b371f55960d2f350a5a41c2c793a47d5d026382b39994958b"
+    },
+    {
+      "asset": "spear",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\weapons\\spear_source_v1.png",
+      "sha256": "3b9d8d2bf4b09426a9845751bcc2b3ddcc93563f49d09990d1959530f3f844af"
+    },
+    {
+      "asset": "minotaur_stalker",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\minotaur_stalker_source_v1.png",
+      "sha256": "a188072a8008f35713dab758a8e4a32746df90d47641f2c6a1b908a7d35aefed"
+    },
+    {
+      "asset": "asterion",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\asterion_source_v1.png",
+      "sha256": "9f65e59ad1497924e2f8f5209403e5e055c5d2947caac2940eab10b698525d71"
+    },
+    {
+      "asset": "skeleton_archer",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\skeleton_archer_source_v1.png",
+      "sha256": "5cd909868552653b06d6ee2fee6800969b0a427d85f7d85819f2823f2fe15e58"
+    },
+    {
+      "asset": "orc_grunt",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\orc_grunt_source_v1.png",
+      "sha256": "72a3a174ca74ed1dc52c665bd605171f13adb52e482b4408fa4d5a006c0f2b14"
+    },
+    {
+      "asset": "warrior_thor",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\warrior_thor_source_v1.png",
+      "sha256": "bafe18d5209b234c836a403598712ade5e1be56fc02276afde2d19f311e2dfee"
+    },
+    {
+      "asset": "elf_questor",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\elf_questor_source_v1.png",
+      "sha256": "5df611ea963f5f99d27a8460c8a1acab8fe1450f6b9b029457acf8cfb3c14366"
+    },
+    {
+      "asset": "wizard_merlin",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\wizard_merlin_source_v1.png",
+      "sha256": "ef77030198725754205eb341158ce4ebeaf7fd5fd052ef101c9a420395d838d1"
+    },
+    {
+      "asset": "valkyrie_thyra",
+      "path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\valkyrie_thyra_source_v1.png",
+      "sha256": "2df009cfdbc72dc2a1cd261143e905b0d9b6259eefcfc38e5324c8cc5b087baa"
+    }
+  ],
+  "art_review": {
+    "method": "Root visual inspection and independent reviewers",
+    "enemy_sources_accepted": 17,
+    "biome_concepts_accepted_by_root": 5,
+    "production_import_readiness": "NOT_ESTABLISHED; chromakey, frame extraction and runtime acceptance pending"
+  },
+  "maze_review": {
+    "floors": 5,
+    "static_graph_checks": "PASS",
+    "minimum_cycles_before_gate": 5,
+    "minimum_cycles_in_boss_domain": 3,
+    "real_godot_navigation": "NOT_IMPLEMENTED_OR_VERIFIED"
+  },
+  "assets": [
+    {
+      "asset": "thornbound_revenant",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-4c51d3bf-dfde-48d2-b07e-3ce074a042ad.png",
+      "sha256": "a50f168b0c13c8c527c14b53bcc8cf522c7b63c89025147683b45060a30578c3",
+      "bytes": 2336596,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          17,
+          241,
+          17
+        ],
+        [
+          14,
+          240,
+          16
+        ],
+        [
+          17,
+          241,
+          15
+        ],
+        [
+          17,
+          244,
+          17
+        ],
+        [
+          4,
+          247,
+          8
+        ]
+      ],
+      "name": "Thornbound Revenant",
+      "category": "character",
+      "rank": "regular",
+      "element": "earth",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\thornbound_revenant_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Duplicate attack spear removed and independently rechecked.",
+        "Preserve spear shafts and thorn fragments in reviewed extraction."
+      ],
+      "combat_proposal": {
+        "role": "Root-spear pressure",
+        "telegraph": "Spear draws back; wood creak",
+        "counter": "Sidestep sweep/thrust, punish extended recovery",
+        "pairing_limit": "Moss Troll at wide junction; no overlapping immobilizers"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Humanoid animated dead knight of twisted bark, broken rusted chainmail, pale thorn crown, amber sap in chest, one long ROOT SPEAR in RIGHT hand; muted moss olive never neon green. Tactical visual identity: Root spear sweeps; reliable spear identity in every living pose. Row2 windup: plant spear and thorned left hand draws back. Row3 attack: horizontal root-spear sweep with short brown thorn burst. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: crumples into dry twigs and abandoned helmet. Green gutters on all outer sides.",
+        "revision_prompts": [
+          "Use case: precise-object-edit. Edit only the ATTACK ROW (fourth row from TOP), FIRST COLUMN of this 6x6 Thornbound Revenant sheet. That pose incorrectly has TWO spears: one upright in its RIGHT hand and a second horizontal shaft across the torso. Remove the duplicate upright spear and redraw the ONE original root spear held in its same right hand beginning a horizontal sweep, coherently leading into columns2-4. Exactly ONE root spear in EVERY living cell, with one hand grip on its shaft. Fix only this equipment continuity error; keep other35 cells, design, gritty pixel-art style, all other rows, original 6x6 grid, canvas1254x1254, camera, poses, scale and green background unchanged. In attacked pose no spare staff or duplicate shaft. Keep complete spear tip inside own viewport and green gutters."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "barrow_knight",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-f8d41a1a-43a2-418d-8e7b-8001fe798887.png",
+      "sha256": "295acd0acb55f4e8dda2b0636ca7324e40ff0e09fb5d60a333884e1637d845ca",
+      "bytes": 2423316,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          21,
+          242,
+          30
+        ],
+        [
+          19,
+          243,
+          29
+        ],
+        [
+          18,
+          240,
+          24
+        ],
+        [
+          16,
+          243,
+          23
+        ],
+        [
+          5,
+          248,
+          19
+        ]
+      ],
+      "name": "Barrow Knight",
+      "category": "character",
+      "rank": "regular",
+      "element": "earth,aether",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\barrow_knight_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Six independently occupied death cells restored; stagger greatsword retained.",
+        "Normalize corpse anchor; preserve blade tips and remove incidental floor lines."
+      ],
+      "combat_proposal": {
+        "role": "Greatsword elite",
+        "telegraph": "Blade rises above visor; armor scrape",
+        "counter": "Retreat past cleave, counter slow blade lift",
+        "pairing_limit": "One archer with cover; no narrow-passage swarm"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Tall undead oathbreaker in dented charcoal plate, ragged dull purple cape, bronze burial mask with cold violet eyes, one CHIPPED GREATSWORD held with both gauntlets. Tactical visual identity: Heavy two-handed sword pressure. Row2 windup: greatsword raised overhead in both hands. Row3 attack: weighty descending sword blow. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: kneels then collapses; sword stays alongside corpse. Green gutters on all outer sides.",
+        "revision_prompts": [
+          "Use case: precise-object-edit. Correct this6x6 Barrow Knight sprite sheet: death row6 currently has only FIVE independent figures, with one wide final corpse spanning columns5and6. Redraw row6 as exactly SIX separate complete time poses: kneeling, collapsing, nearly prone, prone, fully prone, fully prone settling. Put a complete independently contained corpse AND its SAME chipped greatsword in EACH of final columns5and6, keep a visible green gutter between them. SHRINK death poses enough to fit each209x209 source cell with safe padding, retain fixed world anchor and perspective; do not stretch one corpse across two cells. Stagger row5 column1 currently loses the greatsword: add the SAME sword held in BOTH hands during recoil (or visibly fallen inside that cell), return to two-handed guard bycolumns5and6. Each living cell must retain sword. Keep all other sprites, knight identity, dark purple cape, rusty armor, camera, pixel-art style, six columns/six rows, original1254x1254 green screen. No missing subjects, extra blade or merged frame."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "mire_hag",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-582e5959-19b7-4212-af8e-956ebbb2c065.png",
+      "sha256": "8302e6bf299b63128de9e672c5cc7ca883888797cf12f777bb544f9d475932f1",
+      "bytes": 2663755,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          22,
+          244,
+          16
+        ],
+        [
+          15,
+          241,
+          13
+        ],
+        [
+          22,
+          241,
+          15
+        ],
+        [
+          18,
+          245,
+          12
+        ],
+        [
+          7,
+          250,
+          7
+        ]
+      ],
+      "name": "Mire Hag",
+      "category": "character",
+      "rank": "regular",
+      "element": "water",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\mire_hag_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Staff/censer and six phases coherent.",
+        "Soft mist requires reviewed alpha mask; remove incidental ground lines."
+      ],
+      "combat_proposal": {
+        "role": "Censer mist zoning",
+        "telegraph": "Censer lifts and mist gathers; hollow chime",
+        "counter": "Leave marked patch, close during downward swing",
+        "pairing_limit": "Cave Spider where two routes exist; no unavoidable mist+ice"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Stooped old bog witch, long nose, dark teal ragged shawl, bone trinkets, crooked driftwood STAFF in LEFT hand and rusted brass CENSER in RIGHT. Teal subdued not key green. Tactical visual identity: Fog caster and area denial. Row2 windup: censer lifted, blue mist gathers narrowly. Row3 attack: casts compact curling blue mist plume from censer. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: sinks into compact dark blue puddle; staff and censer retained then settle. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "frost_wraith",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-24caedde-7e5e-4970-b231-4031a00f5ac9.png",
+      "sha256": "d6b0429379e7973838dada2521f3dec46fbacf2896d47705d2982ab860da68e6",
+      "bytes": 2588055,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          18,
+          242,
+          12
+        ],
+        [
+          14,
+          239,
+          11
+        ],
+        [
+          18,
+          242,
+          12
+        ],
+        [
+          15,
+          243,
+          9
+        ],
+        [
+          5,
+          249,
+          6
+        ]
+      ],
+      "name": "Frost Wraith",
+      "category": "character",
+      "rank": "regular",
+      "element": "water",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\frost_wraith_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Scythe and hovering figure coherent, ice sweep and dissolution readable.",
+        "Preserve full ice arcs/fragments and stable hover ground reference."
+      ],
+      "combat_proposal": {
+        "role": "Ice-scythe skirmisher",
+        "telegraph": "Scythe draws back with frost curl; ice ring",
+        "counter": "Dodge outside sweep, counter solid recovery",
+        "pairing_limit": "Sentinel only in wide loop; no wall/gate bypass"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Hovering spectral armored executioner: elongated icicle mask, dark navy torn robes, visible cold-blue translucent armored shoulders and arms; single jagged ICE SCYTHE in BOTH hands; body readable not mostly invisible. Tactical visual identity: Hovering scythe sweeps. Row2 windup: draws ice scythe back, narrow cyan frost curls. Row3 attack: scythe sweeps diagonally downward. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: spectral body dissolves into blue ice fragments at same anchor. Green gutters on all outer sides. Spectral body uses visible opaque charcoal-blue outlined shading on this RGB source, not semitransparent green-blended smoke; keep nominal ground reference through hovering.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "ember_imp",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-43f4dcbb-c2bb-4ea2-abda-72f16ca86e22.png",
+      "sha256": "679626d0e1e52c886a1cffc40d851118eeddb664c014fc889028026340401abd",
+      "bytes": 2309488,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          18,
+          242,
+          38
+        ],
+        [
+          15,
+          241,
+          36
+        ],
+        [
+          17,
+          242,
+          35
+        ],
+        [
+          15,
+          244,
+          32
+        ],
+        [
+          5,
+          248,
+          31
+        ]
+      ],
+      "name": "Ember Imp",
+      "category": "character",
+      "rank": "regular",
+      "element": "fire",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\ember_imp_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Missing attack subject restored; six complete throw/reload poses accepted.",
+        "Keep pot trajectory separate from collision events; extract particles and complete tail."
+      ],
+      "combat_proposal": {
+        "role": "Fire-pot harassment",
+        "telegraph": "Pot cocks beside shoulder; pot rattle",
+        "counter": "Move across throw lane, close during reload",
+        "pairing_limit": "Ash Zealot; retain an unburned escape branch"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Small squat reddish rust-orange horned imp, charcoal belly armor, short curled tail, wide malicious eyes; RIGHT hand carries one small black iron FIRE POT with amber embers, LEFT hand clawed. Tactical visual identity: Compact bomb thrower; same fire pot through living rows. Row2 windup: fire pot held back beside shoulder. Row3 attack: forward overhand throw, small orange ember projectile inside cell; pot returns on final recovery. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: curls up and extinguishes in charcoal ashes. Green gutters on all outer sides.",
+        "revision_prompts": [
+          "Use case: precise-object-edit. Correct ONLY attack row4 of this6x6 Ember Imp sheet. Third column currently has only thrown fire pot/trail and is missing the IMP. Redraw the ENTIRE attack row4 as SIX independent complete imp+effect time poses, each fully contained in its own209x209 source cell:1pot raised/windup;2early release and full standing imp;3full imp follow-through with ONE thrown pot just ahead of hand;4full imp recovering with compact pot/embers farther ahead;5full imp reaching for replacement pot;6full imp returning to original guard with pot in hand. Every column MUST show full imp body, two arms/twolegs, horns and tail. Make the projectile and trail SHORT enough that no effect reaches into adjacent cell. Maintain generous green gutters in EVERY frame; slight scale reduction of that row okay to preserve tip/effect. Preserve all other30 frames, same original imp identity, green background, original1254x1254 canvas, 6x6 layout, weathered pixel-art style. No projectile-only frames, no duplicated imp or pot in a cell."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "ash_zealot",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-58ea55cc-ce2c-4b70-a7a4-0ba2513c6872.png",
+      "sha256": "926268561ddcd96ed9250ad5d8cadf30c1703b2564299167b32932728db46872",
+      "bytes": 2190665,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          22,
+          242,
+          13
+        ],
+        [
+          20,
+          241,
+          13
+        ],
+        [
+          25,
+          242,
+          17
+        ],
+        [
+          25,
+          244,
+          15
+        ],
+        [
+          9,
+          249,
+          7
+        ]
+      ],
+      "name": "Ash Zealot",
+      "category": "character",
+      "rank": "regular",
+      "element": "fire",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\ash_zealot_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Flail continuity and six phases accepted.",
+        "Exclude darker green walk shadows and thin ground marks during keying."
+      ],
+      "combat_proposal": {
+        "role": "Short-flail pressure",
+        "telegraph": "Flail coils above shoulder; chain clink",
+        "counter": "Bait strike, backstep, counter stalled swing",
+        "pairing_limit": "One Imp; avoid three melee bodies blocking corridor"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Lean human fanatic in scorched black-red monastic robe, brass furnace face mask, ash-gray hands, burning rope belt; iron FLAIL with three visible linked chain segments and one spiked head in RIGHT hand, left grips brass prayer token. Tactical visual identity: Readable flail melee. Row2 windup: flail coils above right shoulder. Row3 attack: one short flail lash, complete chain and head stay inside cell. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: kneels then falls, fire gutters out, equipment rests with body. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "storm_gargoyle",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-ec884b70-1e92-4863-a388-8c0bd3210440.png",
+      "sha256": "bdc69c948a27d670483b506c330204ce5eb3124ad86c940dc2806e60d321405b",
+      "bytes": 2930184,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          21,
+          243,
+          14
+        ],
+        [
+          18,
+          242,
+          16
+        ],
+        [
+          23,
+          242,
+          14
+        ],
+        [
+          16,
+          244,
+          9
+        ],
+        [
+          7,
+          250,
+          7
+        ]
+      ],
+      "name": "Storm Gargoyle",
+      "category": "character",
+      "rank": "regular",
+      "element": "air",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\storm_gargoyle_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Wings/horns/tail and lightning slam/rubble coherent.",
+        "Review widest wings and loose rubble bounds."
+      ],
+      "combat_proposal": {
+        "role": "Armored claw bruiser",
+        "telegraph": "Claws rise, wings stiffen; stone grind",
+        "counter": "Leave marked slam radius, counter claws-down pause",
+        "pairing_limit": "One Harpy; no slam plus forced displacement"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Heavy squat slate-gray stone gargoyle, horned face, cobalt cracks, thick clawed stone arms, TWO compact folded bat wings and short tail, no handheld weapon; wings controlled and fit cells. Tactical visual identity: Winged stone bruiser. Row2 windup: crouches, wings partially spread and fists pulled back. Row3 attack: forward double-claw slam, brief hard-edged blue lightning at claws. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: stone body slumps then cracks into visible rubble. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "tempest_harpy",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-931b2dd8-b729-440d-b41e-8e202c6eb60a.png",
+      "sha256": "926427e51724012d1290257113be6802f309be8aa6db17408d6ce1aad532606c",
+      "bytes": 2551097,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          19,
+          242,
+          14
+        ],
+        [
+          16,
+          241,
+          12
+        ],
+        [
+          20,
+          242,
+          13
+        ],
+        [
+          17,
+          243,
+          10
+        ],
+        [
+          7,
+          249,
+          5
+        ]
+      ],
+      "name": "Tempest Harpy",
+      "category": "character",
+      "rank": "regular",
+      "element": "air",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\tempest_harpy_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "36 subjects with consistent mask, wings and talons.",
+        "Review wide-wing frame bounds and normalize hovering anchor."
+      ],
+      "combat_proposal": {
+        "role": "Talon dive disruptor",
+        "telegraph": "Talons tuck and wings compress; screech",
+        "counter": "Sidestep dive, punish landing",
+        "pairing_limit": "One Gargoyle; one active narrow-passage dive"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Avian woman with stern bronze mask, dark indigo feather mantle, TWO broad feather wings instead of arms, armored taloned legs, gray-plumage tail; no extra human arms, no handheld weapon. Tactical visual identity: Winged dive slasher. Row2 windup: hover wingbeats compress, talons tuck. Row3 attack: low forward talon rake, wings tucked enough to stay within cell. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: lands, curls wings and collapses with feather fragments. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "rune_sentinel",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-36088194-1ab0-4cdb-a12e-a141661e6cfc.png",
+      "sha256": "934de5affc937e11cd9e7743ef09e3662b6ab2b61d072b3661c896777edf7541",
+      "bytes": 2312919,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          18,
+          242,
+          49
+        ],
+        [
+          14,
+          242,
+          45
+        ],
+        [
+          16,
+          241,
+          43
+        ],
+        [
+          14,
+          244,
+          42
+        ],
+        [
+          6,
+          248,
+          40
+        ]
+      ],
+      "name": "Rune Sentinel",
+      "category": "character",
+      "rank": "regular",
+      "element": "aether",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\rune_sentinel_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Two corrections; duplicate hammer removed in attack row4 column1, final revision independently passes.",
+        "Shield stays on character right, hammer left; preserve disassembly fragments."
+      ],
+      "combat_proposal": {
+        "role": "Shield-and-hammer guard",
+        "telegraph": "Hammer runes brighten; low hum",
+        "counter": "Flank shield after missed slam",
+        "pairing_limit": "One caster; never seal every branch with two guards"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Headless angular animated dark bronze ARMOR construct, one floating violet runestone where head would be, broad faceted shoulders, RIGHT hand broad rectangular RUNE SHIELD, LEFT hand short heavy RUNE HAMMER; square silhouette. Tactical visual identity: Shielded construct. Row2 windup: rune hammer held back, shield still visible. Row3 attack: short hammer smash while shield remains coherent. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: violet core dims and armor dismantles into compact pieces. Green gutters on all outer sides.",
+        "revision_prompts": [
+          "Use case: precise-object-edit. Fix ONLY attack row4 FIRST column of this6x6 Rune Sentinel source sheet. That sprite incorrectly has TWO hammers: an extra raised hammer above-left of its head/core, plus the original hammer held lower-right. Remove the duplicated LOWER-RIGHT hammer and redraw the same one hammer in LEFT hand beginning its raised overhead slam. Exactly TWO arms, RIGHT hand holds its consistent broad rune shield, LEFT hand holds ONE original rune hammer. ONE floating violet head core remains above neck. Anatomy and orientation match attack columns2-4. Preserve all other35 cells, sheet6x6,1254x1254 canvas, green background, pixel style, bronze armor, staff-free construct identity and all phases. No duplicate weapon or extra limb.",
+          "Use case: precise-object-edit. REPLACE ENTIRE ONE SPRITE: ROW4 (fourth row from top), COLUMN1 (leftmost), bounding cell x0-209,y627-836 of this1254x1254 sheet. Current one pose has TWO hammers. Redraw that one sprite using ROW3 COLUMN6 as exact equipment/anatomy reference: shield in character RIGHT hand on VIEWER LEFT, one hammer in character LEFT hand on VIEWER RIGHT. Exactly TWO arms. New pose is FIRST ATTACK PHASE: left hammer lifted on viewer right above shoulder, right rune shield braced on viewer left. ERASE all old arm/hammer pixels in this targetcell before redrawing; leave no lower-right dangling hammer and no upper-left hammer at all. The only hammer is connected to the ONE left hand on VIEWER RIGHT. One shield, one core, two arms, twolegs. Preserve all other35sprites exactly, same bronze armor/core/sixby6 layout, pixel-art style, green screen,1254x1254 canvas. Complete equipment contained in cell; no extra limb or duplicate item."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "mirror_duelist",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-c8ce8c3c-c9c7-488c-8bc4-104e8dcc1f4b.png",
+      "sha256": "c4ef4e5f8dc6761c6418c59155c4a157681122755d4cadaec8f74d6da16ef62a",
+      "bytes": 2333839,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          18,
+          240,
+          14
+        ],
+        [
+          16,
+          241,
+          12
+        ],
+        [
+          17,
+          241,
+          14
+        ],
+        [
+          20,
+          245,
+          17
+        ],
+        [
+          5,
+          248,
+          7
+        ]
+      ],
+      "name": "Mirror Duelist",
+      "category": "character",
+      "rank": "regular",
+      "element": "aether",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\mirror_duelist_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "36 subjects with rapier retained.",
+        "Rapier tips extend beyond nominal cells; reviewed extraction required. Align windup-to-thrust timing."
+      ],
+      "combat_proposal": {
+        "role": "Rapier melee elite",
+        "telegraph": "Rapier aligns, mask flashes; metal ping",
+        "counter": "Sidestep linear thrust, strike extended arm",
+        "pairing_limit": "Slow melee; no indistinguishable illusion swarm"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Slender masked enchanted duelist in faceted silver armor, deep aubergine half-cape, opaque porcelain oval face, single thin CRYSTAL RAPIER in RIGHT hand and LEFT hand empty, one body only. Tactical visual identity: Agile rapier fencer. Row2 windup: low fencing crouch with rapier pointed forward. Row3 attack: extended clean rapier lunge, sword tip fully contained. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: kneels then shatters into pale lavender mirror pieces. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "cave_spider",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-d9baad6c-3ce4-4b9a-b89a-155e681149e8.png",
+      "sha256": "0c1cccb316389bb9d8d7112e78f17c1a1230c5a7d7f695ed518f9e76ed86ffb0",
+      "bytes": 2333915,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          16,
+          242,
+          16
+        ],
+        [
+          15,
+          242,
+          16
+        ],
+        [
+          19,
+          242,
+          17
+        ],
+        [
+          15,
+          244,
+          14
+        ],
+        [
+          5,
+          249,
+          8
+        ]
+      ],
+      "name": "Cave Spider",
+      "category": "character",
+      "rank": "regular",
+      "element": "earth",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\cave_spider_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "36 subjects; overlapping leg arrangement consistent with eight legs.",
+        "Exclude darker-green ground patches; keep full legs in masks."
+      ],
+      "combat_proposal": {
+        "role": "Low bite ambusher",
+        "telegraph": "Front legs rise, abdomen compresses; leg chatter",
+        "counter": "Sidestep pounce, strike before legs unfold",
+        "pairing_limit": "Hag with retreat branch; mist cannot hide all cues"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Low broad giant cave spider with exactly EIGHT jointed ochre-brown legs, dark maroon abdomen, two pale amber mandibles and small clustered eyes; no humanoid arms, no weapon. Chitin silhouette clear. Tactical visual identity: Low creature ambusher. Row2 windup: front legs and mandibles rise slightly. Row3 attack: short forward bite, all eight legs remain consistent and contained. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: legs curl inward around intact abdomen then settle. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "moss_troll",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-dfba9d5e-246b-4b16-a741-68459cae9b18.png",
+      "sha256": "81ddcd5f0bcf88c57d22512f636cd1a82bb7b6afbd5c6a776911fd3e222875f3",
+      "bytes": 2644017,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          20,
+          242,
+          21
+        ],
+        [
+          16,
+          240,
+          18
+        ],
+        [
+          24,
+          243,
+          23
+        ],
+        [
+          20,
+          245,
+          20
+        ],
+        [
+          5,
+          248,
+          11
+        ]
+      ],
+      "name": "Moss Troll",
+      "category": "character",
+      "rank": "regular",
+      "element": "earth",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\moss_troll_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Club restored through affected stagger cells and independently accepted.",
+        "Normalize collapse reference and preserve fallen club."
+      ],
+      "combat_proposal": {
+        "role": "Slow log bruiser",
+        "telegraph": "Log lifts, second hand braces; deep grunt",
+        "counter": "Circle slow turn or retreat, hit log-lift recovery",
+        "pairing_limit": "Revenant; regeneration pauses after damage"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Massive stooped rock-skinned troll, stone-gray face, muted brown moss patches, broad belly, one heavy split LOG CLUB gripped in RIGHT hand, LEFT hand empty with thick fingers, no key green skin. Tactical visual identity: Slow club bruiser. Row2 windup: log club raised over right shoulder. Row3 attack: two-handed log slam; same split log club retained. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: stumbles then collapses on side with log near right hand. Green gutters on all outer sides.",
+        "revision_prompts": [
+          "Use case: precise-object-edit. Fix ONLY stagger row5 columns1,2,3 of this6x6 Moss Troll sheet: the SAME split log club has disappeared. Restore the single log club visibly gripped in troll RIGHT hand through each recoil pose, with weight and anatomy coherent. Keep one club; the LEFT hand can brace belly/chest while recoiling. No second log, no missing club, no detached hand. Columns4-6 of stagger retain their existing club and return to same guard. Keep all other33 poses, full silhouette, six columns/six rows, original1254x1254 canvas, green screen, weathered pixel-art style, gray stone skin and muted brown moss, all attack/death poses unchanged. Club complete inside its own cell with blank green gutter."
+        ],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "stonehart_regent",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-b2d0a239-4afa-484c-af1b-42b6d05136e1.png",
+      "sha256": "8bfb481a0cd1225808e1f49f0a5db4528c4d49d404f2c5883a35fbdce366c203",
+      "bytes": 2738461,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          23,
+          242,
+          15
+        ],
+        [
+          16,
+          241,
+          11
+        ],
+        [
+          18,
+          243,
+          12
+        ],
+        [
+          18,
+          245,
+          12
+        ],
+        [
+          6,
+          248,
+          5
+        ]
+      ],
+      "name": "Stonehart Regent",
+      "category": "character",
+      "rank": "boss",
+      "element": "earth",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\stonehart_regent_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "36 positions, crown/antlers/heart and quadruped stance coherent.",
+        "Far-side limbs normally occluded; preserve full antlers and flying debris."
+      ],
+      "combat_proposal": {
+        "role": "Antler charge / hoof stomp",
+        "telegraph": "Forehoof scrapes, crown cracks glow; rumble",
+        "counter": "Branch away from charge, hit antlers-down flank",
+        "pairing_limit": "Adds between charges; no unavoidable root+charge"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Boss: colossal antlered stone-stag automaton with exactly FOUR heavy rocky legs, two compact branchlike ANTLERS, bronze crown set between antlers, amber heart visible in chest, muted lichen brown and granite body. Quadruped throughout; no hands or weapon. Tactical visual identity: Boss scaled to fit; antlers fully inside cells. Row2 windup: head dips and forelegs brace. Row3 attack: short antler charge and stone hoof stamp. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: stone stag kneels, amber heart fades, intact crowned rubble. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "abbess_of_the_tide",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-c98f1532-691f-454f-8143-c4f1de8a8f76.png",
+      "sha256": "0df9885b43dd1b776e58d5e4422f505f66f2857937656bf23aa89cff7b115f9f",
+      "bytes": 2667111,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          21,
+          242,
+          14
+        ],
+        [
+          15,
+          240,
+          12
+        ],
+        [
+          17,
+          242,
+          11
+        ],
+        [
+          20,
+          244,
+          12
+        ],
+        [
+          6,
+          249,
+          6
+        ]
+      ],
+      "name": "Abbess of the Tide",
+      "category": "character",
+      "rank": "boss",
+      "element": "water",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\abbess_of_the_tide_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "Staff and bell stay single consistent objects across36 positions.",
+        "Preserve water rings, droplets and fallen implements through sinking death."
+      ],
+      "combat_proposal": {
+        "role": "Mist lanes / frost cast",
+        "telegraph": "Staff rises then bell tolls",
+        "counter": "Dry alcove, counter as implements lower",
+        "pairing_limit": "At most one support group; unslowed route remains"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Boss: imposing drowned sorceress abbess, pale blue skin, long dark navy vestments, bronze reliquary halo behind crowned head, barnacle armor; RIGHT hand silver tide STAFF and LEFT hand round brass TIDE BELL. Tactical visual identity: Staff and bell continuity. Row2 windup: bell raised and staff plants with compact icy-blue halo. Row3 attack: staff thrust releases narrow curling blue wave staying within cell. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: sinks to knees then fades into navy water and fallen bell. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "bellows_wyrm",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-3ec52780-56ab-4da8-b1b8-5730b9c9dc15.png",
+      "sha256": "f0ff68ef570435cdd869d41a2ba022394ff63bd57855874cf5508adda84edb00",
+      "bytes": 2749411,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          23,
+          242,
+          17
+        ],
+        [
+          17,
+          243,
+          15
+        ],
+        [
+          21,
+          242,
+          15
+        ],
+        [
+          14,
+          244,
+          12
+        ],
+        [
+          5,
+          249,
+          10
+        ]
+      ],
+      "name": "Bellows Wyrm",
+      "category": "character",
+      "rank": "boss",
+      "element": "fire",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\bellows_wyrm_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "36 bodies; quadruped/wing anatomy coherent with far-side occlusion.",
+        "Attack fire streams cross nominal boundaries. Use reviewed masks; if inseparable, regenerate that row or use separately reviewed fire VFX. Automatic slicing not certified."
+      ],
+      "combat_proposal": {
+        "role": "Furnace breath / bite",
+        "telegraph": "Four feet brace, chest expands; inhalation",
+        "counter": "Turn out of marked lane, hit neck during exhale",
+        "pairing_limit": "Imps between breath cycles; never burn all routes"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Boss: squat compact furnace dragon: exactly FOUR sturdy legs, TWO folded leathery wings, iron-bronze plated red-black body, compact horns, thick tail coiled near body, amber fire in throat, no handheld weapon. Dragon anatomy stays identical. Tactical visual identity: Compact dragon so every claw wing horn and tail fits. Row2 windup: chest inhales and jaw opens with ember throat. Row3 attack: short orange flame breath contained entirely within cell. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: sags, wings fold, cools into red-black armored carcass. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "roc_of_the_broken_sky",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-60664aa7-cfa0-42f0-990e-3763c5817923.png",
+      "sha256": "6d35642cdf1490ef580f144ac5784d32eb81969950c18373787e065abe94380c",
+      "bytes": 2704856,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          22,
+          243,
+          24
+        ],
+        [
+          16,
+          241,
+          21
+        ],
+        [
+          20,
+          242,
+          21
+        ],
+        [
+          17,
+          245,
+          18
+        ],
+        [
+          5,
+          249,
+          13
+        ]
+      ],
+      "name": "Roc of the Broken Sky",
+      "category": "character",
+      "rank": "boss",
+      "element": "air",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\roc_of_the_broken_sky_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "36 positions; two wings/taloned legs, crest and lightning emblem coherent.",
+        "Wide attack wings/lightning have narrow gutters; preserve full feather tips."
+      ],
+      "combat_proposal": {
+        "role": "Dive / lightning discharge",
+        "telegraph": "Wingbeats pause, talons tuck; thunder",
+        "counter": "Move across lane, punish grounded recovery",
+        "pairing_limit": "Alternate Harpy/boss dives"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Boss: giant thunderbird, TWO broad dark slate feather wings and TWO bronze-armored taloned legs, ivory hooked beak, cobalt crest and chest lightning sigil; no extra limbs, no handheld weapon; compact tucked wings for sheet. Tactical visual identity: Avian guardian with readable talons and wing anatomy. Row2 windup: rises slightly, wings fold back, talons pull up. Row3 attack: forward talon strike with compact zigzag gold lightning. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: lands then folds wings and slumps, gold charge fades. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "magister_of_glass",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-680259b7-7f42-4dd6-a7f4-7c6fc20226e3.png",
+      "sha256": "a3fc40c25ac9058067f6cb573e3aee06090519e298e9fe711f2185b18490e99a",
+      "bytes": 2540924,
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          21,
+          241,
+          13
+        ],
+        [
+          15,
+          241,
+          10
+        ],
+        [
+          19,
+          242,
+          11
+        ],
+        [
+          18,
+          244,
+          10
+        ],
+        [
+          8,
+          249,
+          5
+        ]
+      ],
+      "name": "Magister of Glass",
+      "category": "character",
+      "rank": "boss",
+      "element": "aether",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\sprites\\magister_of_glass_source_v1.png",
+      "intended_grid": {
+        "columns": 6,
+        "rows": 6
+      },
+      "integer_cell_dimensions": [
+        209,
+        209
+      ],
+      "canonical_import_dimensions": [
+        1536,
+        1536
+      ],
+      "canonical_cell_dimensions": [
+        256,
+        256
+      ],
+      "sequence": [
+        "idle",
+        "movement",
+        "windup",
+        "attack/recovery",
+        "stagger/recovery",
+        "death"
+      ],
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": [
+        0,
+        255,
+        0
+      ],
+      "background_exactness": "NOT_EXACT_CHROMA_KEY; reviewed mask required; equality-only removal insufficient",
+      "review_status": "ACCEPTED_ARTWORK_SOURCE_WITH_PROCESSING_NOTES",
+      "review_notes": [
+        "36 positions; one staff and off-hand spell crystal coherent.",
+        "Spell tips cross nominal boundaries. Preserve staff/crystal fragments and world reference."
+      ],
+      "combat_proposal": {
+        "role": "Crystal shards / visible reposition",
+        "telegraph": "Staff facets brighten, destination glimmers; glass tone",
+        "counter": "Use corners/pillars, counter while staff dims",
+        "pairing_limit": "Guards occupy one route; translucent echoes cannot block"
+      },
+      "godot_integration_status": "PENDING_ANTIGRAVITY_PROCESSING_AND_WIRING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: original enemy animation SOURCE SHEET for a first-person Godot labyrinth game. EXACTLY ONE character, repeated across EXACTLY 36 frames arranged SIX COLUMNS by SIX ROWS, requested 1536x1536 PNG. Fixed front three-quarter orthographic camera facing viewer, never rear view, camera angle remains identical. Columns are TIME, not facing directions. Each virtual cell has equal dimensions and fixed nominal ground anchor x128/y224 at target256px; maintain common body scale, proportions, equipment and anchor. Sequential row0 idle/breathing; row1 walking or coherent hovering movement; row2 windup; row3 attack then recovery; row4 hit stagger then recovery to standing/hovering guard; row5 death ending at rest/dissolution. Every row contains exactly six distinct temporal poses. Full body and all weapons, horns, tails, wings, effects entirely INSIDE own virtual cell with generous blank green safety gutters. No enlarged single pose or missing cell. Collapse retains world reference. Gritty hand-pixeled 1990s 32-bit dark fantasy arcade aesthetic, bold dark pixel outlines, rich restrained stepped shading ramps, textured weathered materials; clearly pixel art, not smooth painting, realistic photo or plastic 3D. Flat uniform green-screen #00FF00 background, no scenery, floor, cast shadows, grids, borders, labels, numbers, text or watermarks. Avoid exact chromakey green on subject; use muted olive/brown for moss. No duplicated limbs, disappearing equipment, mutations, cropped tips or touching neighboring cells. Subject: Boss: tall aged arcane sorcerer in dark plum and silver robes, long white forked beard, faceted violet crown, RIGHT hand tall dark silver STAFF topped with one diamond-shaped crystal, LEFT hand conjures one compact geometric violet sigil; one body only. Tactical visual identity: Original hostile sorcerer distinct from Merlin hero; consistent staff. Row2 windup: staff raises and left sigil contracts. Row3 attack: staff points forward releasing a compact angular violet ray. Row4 briefly recoils then RETURNS TO SAME LIVING GUARD with all equipment retained, never death/kneeling indefinitely. Row5 death: kneels and breaks into pale violet glass-like facets; crown and staff settle. Green gutters on all outer sides.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "earth_labyrinth",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-cbb45d32-3eef-4581-aab9-e268f14a7e3d.png",
+      "sha256": "8332f88e22d4a832f3261151c7fc0b7fefc028b99fca73010ed5ab97fcf860f0",
+      "bytes": 3934114,
+      "actual_dimensions": [
+        1536,
+        1024
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          22,
+          22,
+          28
+        ],
+        [
+          44,
+          48,
+          70
+        ],
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          3,
+          7,
+          12
+        ],
+        [
+          5,
+          6,
+          12
+        ]
+      ],
+      "name": "Rootbound Crown",
+      "category": "biome",
+      "rank": "concept",
+      "element": "earth",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\earth_labyrinth_concept_v1.png",
+      "intended_grid": null,
+      "integer_cell_dimensions": null,
+      "canonical_import_dimensions": null,
+      "canonical_cell_dimensions": null,
+      "sequence": null,
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": null,
+      "background_exactness": "OPAQUE_ENVIRONMENT_CONCEPT",
+      "review_status": "ACCEPTED_VISUAL_DIRECTION_CONCEPT",
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ],
+      "combat_proposal": null,
+      "godot_integration_status": "REFERENCE_ONLY; MODULAR_ENVIRONMENT_IMPLEMENTATION_PENDING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: environment ART DIRECTION concept board for original mythic dark-fantasy Gauntlet Godot labyrinth stage, requested1536x1024 landscape. Stage: Rootbound Crown. Primary view occupies entire image: isometric elevated three-quarter cutaway of a dense navigable LABYRINTH, tall walls forming many twisting passages, branching dead ends and connected loops. The entire floor MUST read as a MAZE; no broad open arena, generic wide landscape or straight linear dungeon. Theme: Granite coronation passages split by dry brown roots, bronze crown reliefs, amber sap lanterns and moss-stained arches. Include landmark props: Hollow Oak, Forked Cairn, Broken Aqueduct. One intricately designed key door, a return shortcut door, small safe corridor alcoves and discreet elemental hazard tiles. Boss circuit represented by wider winding passages with partitions, no open boss courtyard. Gritty hand-pixeled 1990s32-bit pixel-art art direction with crisp dark outlines, stepped shading, weathered medieval masonry and original Arthurian enchanted-kingdom motifs. Architectural props and repeatable modules are clear. Avoid any copyrighted named characters or copied franchise architecture, modern technology, futuristic neon, HUD, labels, text, arrows, grids, map numbers, watermarks, characters or sprites. Full environmental scene with stage-specific dark backdrop, opaque output; this is a mood and modular-design reference, NOT an exact topology schematic or seamless texture. Keep maze floor geometry readable with generous detail contrast.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "water_labyrinth",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-87dbf11d-c470-4679-b4fb-c1dd02b82150.png",
+      "sha256": "80d88d9ff3be1ecc43e49b4190633957b80f4fcdb0b95a6e53580311069d4cc0",
+      "bytes": 3724325,
+      "actual_dimensions": [
+        1536,
+        1024
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          36,
+          62,
+          84
+        ],
+        [
+          19,
+          40,
+          59
+        ],
+        [
+          1,
+          3,
+          4
+        ],
+        [
+          0,
+          3,
+          6
+        ],
+        [
+          7,
+          10,
+          16
+        ]
+      ],
+      "name": "Drowned Bellways",
+      "category": "biome",
+      "rank": "concept",
+      "element": "water",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\water_labyrinth_concept_v1.png",
+      "intended_grid": null,
+      "integer_cell_dimensions": null,
+      "canonical_import_dimensions": null,
+      "canonical_cell_dimensions": null,
+      "sequence": null,
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": null,
+      "background_exactness": "OPAQUE_ENVIRONMENT_CONCEPT",
+      "review_status": "ACCEPTED_VISUAL_DIRECTION_CONCEPT",
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ],
+      "combat_proposal": null,
+      "godot_integration_status": "REFERENCE_ONLY; MODULAR_ENVIRONMENT_IMPLEMENTATION_PENDING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: environment ART DIRECTION concept board for original mythic dark-fantasy Gauntlet Godot labyrinth stage, requested1536x1024 landscape. Stage: Drowned Bellways. Primary view occupies entire image: isometric elevated three-quarter cutaway of a dense navigable LABYRINTH, tall walls forming many twisting passages, branching dead ends and connected loops. The entire floor MUST read as a MAZE; no broad open arena, generic wide landscape or straight linear dungeon. Theme: Flooded abbey drainage passages, deep navy wet stone, cyan frost, raised dry ledges, brass bells and blue lanterns. Include landmark props: Cracked Bell, Tide Marks, Pump Wheel. One intricately designed key door, a return shortcut door, small safe corridor alcoves and discreet elemental hazard tiles. Boss circuit represented by wider winding passages with partitions, no open boss courtyard. Gritty hand-pixeled 1990s32-bit pixel-art art direction with crisp dark outlines, stepped shading, weathered medieval masonry and original Arthurian enchanted-kingdom motifs. Architectural props and repeatable modules are clear. Avoid any copyrighted named characters or copied franchise architecture, modern technology, futuristic neon, HUD, labels, text, arrows, grids, map numbers, watermarks, characters or sprites. Full environmental scene with stage-specific dark backdrop, opaque output; this is a mood and modular-design reference, NOT an exact topology schematic or seamless texture. Keep maze floor geometry readable with generous detail contrast.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "fire_labyrinth",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-2941b468-0fa5-4fa9-8ea5-59d55e6d9f2a.png",
+      "sha256": "9f9091b8ea96186adae445cd9f20c43d366689328150f9c412c5c49b4d8e5fdb",
+      "bytes": 3695190,
+      "actual_dimensions": [
+        1536,
+        1024
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          61,
+          45,
+          47
+        ],
+        [
+          68,
+          40,
+          39
+        ],
+        [
+          25,
+          20,
+          23
+        ],
+        [
+          158,
+          69,
+          30
+        ],
+        [
+          51,
+          33,
+          32
+        ]
+      ],
+      "name": "Ember Oathforge",
+      "category": "biome",
+      "rank": "concept",
+      "element": "fire",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\fire_labyrinth_concept_v1.png",
+      "intended_grid": null,
+      "integer_cell_dimensions": null,
+      "canonical_import_dimensions": null,
+      "canonical_cell_dimensions": null,
+      "sequence": null,
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": null,
+      "background_exactness": "OPAQUE_ENVIRONMENT_CONCEPT",
+      "review_status": "ACCEPTED_VISUAL_DIRECTION_CONCEPT",
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ],
+      "combat_proposal": null,
+      "godot_integration_status": "REFERENCE_ONLY; MODULAR_ENVIRONMENT_IMPLEMENTATION_PENDING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: environment ART DIRECTION concept board for original mythic dark-fantasy Gauntlet Godot labyrinth stage, requested1536x1024 landscape. Stage: Ember Oathforge. Primary view occupies entire image: isometric elevated three-quarter cutaway of a dense navigable LABYRINTH, tall walls forming many twisting passages, branching dead ends and connected loops. The entire floor MUST read as a MAZE; no broad open arena, generic wide landscape or straight linear dungeon. Theme: Black furnace brick maze, bronze pipes, ash-white inscriptions, orange vent light and a cobalt cooling-water channel. Include landmark props: Broken Anvil, Three Chimneys, Cooling Pipe. One intricately designed key door, a return shortcut door, small safe corridor alcoves and discreet elemental hazard tiles. Boss circuit represented by wider winding passages with partitions, no open boss courtyard. Gritty hand-pixeled 1990s32-bit pixel-art art direction with crisp dark outlines, stepped shading, weathered medieval masonry and original Arthurian enchanted-kingdom motifs. Architectural props and repeatable modules are clear. Avoid any copyrighted named characters or copied franchise architecture, modern technology, futuristic neon, HUD, labels, text, arrows, grids, map numbers, watermarks, characters or sprites. Full environmental scene with stage-specific dark backdrop, opaque output; this is a mood and modular-design reference, NOT an exact topology schematic or seamless texture. Keep maze floor geometry readable with generous detail contrast.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "air_labyrinth",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-f7c204b8-7b60-4c2c-bcaa-f124bfa144fb.png",
+      "sha256": "850248405924c448542dbfa8b35ca54e5e95cd5af8289cd02bd08803e2a1e1cc",
+      "bytes": 3998429,
+      "actual_dimensions": [
+        1536,
+        1024
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          33,
+          30,
+          56
+        ],
+        [
+          55,
+          42,
+          88
+        ],
+        [
+          31,
+          31,
+          50
+        ],
+        [
+          91,
+          90,
+          139
+        ],
+        [
+          39,
+          29,
+          69
+        ]
+      ],
+      "name": "Windglass Warrens",
+      "category": "biome",
+      "rank": "concept",
+      "element": "air",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\air_labyrinth_concept_v1.png",
+      "intended_grid": null,
+      "integer_cell_dimensions": null,
+      "canonical_import_dimensions": null,
+      "canonical_cell_dimensions": null,
+      "sequence": null,
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": null,
+      "background_exactness": "OPAQUE_ENVIRONMENT_CONCEPT",
+      "review_status": "ACCEPTED_VISUAL_DIRECTION_CONCEPT",
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ],
+      "combat_proposal": null,
+      "godot_integration_status": "REFERENCE_ONLY; MODULAR_ENVIRONMENT_IMPLEMENTATION_PENDING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: environment ART DIRECTION concept board for original mythic dark-fantasy Gauntlet Godot labyrinth stage, requested1536x1024 landscape. Stage: Windglass Warrens. Primary view occupies entire image: isometric elevated three-quarter cutaway of a dense navigable LABYRINTH, tall walls forming many twisting passages, branching dead ends and connected loops. The entire floor MUST read as a MAZE; no broad open arena, generic wide landscape or straight linear dungeon. Theme: High mountain observatory partition maze, ivory stone screens, bronze vanes, blue banners, purple storm sky; solid rail-protected floors. Include landmark props: Broken Astrolabe, Blue Banners, Conductor Tower. One intricately designed key door, a return shortcut door, small safe corridor alcoves and discreet elemental hazard tiles. Boss circuit represented by wider winding passages with partitions, no open boss courtyard. Gritty hand-pixeled 1990s32-bit pixel-art art direction with crisp dark outlines, stepped shading, weathered medieval masonry and original Arthurian enchanted-kingdom motifs. Architectural props and repeatable modules are clear. Avoid any copyrighted named characters or copied franchise architecture, modern technology, futuristic neon, HUD, labels, text, arrows, grids, map numbers, watermarks, characters or sprites. Full environmental scene with stage-specific dark backdrop, opaque output; this is a mood and modular-design reference, NOT an exact topology schematic or seamless texture. Keep maze floor geometry readable with generous detail contrast.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "aether_labyrinth",
+      "generated_source_path": "C:\\Users\\pdard\\.codex\\generated_images\\01a1225d-d07b-7922-a3b2-ceaf200941cb\\exec-1799db61-2562-4976-879b-0dd52c2bc335.png",
+      "sha256": "cce9baaa3c6ce4ae141e3b467b9c79e0274f53a0bcdd909f15745d95d7187fb5",
+      "bytes": 3670056,
+      "actual_dimensions": [
+        1536,
+        1024
+      ],
+      "actual_mode": "RGB",
+      "sampled_corner_rgb": [
+        [
+          18,
+          24,
+          40
+        ],
+        [
+          61,
+          63,
+          128
+        ],
+        [
+          8,
+          14,
+          23
+        ],
+        [
+          24,
+          29,
+          57
+        ],
+        [
+          17,
+          20,
+          37
+        ]
+      ],
+      "name": "Unwritten Labyrinth",
+      "category": "biome",
+      "rank": "concept",
+      "element": "aether",
+      "source_path": "C:\\Users\\pdard\\OneDrive\\Desktop\\voxel games\\gauntlet legends\\Gauntlet Godot\\assets\\biomes\\aether_labyrinth_concept_v1.png",
+      "intended_grid": null,
+      "integer_cell_dimensions": null,
+      "canonical_import_dimensions": null,
+      "canonical_cell_dimensions": null,
+      "sequence": null,
+      "hard_grid_slicing_certified": false,
+      "requested_background_rgb": null,
+      "background_exactness": "OPAQUE_ENVIRONMENT_CONCEPT",
+      "review_status": "ACCEPTED_VISUAL_DIRECTION_CONCEPT",
+      "review_notes": [
+        "Distinct elemental labyrinth visual direction; root review accepted.",
+        "Illustrative environment reference, not exact maze topology or seamless material."
+      ],
+      "combat_proposal": null,
+      "godot_integration_status": "REFERENCE_ONLY; MODULAR_ENVIRONMENT_IMPLEMENTATION_PENDING",
+      "generation": {
+        "tool": "built-in imagegen",
+        "initial_prompt": "Use case: stylized-concept. Asset type: environment ART DIRECTION concept board for original mythic dark-fantasy Gauntlet Godot labyrinth stage, requested1536x1024 landscape. Stage: Unwritten Labyrinth. Primary view occupies entire image: isometric elevated three-quarter cutaway of a dense navigable LABYRINTH, tall walls forming many twisting passages, branching dead ends and connected loops. The entire floor MUST read as a MAZE; no broad open arena, generic wide landscape or straight linear dungeon. Theme: Royal archive labyrinth in blue-black stone, silver path inscriptions, angular violet crystal lamps and barred views of a broken throne. Include landmark props: Celestial Globe, Silver Script, Broken Throne. One intricately designed key door, a return shortcut door, small safe corridor alcoves and discreet elemental hazard tiles. Boss circuit represented by wider winding passages with partitions, no open boss courtyard. Gritty hand-pixeled 1990s32-bit pixel-art art direction with crisp dark outlines, stepped shading, weathered medieval masonry and original Arthurian enchanted-kingdom motifs. Architectural props and repeatable modules are clear. Avoid any copyrighted named characters or copied franchise architecture, modern technology, futuristic neon, HUD, labels, text, arrows, grids, map numbers, watermarks, characters or sprites. Full environmental scene with stage-specific dark backdrop, opaque output; this is a mood and modular-design reference, NOT an exact topology schematic or seamless texture. Keep maze floor geometry readable with generous detail contrast.",
+        "revision_prompts": [],
+        "transparent_background": false
+      }
+    }
+  ]
+}
+

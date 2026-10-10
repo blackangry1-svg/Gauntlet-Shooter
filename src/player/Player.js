@@ -75,6 +75,7 @@ export class Player {
 
     // Weapons subsystem
     this.weapons = new Weapons(scene, camera, input, audio, stats.weapons, charType);
+    this.onRest = null;
     this.weapons.player = this;
 
     // Invulnerability frames (iframes)
@@ -84,10 +85,190 @@ export class Player {
     this._hitFlash = document.getElementById('hit-flash');
     this._damageVignette = document.getElementById('damage-vignette');
 
-    // Wall collision list
+    // Wall collision & floor elevation lists
     this.walls = [];
     this.interactables = [];
+    this.floorRamps = [];
+    this.currentGroundY = 0;
     this.checkpointPos = new THREE.Vector3(0, PLAYER_HEIGHT, 2);
+
+    // Progression & Experience System
+    this.level = 1;
+    this.xp = 0;
+    this.xpToNextLevel = 100;
+    this.damageMultiplier = 1.0;
+    this.damageReduction = 1.0;
+    this.hasAegis = false;
+    this.hud = null;
+
+    // Third-person hero model & view state
+    this.isThirdPerson = false;
+    this.thirdPersonMesh = null;
+    this._tpTex = null;
+    this._tpAnimTimer = 0;
+    this._tpAnimFrame = 0;
+    this._tpCurrentAnim = 'idle';
+    this.worldPos = new THREE.Vector3(0, 0, 0);
+    this._buildThirdPersonMesh();
+  }
+
+  setHUD(hud) {
+    this.hud = hud;
+  }
+
+  setFloorRamps(ramps) {
+    this.floorRamps = Array.isArray(ramps) ? ramps : [];
+  }
+
+  _buildThirdPersonMesh() {
+    if (this.thirdPersonMesh) return;
+    const THREE = window.THREE;
+    const texLoader = new THREE.TextureLoader();
+    this._tpTex = texLoader.load(`/assets/sprites/${this.charType}.png`);
+    this._tpTex.magFilter = THREE.NearestFilter;
+    this._tpTex.repeat.set(1 / 6, 1 / 6);
+    this._tpTex.offset.set(0, 5 / 6);
+
+    const mat = new THREE.MeshLambertMaterial({
+      map: this._tpTex,
+      emissiveMap: this._tpTex,
+      emissive: new THREE.Color(0.85, 0.85, 0.85),
+      emissiveIntensity: 0.85,
+      transparent: true,
+      alphaTest: 0.25,
+      side: THREE.DoubleSide,
+      depthWrite: true,
+    });
+
+    const geo = new THREE.PlaneGeometry(1.8, 2.4);
+    this._tpSprite = new THREE.Mesh(geo, mat);
+    this._tpSprite.position.y = 1.2;
+
+    this.thirdPersonMesh = new THREE.Group();
+    this.thirdPersonMesh.add(this._tpSprite);
+    this.thirdPersonMesh.visible = false;
+    this.scene.add(this.thirdPersonMesh);
+
+    this._tpCurrentAnim = 'idle';
+    this._tpAnimFrame = 0;
+    this._tpAnimTimer = 0;
+  }
+
+  toggleThirdPerson() {
+    this.isThirdPerson = !this.isThirdPerson;
+    if (this.thirdPersonMesh) {
+      this.thirdPersonMesh.visible = this.isThirdPerson;
+    }
+    if (this.weapons && this.weapons._weaponMesh) {
+      this.weapons._weaponMesh.visible = !this.isThirdPerson;
+    }
+    if (this.weapons && this.weapons._slashArcMesh && this.isThirdPerson) {
+      this.weapons._slashArcMesh.visible = false;
+    }
+    const hudEl = document.querySelector('#checkpoint-banner');
+    if (hudEl) {
+      hudEl.classList.remove('hidden');
+      const bTxt = hudEl.querySelector('.banner-text');
+      const bSub = hudEl.querySelector('.banner-sub');
+      if (bTxt) bTxt.textContent = this.isThirdPerson ? 'THIRD PERSON CAMERA' : 'FIRST PERSON CAMERA';
+      if (bSub) bSub.textContent = 'Toggle with [V] / [D-Pad ↓]';
+      setTimeout(() => hudEl.classList.add('hidden'), 1800);
+    }
+  }
+
+  _updateThirdPersonAnimation(dt, isMoving) {
+    if (!this.thirdPersonMesh || !this.isThirdPerson || !this._tpTex) return;
+
+    let targetAnim = 'idle';
+    if (this.weapons && this.weapons._swinging) {
+      targetAnim = this.weapons._isHeavy ? 'heavy' : 'attack';
+    } else if (this.isDodging) {
+      targetAnim = 'dodge';
+    } else if (this.isBlocking) {
+      targetAnim = 'block';
+    } else if (isMoving) {
+      targetAnim = 'run';
+    }
+
+    if (this._tpCurrentAnim !== targetAnim) {
+      this._tpCurrentAnim = targetAnim;
+      this._tpAnimFrame = 0;
+      this._tpAnimTimer = 0;
+    }
+
+    const animDefs = {
+      idle:   { row: 0, count: 6, speed: 5 },
+      run:    { row: 1, count: 6, speed: 10 },
+      dodge:  { row: 1, count: 6, speed: 14 },
+      attack: { row: 2, count: 6, speed: 14 },
+      heavy:  { row: 3, count: 6, speed: 10 },
+      block:  { row: 4, count: 4, speed: 4 },
+    };
+
+    const def = animDefs[this._tpCurrentAnim] || animDefs.idle;
+    this._tpAnimTimer += dt * (def.speed || 6);
+    if (this._tpAnimTimer >= 1.0) {
+      this._tpAnimTimer -= 1.0;
+      this._tpAnimFrame = (this._tpAnimFrame + 1) % def.count;
+    }
+
+    const col = this._tpAnimFrame % def.count;
+    const row = def.row;
+    this._tpTex.offset.x = col / 6;
+    this._tpTex.offset.y = (5 - row) / 6;
+
+    this.thirdPersonMesh.position.set(this.worldPos.x, this.currentGroundY, this.worldPos.z);
+    this.thirdPersonMesh.lookAt(this.camera.position.x, this.thirdPersonMesh.position.y + 1.2, this.camera.position.z);
+  }
+
+  getGroundY(x, z) {
+    let bestY = 0;
+    let found = false;
+    for (const r of this.floorRamps) {
+      if (x >= r.minX - 0.6 && x <= r.maxX + 0.6 && z >= r.minZ - 0.6 && z <= r.maxZ + 0.6) {
+        let groundY = r.y !== undefined ? r.y : 0;
+        if (r.isSlope) {
+          const factor = Math.max(0, Math.min(1, (z - r.startZ) / (r.endZ - r.startZ)));
+          groundY = r.startY + factor * (r.endY - r.startY);
+        }
+        if (!found || Math.abs(groundY - this.currentGroundY) < Math.abs(bestY - this.currentGroundY)) {
+          bestY = groundY;
+          found = true;
+        }
+      }
+    }
+    return found ? bestY : this.currentGroundY;
+  }
+
+  addXP(amount) {
+    this.xp += amount;
+    let leveledUp = false;
+    const MAX_LEVEL = 25;
+    while (this.xp >= this.xpToNextLevel && this.level < MAX_LEVEL) {
+      this.xp -= this.xpToNextLevel;
+      this.level++;
+      this.xpToNextLevel = Math.floor(100 * Math.pow(1.35, this.level - 1));
+      this.maxHealth += 25;
+      this.health = this.maxHealth;
+      this.maxStamina += 15;
+      this.stamina = this.maxStamina;
+      this.maxMana += 15;
+      this.mana = this.maxMana;
+      this.damageMultiplier = (1.0 + (this.level - 1) * 0.12) * (this.hasAegis ? 2.0 : 1.0);
+      leveledUp = true;
+    }
+    if (this.level >= MAX_LEVEL) {
+      this.xp = Math.min(this.xp, this.xpToNextLevel);
+    }
+    if (leveledUp) {
+      this.audio.playSFX('levelUp');
+      if (this.hud && typeof this.hud.showLevelUpBanner === 'function') {
+        this.hud.showLevelUpBanner(this.level, this.damageMultiplier, this.maxHealth, this.maxStamina);
+      }
+    }
+    if (this.hud && typeof this.hud.update === 'function') {
+      this.hud.update(this);
+    }
   }
 
   setWalls(walls) {
@@ -124,6 +305,9 @@ export class Player {
   setBlocking(active) {
     this._manualBlock = !!active;
     this.isBlocking = this._manualBlock && !this.isStunned && !this.isDodging && this.stamina > 5;
+    if (this.isBlocking) {
+      this._iframes = 0;
+    }
   }
 
   hasStamina(amount) {
@@ -132,6 +316,9 @@ export class Player {
 
   takeDamage(amount, sourcePos = null) {
     if (this._iframes > 0) return; // Perfect dodge or iframe
+    if (this.damageReduction && this.damageReduction < 1.0) {
+      amount *= this.damageReduction;
+    }
 
     // Check block
     if (this.isBlocking && !this.isStunned) {
@@ -203,15 +390,21 @@ export class Player {
 
   restAtCheckpoint(pos) {
     this.checkpointPos.copy(pos);
+    if (!this.worldPos) this.worldPos = new THREE.Vector3();
+    this.worldPos.set(pos.x, Math.max(0, pos.y - PLAYER_HEIGHT), pos.z);
     this.health  = this.maxHealth;
     this.stamina = this.maxStamina;
     this.mana    = this.maxMana;
     this.flasks  = this.maxFlasks;
     this.audio.playSFX('bonfireRest');
+    if (this.onRest) this.onRest();
   }
 
   respawn() {
     this.camera.position.copy(this.checkpointPos);
+    if (!this.worldPos) this.worldPos = new THREE.Vector3();
+    this.worldPos.set(this.checkpointPos.x, Math.max(0, this.checkpointPos.y - PLAYER_HEIGHT), this.checkpointPos.z);
+    this.currentGroundY = Math.max(0, this.checkpointPos.y - PLAYER_HEIGHT);
     this.health  = this.maxHealth;
     this.stamina = this.maxStamina;
     this.mana    = this.maxMana;
@@ -220,6 +413,19 @@ export class Player {
     this.isStunned = false;
     this._manualBlock = false;
     this._iframes = 0;
+  }
+
+  teleport(x, y, z) {
+    const groundY = this.getGroundY(x, z);
+    const targetGroundY = groundY > 0 ? groundY : Math.max(0, y - PLAYER_HEIGHT);
+    this.currentGroundY = targetGroundY;
+    if (!this.worldPos) this.worldPos = new THREE.Vector3();
+    this.worldPos.set(x, targetGroundY, z);
+    this.camera.position.set(x, targetGroundY + PLAYER_HEIGHT, z);
+    this.camera.updateMatrixWorld();
+    if (this.thirdPersonMesh) {
+      this.thirdPersonMesh.position.set(x, targetGroundY, z);
+    }
   }
 
   update(dt) {
@@ -232,11 +438,12 @@ export class Player {
       if (this.stunTimer <= 0) this.isStunned = false;
     }
 
-    // Mouse look: active during gameplay simulation when pointer is locked (or in headless test)
+    // Mouse / Gamepad look: active during gameplay simulation when pointer is locked or gamepad is active
     const isLocked = !!document.pointerLockElement ||
                      (typeof navigator !== 'undefined' && navigator.userAgent.includes('HeadlessChrome')) ||
                      !!(typeof window !== 'undefined' && window.__HEADLESS_TEST__);
-    if (isLocked && (this.input.mouseX !== 0 || this.input.mouseY !== 0)) {
+    const canLook = isLocked || this.input.isGamepadActive;
+    if (canLook && (this.input.mouseX !== 0 || this.input.mouseY !== 0)) {
       const sens = this.mouseSensitivity || MOUSE_SENS;
       const ySign = this.invertY ? 1 : -1;
       this.yaw   -= this.input.mouseX * sens;
@@ -244,12 +451,22 @@ export class Player {
       this.pitch  = Math.max(-MAX_PITCH, Math.min(MAX_PITCH, this.pitch));
       this.input.mouseX = 0;
       this.input.mouseY = 0;
-    } else if (!isLocked) {
+    } else if (!canLook) {
       this.input.mouseX = 0;
       this.input.mouseY = 0;
     }
     this.camera.rotation.y = this.yaw;
     this.camera.rotation.x = this.pitch;
+
+    // Reset camera pitch (R3 or C)
+    if (this.input.resetCamera) {
+      this.pitch = 0;
+    }
+
+    // Toggle 1st Person / 3rd Person view (D-Pad Down or V)
+    if (this.input.toggleView) {
+      this.toggleThirdPerson();
+    }
 
     // Flask healing key (Q)
     if (this.input.useFlask) {
@@ -264,10 +481,20 @@ export class Player {
     // Blocking (Hold Right Mouse Button or manual block trigger)
     this.isBlocking = !this.isStunned && !this.isDodging && (this.input.mouseDown(2) || this._manualBlock) && this.stamina > 5;
 
-    // Movement calculation
-    const fw = this.input.moveForward  ? 1 : (this.input.moveBackward ? -1 : 0);
-    const rt = this.input.moveRight    ? 1 : (this.input.moveLeft     ? -1 : 0);
-    const isTryingMove = (fw !== 0 || rt !== 0);
+    // Movement calculation (Supports true analog stick magnitude & digital WASD)
+    let moveMagnitude = 1.0;
+    let fw = 0;
+    let rt = 0;
+    if (this.input && typeof this.input.getMoveAxes === 'function') {
+      const axes = this.input.getMoveAxes();
+      rt = axes.x;
+      fw = axes.y;
+      moveMagnitude = axes.magnitude > 0 ? axes.magnitude : 1.0;
+    } else {
+      fw = this.input.moveForward  ? 1 : (this.input.moveBackward ? -1 : 0);
+      rt = this.input.moveRight    ? 1 : (this.input.moveLeft     ? -1 : 0);
+    }
+    const isTryingMove = (Math.abs(fw) > 0.05 || Math.abs(rt) > 0.05);
 
     const forward = new THREE.Vector3();
     this.camera.getWorldDirection(forward);
@@ -278,8 +505,8 @@ export class Player {
     const right = new THREE.Vector3(-forward.z, 0, forward.x);
 
     this._moveDir.set(0, 0, 0);
-    if (fw !== 0) this._moveDir.addScaledVector(forward, fw);
-    if (rt !== 0) this._moveDir.addScaledVector(right, rt);
+    if (Math.abs(fw) > 0.001) this._moveDir.addScaledVector(forward, fw);
+    if (Math.abs(rt) > 0.001) this._moveDir.addScaledVector(right, rt);
     if (this._moveDir.lengthSq() > 0.001) this._moveDir.normalize();
 
     // Dodge execution (Space)
@@ -296,8 +523,8 @@ export class Player {
       this.audio.playSFX('dodge');
     }
 
-    // Movement physics
-    let speed = this.baseSpeed;
+    // Movement physics with analog speed scaling
+    let speed = this.baseSpeed * (this.isDodging ? 1.0 : moveMagnitude);
     if (this.isDodging) {
       speed = DODGE_SPEED;
       this.dodgeTimer -= dt;
@@ -311,21 +538,27 @@ export class Player {
     const currentMoveDir = this.isDodging ? this._dodgeDir : this._moveDir;
     const moveDist = (this.isDodging || isTryingMove) ? speed * dt : 0;
 
-    const newPos = this.camera.position.clone();
+    const curX = (this.worldPos && this.worldPos.x !== undefined) ? this.worldPos.x : this.camera.position.x;
+    const curZ = (this.worldPos && this.worldPos.z !== undefined) ? this.worldPos.z : this.camera.position.z;
+    const oldPos = new THREE.Vector3(curX, this.currentGroundY + PLAYER_HEIGHT, curZ);
+    const newPos = oldPos.clone();
     newPos.x += currentMoveDir.x * moveDist;
     newPos.z += currentMoveDir.z * moveDist;
 
     // Wall collision resolution (sliding against AABB walls)
-    newPos.x = this._resolveX(this.camera.position, newPos);
-    newPos.z = this._resolveZ(this.camera.position, newPos);
-    this.camera.position.copy(newPos);
-    this.camera.position.y = PLAYER_HEIGHT;
+    newPos.x = this._resolveX(oldPos, newPos);
+    newPos.z = this._resolveZ(oldPos, newPos);
+    if (!this.worldPos) this.worldPos = new THREE.Vector3();
+    this.worldPos.x = newPos.x;
+    this.worldPos.z = newPos.z;
+
+    // Vertical Elevation & Ramp Physics across the 5 Citadel Floors
+    const targetGroundY = this.getGroundY(newPos.x, newPos.z);
+    this.currentGroundY = THREE.MathUtils.lerp(this.currentGroundY, targetGroundY, 0.35);
 
     // Head bob & footsteps
     if (isTryingMove && !this.isDodging) {
       this._bobT += dt * (this.input.sprint ? 14 : 9);
-      this.camera.position.y = PLAYER_HEIGHT + Math.sin(this._bobT) * 0.04;
-
       this._footstepT -= dt;
       if (this._footstepT <= 0) {
         this.audio.playSFX('footstep', 0.35);
@@ -333,6 +566,23 @@ export class Player {
       }
     } else {
       this._footstepT = 0;
+    }
+
+    if (this.isThirdPerson) {
+      const camDist = 3.2;
+      const camHeight = 1.9;
+      this.camera.position.set(
+        this.worldPos.x - Math.sin(this.yaw) * camDist,
+        this.currentGroundY + camHeight + Math.sin(this.pitch) * 1.5,
+        this.worldPos.z - Math.cos(this.yaw) * camDist
+      );
+      this.camera.lookAt(this.worldPos.x, this.currentGroundY + 1.3, this.worldPos.z);
+      this._updateThirdPersonAnimation(dt, isTryingMove);
+    } else {
+      const bobY = (isTryingMove && !this.isDodging) ? Math.sin(this._bobT) * 0.04 : 0;
+      this.camera.position.set(this.worldPos.x, this.currentGroundY + PLAYER_HEIGHT + bobY, this.worldPos.z);
+      this.camera.rotation.y = this.yaw;
+      this.camera.rotation.x = this.pitch;
     }
 
     // Stamina Regeneration (delayed after use)
@@ -351,12 +601,23 @@ export class Player {
     this.weapons.update(dt);
   }
 
+  getBodyPosition() {
+    const THREE = window.THREE;
+    const px = (this.isThirdPerson && this.worldPos) ? this.worldPos.x : this.camera.position.x;
+    const py = this.isThirdPerson ? this.currentGroundY + 1.7 : this.camera.position.y;
+    const pz = (this.isThirdPerson && this.worldPos) ? this.worldPos.z : this.camera.position.z;
+    return new THREE.Vector3(px, py, pz);
+  }
+
   _checkInteraction() {
-    const playerPos = this.camera.position;
+    const playerPos = this.getBodyPosition();
     for (const item of this.interactables) {
       if (item.active && item.position) {
-        const dist = playerPos.distanceTo(item.position);
-        if (dist <= (item.radius || 2.5)) {
+        const dx = playerPos.x - item.position.x;
+        const dz = playerPos.z - item.position.z;
+        const dy = Math.abs(playerPos.y - item.position.y);
+        const dist2D = Math.hypot(dx, dz);
+        if (dist2D <= (item.radius || 2.5) && dy <= 5.0) {
           item.onInteract(this);
           break;
         }
@@ -366,7 +627,12 @@ export class Player {
 
   _resolveX(oldPos, newPos) {
     const r = 0.35; // collision radius
+    const feetY = oldPos.y - 1.7;
     for (const wall of this.walls) {
+      if (wall.floorY !== undefined) {
+        const wallH = wall.wallH || 4.2;
+        if (feetY < wall.floorY - 0.5 || feetY > wall.floorY + wallH - 0.2) continue;
+      }
       const minX = wall.x - wall.w / 2 - r;
       const maxX = wall.x + wall.w / 2 + r;
       const minZ = wall.z - wall.d / 2 - r;
@@ -380,7 +646,12 @@ export class Player {
 
   _resolveZ(oldPos, newPos) {
     const r = 0.35;
+    const feetY = oldPos.y - 1.7;
     for (const wall of this.walls) {
+      if (wall.floorY !== undefined) {
+        const wallH = wall.wallH || 4.2;
+        if (feetY < wall.floorY - 0.5 || feetY > wall.floorY + wallH - 0.2) continue;
+      }
       const minX = wall.x - wall.w / 2 - r;
       const maxX = wall.x + wall.w / 2 + r;
       const minZ = wall.z - wall.d / 2 - r;

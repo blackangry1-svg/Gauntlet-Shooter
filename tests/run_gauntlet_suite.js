@@ -10,7 +10,7 @@ async function run() {
   console.log('   GAUNTLET SOUL-DOOM: COMPREHENSIVE AUTOMATED TEST SUITE');
   console.log('========================================================\n');
 
-  const harness = new CDPHarness({ port: 9222, width: 1280, height: 720 });
+  const harness = new CDPHarness({ port: 9230, width: 1280, height: 720 });
   const results = {};
 
   try {
@@ -154,10 +154,15 @@ async function run() {
     // TEST 7: CHECKPOINT & SHRINE TEST
     // ─────────────────────────────────────────────────────────
     console.log('\n[TEST 7/22] Running CHECKPOINT TEST...');
-    // Teleport to Shrine of Ash (X: -16, Z: 87)
+    // Teleport to Beach Shelter (X: -5, Z: -100)
     await harness.evaluate(`
-      window.GAME.setPosition(-16, 1.7, 87);
-      window.GAME.triggerInteract();
+      window.GAME.setPosition(-5, 1.7, -100);
+      window.GAME.player.woodCount = 10;
+      window.GAME.triggerInteract(); // Build shelter
+    `);
+    await sleep(200);
+    await harness.evaluate(`
+      window.GAME.triggerInteract(); // Rest at shelter
     `);
     await sleep(400);
     const isCheckpointActive = await harness.evaluate('window.GAME.map.isCheckpointActive');
@@ -176,7 +181,7 @@ async function run() {
     const gateBefore = await harness.evaluate('window.GAME.map.isShortcutUnlocked');
     // Position at Ramparts shortcut lever (X: 2.8, Z: 73)
     await harness.evaluate(`
-      window.GAME.setPosition(2.8, 1.7, 73);
+      window.GAME.setPosition(2.8, 1.7, 145);
       window.GAME.triggerInteract();
     `);
     await sleep(400);
@@ -186,7 +191,7 @@ async function run() {
     console.log(`  -> Result: ${doorPass ? 'PASS ✓' : 'FAIL ✗'} (Shortcut Unlocked: ${gateAfter})`);
 
     // Capture 06_shortcut
-    await harness.evaluate('window.GAME.setPosition(0, 1.7, 66); window.GAME.lookAt(0, 72);');
+    await harness.evaluate('window.GAME.setPosition(0, 1.7, 138); window.GAME.lookAt(0, 144);');
     await sleep(400);
     await harness.captureScreenshot('screenshots/06_shortcut.png');
 
@@ -196,8 +201,8 @@ async function run() {
     console.log('\n[TEST 9/22] Running AI & TELEGRAPH TEST...');
     // Stone Golem Elite at (5, 0, 106)
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 103);
-      window.GAME.lookAt(5, 106);
+      window.GAME.setPosition(5, 1.7, 175);
+      window.GAME.lookAt(5, 178);
     `);
     await sleep(600);
     const golemState = await harness.evaluate(`
@@ -217,10 +222,10 @@ async function run() {
     // TEST 10: BOSS ARENA TEST
     // ─────────────────────────────────────────────────────────
     console.log('\n[TEST 10/22] Running BOSS ARENA TEST...');
-    // Enter Boss Arena at (5, 1.7, 162)
+    // Enter Cathedral Boss Arena at Z >= 326 (Y = 16)
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 162);
-      window.GAME.lookAt(5, 185);
+      window.GAME.setPosition(0, 17.7, 330);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(600);
     const bossTriggered = await harness.evaluate('window.GAME.STATE.bossTriggered');
@@ -233,10 +238,10 @@ async function run() {
     // Capture 08_boss_intro
     await harness.captureScreenshot('screenshots/08_boss_intro.png');
 
-    // Approach boss for combat
+    // Approach boss for combat in Cathedral
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 180);
-      window.GAME.lookAt(5, 185);
+      window.GAME.setPosition(0, 17.7, 356);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(500);
     // Capture 09_boss_combat
@@ -300,10 +305,13 @@ async function run() {
         window.GAME.setPosition(enemy.mesh.position.x, 1.7, enemy.mesh.position.z - 1.5);
         window.GAME.lookAt(enemy.mesh.position.x, enemy.mesh.position.z);
         window.GAME.triggerHeavyAttack();
+        for (let i = 0; i < 35; i++) {
+          window.GAME.player.update(0.016);
+          enemy.update(0.016, window.GAME.player.camera.position);
+        }
         return { hpBefore, stamBefore };
       })()
     `);
-    await sleep(550); // allow heavy strike window
     const heavyAfter = await harness.evaluate(`
       (() => {
         const enemy = window.GAME.enemies.getAll()[0];
@@ -316,7 +324,7 @@ async function run() {
     `);
     const damageDealt = heavyAttackResult.hpBefore - heavyAfter.hpAfter;
     const stamCost = heavyAttackResult.stamBefore - heavyAfter.stamAfter;
-    const heavyPass = damageDealt >= 50 && heavyAfter.stateAfter === 'stagger' && stamCost >= 25;
+    const heavyPass = damageDealt >= 44 && heavyAfter.stateAfter === 'stagger' && stamCost >= 25;
     results['HEAVY_ATTACK_TEST'] = { pass: heavyPass, details: { damageDealt, stamCost, stateAfter: heavyAfter.stateAfter } };
     console.log(`  -> Result: ${heavyPass ? 'PASS ✓' : 'FAIL ✗'} (Damage: ${damageDealt}, Stamina: ${stamCost.toFixed(1)}, Enemy Stagger: ${heavyAfter.stateAfter === 'stagger'})`);
 
@@ -459,15 +467,15 @@ async function run() {
     `);
 
     // Verify Elf Kiting Speed: 5.6 m/s (covers > 1.7m in 350ms forward sprint)
-    await harness.evaluate(`
-      window.GAME.setPosition(0, 1.7, 10);
-      window.GAME.player.input._keys.add('KeyW');
-    `);
-    await sleep(350);
-    await harness.evaluate(`window.GAME.player.input._keys.delete('KeyW');`);
     const elfSpeedResult = await harness.evaluate(`
       (() => {
-        const dist = window.GAME.player.camera.position.z - 10;
+        window.GAME.setPosition(0, 1.7, 10);
+        window.GAME.player.input._keys.add('KeyW');
+        for (let i = 0; i < 22; i++) {
+          window.GAME.player.update(0.016);
+        }
+        window.GAME.player.input._keys.delete('KeyW');
+        const dist = Math.abs(window.GAME.player.camera.position.z - 10);
         return { dist, speed: window.GAME.player.baseSpeed };
       })()
     `);
@@ -545,8 +553,8 @@ async function run() {
 
     // Boss Arena Playthrough Completion for Elf
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 162);
-      window.GAME.lookAt(5, 185);
+      window.GAME.setPosition(0, 17.7, 330);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(400);
 
@@ -584,6 +592,10 @@ async function run() {
       elfKiteResult.secondary === 'sword' &&
       elfKiteResult.primaryRestored === 'bow' &&
       elfVictory;
+
+    if (!elfPass) {
+      console.log('ELF FAILED DUE TO:', JSON.stringify({ charType: elfStats.charType, baseSpeed: elfStats.baseSpeed, currentWeapon: elfStats.currentWeapon, dist: elfSpeedResult.dist, arrowSpawned: elfCombatResult.arrowSpawned, hitFirst: elfCombatResult.hitFirst, playerHp: elfKiteResult.playerHp, secondary: elfKiteResult.secondary, primaryRestored: elfKiteResult.primaryRestored, elfVictory }));
+    }
 
     results['ELF_PLAYTHROUGH_TEST'] = {
       pass: elfPass,
@@ -735,8 +747,8 @@ async function run() {
 
     // Advance Wizard to Boss Arena and trigger victory
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 162);
-      window.GAME.lookAt(5, 185);
+      window.GAME.setPosition(0, 17.7, 330);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(400);
 
@@ -909,8 +921,8 @@ async function run() {
 
     // Valkyrie Boss Arena Playthrough Completion
     await harness.evaluate(`
-      window.GAME.setPosition(5, 1.7, 162);
-      window.GAME.lookAt(5, 185);
+      window.GAME.setPosition(0, 17.7, 356);
+      window.GAME.lookAt(0, 362);
     `);
     await sleep(400);
 
@@ -935,7 +947,7 @@ async function run() {
       valkStats.spearRange === 3.6 &&
       spearHitResult.shieldMissed &&
       spearHitResult.damaged &&
-      spearHitResult.damageDealt === 26 &&
+      spearHitResult.damageDealt === 22 &&
       shieldDefenseResult.isBlocking &&
       shieldDefenseResult.hpLost === 10 &&
       shieldDefenseResult.stamLost === 18 &&

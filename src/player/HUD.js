@@ -19,6 +19,11 @@ export class HUD {
     this._minimapCtx  = this._minimap.getContext('2d');
     this._roomNum     = document.getElementById('room-num');
     this._scoreEl     = document.getElementById('score-value');
+    this._xpBar       = document.getElementById('xp-bar');
+    this._xpText      = document.getElementById('xp-text');
+    this._levelBadge  = document.getElementById('portrait-level');
+    this._levelUpBanner = document.getElementById('levelup-banner');
+    this._levelUpSub    = document.getElementById('levelup-sub');
   }
 
   update(player) {
@@ -36,8 +41,23 @@ export class HUD {
     if (this._staminaText) this._staminaText.textContent = Math.ceil(player.stamina);
     if (this._manaText)    this._manaText.textContent    = Math.ceil(player.mana);
 
+    // XP and Level
+    if (this._xpBar && player.xpToNextLevel) {
+      const xpPct = Math.min(1.0, Math.max(0, (player.xp || 0) / player.xpToNextLevel));
+      this._xpBar.style.width = (xpPct * 100) + '%';
+    }
+    if (this._xpText && player.xpToNextLevel) {
+      this._xpText.textContent = `${player.xp || 0}/${player.xpToNextLevel} XP`;
+    }
+    if (this._levelBadge && player.level) {
+      this._levelBadge.textContent = `Lv.${player.level}`;
+    }
+
     if (this._flaskText && player.flasks !== undefined) {
-      this._flaskText.textContent = `Flasks: ${player.flasks}/${player.maxFlasks} [Q]`;
+      const isGp = player.input && player.input.isGamepadActive;
+      this._flaskText.textContent = isGp
+        ? `Flasks: ${player.flasks}/${player.maxFlasks} [D-Pad ↑]`
+        : `Flasks: ${player.flasks}/${player.maxFlasks} [Q]`;
     }
 
     // Low health pulsing
@@ -50,7 +70,11 @@ export class HUD {
 
   showInteractPrompt(text = 'INTERACT') {
     if (this._interactPrompt) {
-      this._interactText.textContent = text;
+      let displayText = text;
+      if (window.GAME?.player?.input?.isGamepadActive) {
+        displayText = text.replace(/\[E\]/g, '[◯]').replace(/\[F\]/g, '[◯]').replace(/\[Q\]/g, '[D-Pad ↑]');
+      }
+      this._interactText.textContent = displayText;
       this._interactPrompt.classList.remove('hidden');
     }
   }
@@ -65,6 +89,19 @@ export class HUD {
     if (this._checkpointBanner) {
       this._checkpointBanner.classList.remove('hidden');
       setTimeout(() => this._checkpointBanner?.classList.add('hidden'), 2800);
+    }
+  }
+
+  showLevelUpBanner(level, damageMultiplier, hp, stam) {
+    if (this._levelUpBanner) {
+      if (this._levelUpSub) {
+        const bonusPct = Math.round(((damageMultiplier || 1.0) - 1.0) * 100);
+        this._levelUpSub.textContent = `LEVEL ${level} REACHED · HP & Stamina Restored · Damage +${bonusPct}%`;
+      }
+      this._levelUpBanner.classList.remove('hidden');
+      setTimeout(() => {
+        if (this._levelUpBanner) this._levelUpBanner.classList.add('hidden');
+      }, 3200);
     }
   }
 
@@ -154,5 +191,30 @@ export class HUD {
     ctx.strokeStyle = 'rgba(200,168,75,0.5)';
     ctx.lineWidth = 1;
     ctx.strokeRect(0, 0, W, H);
+  }
+
+  updateKeys(count) {
+    const el = document.getElementById('key-count');
+    if (el) el.textContent = count;
+  }
+
+  showKeyPickupBanner() {
+    const el = document.getElementById('key-banner');
+    if (el) {
+      el.classList.remove('hidden');
+      setTimeout(() => el?.classList.add('hidden'), 2200);
+    }
+  }
+
+  showFloorBanner(floorNum, floorName) {
+    const el = document.getElementById('floor-banner');
+    const txt = document.getElementById('floor-banner-text');
+    const sub = document.getElementById('floor-banner-sub');
+    if (el && txt) {
+      txt.textContent = floorName || `FLOOR ${floorNum}`;
+      if (sub) sub.textContent = `— Ascend and Survive —`;
+      el.classList.remove('hidden');
+      setTimeout(() => el?.classList.add('hidden'), 3800);
+    }
   }
 }

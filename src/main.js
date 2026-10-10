@@ -12,9 +12,12 @@ import { Player } from './player/Player.js';
 import { HUD } from './player/HUD.js';
 import { MapLoader } from './world/MapLoader.js';
 import { EnemyManager } from './enemies/EnemyManager.js';
-import { preloadEnemyTextures, OrcGrunt, SkeletonArcher, StoneGolem, DeathBat, DeathKnight } from './enemies/Enemy.js';
+import { preloadEnemyTextures, OrcGrunt, SkeletonArcher, StoneGolem, DeathBat, DeathKnight, LavaGolem, StormHarpy, DarkAcolyte, ChampionOrc } from './enemies/Enemy.js';
 import { ParticleSystem } from './combat/ParticleSystem.js';
+import { PickupSystem } from './combat/PickupSystem.js';
 import { MainMenu } from './ui/MainMenu.js';
+import { MinotaurStalker } from './enemies/MinotaurStalker.js';
+import { SpriteTestRoom } from './world/SpriteTestRoom.js';
 
 // Preload enemy sprite sheets into memory immediately
 preloadEnemyTextures();
@@ -40,8 +43,13 @@ renderer.toneMappingExposure = 1.05;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0609);
 scene.fog = new THREE.Fog(0x0a0609, 10, 42); // Atmospheric dungeon fog
+const sunLight = new THREE.DirectionalLight(0xfffae0, 1.3);
+scene.add(sunLight);
+const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0xd2b48c, 0.6);
+scene.add(hemiLight);
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 60);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 250);
+scene.add(camera); // Crucial: renders child viewmodels (weapons, slash arcs) attached to camera
 
 // Global ambient lighting
 const ambientLight = new THREE.AmbientLight(0x281c14, 0.7);
@@ -57,16 +65,21 @@ const STATE = {
   frameCount: 0,
   bossTriggered: false,
   bossDefeated: false,
+  keys: 0,          // dungeon keys collected
+  lastFloor: 0,     // floor tracker for entry banners (1-5)
 };
 
-const input     = new InputManager();
-const audio     = new AudioManager();
-const save      = new SaveManager();
-const hud       = new HUD();
-const map       = new MapLoader(scene);
-const enemies   = new EnemyManager(scene, audio);
-const particles = new ParticleSystem(scene);
-let player      = null;
+const input           = new InputManager();
+const audio           = new AudioManager();
+const save            = new SaveManager();
+const hud             = new HUD();
+const map             = new MapLoader(scene);
+const enemies         = new EnemyManager(scene, audio);
+const minotaurStalker = new MinotaurStalker(scene, audio, enemies);
+const particles       = new ParticleSystem(scene, renderer, camera);
+const pickups         = new PickupSystem(scene, audio);
+let player            = null;
+let spriteTestRoom    = null;
 
 // ─────────────────────────────────────────────────────────────
 // SETTINGS MANAGEMENT & PERSISTENCE
@@ -178,20 +191,39 @@ function createCeilingTexture() {
 }
 
 const texLoader = new THREE.TextureLoader();
-const wallTex = texLoader.load('/assets/textures/wall.jpg');
-wallTex.wrapS = wallTex.wrapT = THREE.RepeatWrapping;
-wallTex.repeat.set(2, 2);
 
-const floorTex = texLoader.load('/assets/textures/floor.jpg');
-floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping;
-floorTex.repeat.set(3, 3);
+function loadTexture(path, repeatX = 2, repeatY = 2) {
+  const tex = texLoader.load(path);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(repeatX, repeatY);
+  return tex;
+}
 
+const wallTex = loadTexture('/assets/textures/wall.jpg', 2, 2);
+const floorTex = loadTexture('/assets/textures/floor.jpg', 3, 3);
 const ceilTex = createCeilingTexture();
 
+const aqueductWallTex = loadTexture('/assets/textures/aqueduct_wall.jpg', 2, 2);
+const aqueductFloorTex = loadTexture('/assets/textures/aqueduct_floor.jpg', 3, 3);
+const forgeWallTex = loadTexture('/assets/textures/forge_wall.jpg', 2, 2);
+const forgeFloorTex = loadTexture('/assets/textures/forge_floor.jpg', 3, 3);
+const galeWallTex = loadTexture('/assets/textures/gale_wall.jpg', 2, 2);
+const galeFloorTex = loadTexture('/assets/textures/gale_floor.jpg', 3, 3);
+const throneWallTex = loadTexture('/assets/textures/throne_wall.jpg', 2, 2);
+const throneFloorTex = loadTexture('/assets/textures/throne_floor.jpg', 3, 3);
+
 const materials = {
-  wall:  new THREE.MeshLambertMaterial({ map: wallTex }),
-  floor: new THREE.MeshLambertMaterial({ map: floorTex }),
-  ceil:  new THREE.MeshLambertMaterial({ map: ceilTex }),
+  wall:          new THREE.MeshLambertMaterial({ map: wallTex }),
+  floor:         new THREE.MeshLambertMaterial({ map: floorTex }),
+  ceil:          new THREE.MeshLambertMaterial({ map: ceilTex }),
+  aqueductWall:  new THREE.MeshLambertMaterial({ map: aqueductWallTex }),
+  aqueductFloor: new THREE.MeshLambertMaterial({ map: aqueductFloorTex }),
+  forgeWall:     new THREE.MeshLambertMaterial({ map: forgeWallTex }),
+  forgeFloor:    new THREE.MeshLambertMaterial({ map: forgeFloorTex }),
+  galeWall:      new THREE.MeshLambertMaterial({ map: galeWallTex }),
+  galeFloor:     new THREE.MeshLambertMaterial({ map: galeFloorTex }),
+  throneWall:    new THREE.MeshLambertMaterial({ map: throneWallTex }),
+  throneFloor:   new THREE.MeshLambertMaterial({ map: throneFloorTex }),
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -201,10 +233,9 @@ const materials = {
 function warmupShaders() {
   const warmupGroup = new THREE.Group();
   const boxGeo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-  const meshW = new THREE.Mesh(boxGeo, materials.wall);
-  const meshF = new THREE.Mesh(boxGeo, materials.floor);
-  const meshC = new THREE.Mesh(boxGeo, materials.ceil);
-  warmupGroup.add(meshW, meshF, meshC);
+  for (const mat of Object.values(materials)) {
+    warmupGroup.add(new THREE.Mesh(boxGeo, mat));
+  }
   scene.add(warmupGroup);
 
   // Perform dummy render to compile shaders before player sees action
@@ -238,6 +269,48 @@ menu.onContinue = () => {
   }
 };
 
+function saveCurrentGame() {
+  if (!player) return null;
+  const pz = camera.position.z;
+  const px = camera.position.x;
+  let roomNum = 1;
+  if (pz < 138) roomNum = 1;
+  else if (pz < 202) roomNum = 2;
+  else if (pz < 264) roomNum = 3;
+  else if (pz < 326) roomNum = 4;
+  else roomNum = 5;
+
+  const data = {
+    character: STATE.character,
+    level: player.level,
+    xp: player.xp,
+    xpToNextLevel: player.xpToNextLevel,
+    damageMultiplier: player.damageMultiplier,
+    damageReduction: player.damageReduction || 1.0,
+    hasAegis: !!player.hasAegis,
+    woodCount: player.woodCount || 0,
+    shelterBuilt: map.shelterInteractable ? !!map.shelterInteractable.isBuilt : false,
+    health: player.health,
+    maxHealth: player.maxHealth,
+    stamina: player.stamina,
+    maxStamina: player.maxStamina,
+    mana: player.mana,
+    maxMana: player.maxMana,
+    flasks: player.flasks,
+    maxFlasks: player.maxFlasks,
+    checkpointPos: { x: player.checkpointPos.x, y: player.checkpointPos.y, z: player.checkpointPos.z },
+    score: STATE.score,
+    room: roomNum,
+  };
+  save.save(data);
+  const status = document.getElementById('save-status');
+  if (status) {
+    status.textContent = '✓ Progress Saved at Checkpoint';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+  }
+  return data;
+}
+
 // ─────────────────────────────────────────────────────────────
 // GAME START & LEVEL INITIALIZATION
 // ─────────────────────────────────────────────────────────────
@@ -245,6 +318,9 @@ function startGame(charType, fromSave = false, savedData = null) {
   STATE.phase = 'playing';
   STATE.bossTriggered = false;
   STATE.bossDefeated  = false;
+  STATE.isTestBossArena = false;
+  STATE.keys = 0;
+  STATE.lastFloor = 0;
 
   document.getElementById('main-menu').classList.add('hidden');
   document.getElementById('game-container').classList.remove('hidden');
@@ -277,41 +353,104 @@ function startGame(charType, fromSave = false, savedData = null) {
   const portIcon = document.getElementById('portrait-icon');
   if (portIcon) portIcon.textContent = portraitIcons[charType] || '🛡️';
   if (fromSave && savedData) {
-    player.health  = savedData.health ?? player.health;
-    player.stamina = savedData.stamina ?? player.stamina;
-    player.mana    = savedData.mana ?? player.mana;
+    player.level = savedData.level ?? player.level;
+    player.xp = savedData.xp ?? player.xp;
+    player.xpToNextLevel = savedData.xpToNextLevel ?? player.xpToNextLevel;
+    player.damageMultiplier = savedData.damageMultiplier ?? player.damageMultiplier;
+    player.maxHealth = savedData.maxHealth ?? player.maxHealth;
+    player.health = savedData.health ?? player.maxHealth;
+    player.maxStamina = savedData.maxStamina ?? player.maxStamina;
+    player.stamina = savedData.stamina ?? player.maxStamina;
+    player.maxMana = savedData.maxMana ?? player.maxMana;
+    player.mana = savedData.mana ?? player.maxMana;
+    player.maxFlasks = savedData.maxFlasks ?? player.maxFlasks;
+    player.flasks = savedData.flasks ?? player.maxFlasks;
     if (savedData.checkpointPos) {
       player.checkpointPos.copy(savedData.checkpointPos);
       camera.position.copy(player.checkpointPos);
+      player.currentGroundY = Math.max(0, player.checkpointPos.y - 1.7);
     }
   } else {
     // Start at Crypt Entrance
-    camera.position.set(0, 1.7, 2);
-    player.checkpointPos.set(0, 1.7, 2);
+    camera.position.set(0, 1.7, -140);
+    player.checkpointPos.set(0, 1.7, -140);
   }
+
+  // Clear lingering pickups
+  pickups.clear();
 
   // Build the complete contiguous Souls-Doom level
   const world = map.buildContinuousLevel(materials, player, audio, hud);
+  if (!spriteTestRoom) {
+    spriteTestRoom = new SpriteTestRoom(scene, renderer);
+  }
+
+  // Restore persistent player data (wood, shelter, aegis)
+  if (savedData) {
+    if (savedData.woodCount !== undefined) player.woodCount = savedData.woodCount;
+    if (savedData.shelterBuilt && map.shelterInteractable) {
+      map.shelterInteractable.isBuilt = true;
+      map.shelterInteractable.prompt = 'REST AT SHELTER [E]';
+    }
+    if (savedData.hasAegis) {
+      player.hasAegis = true;
+      player.damageReduction = 0.5;
+      if (savedData.damageMultiplier === undefined) {
+        player.damageMultiplier *= 2.0;
+      }
+    }
+  }
+  player.onRest = () => saveCurrentGame();
 
   // Critical architectural bindings
   player.setWalls(world.walls);
   player.setInteractables(world.interactables);
+  player.setHUD(hud);
   enemies.setWalls(world.walls);
+  enemies.setFloorRamps(world.floorRamps);
   player.weapons.inject(enemies, particles, world.walls);
 
   // Spawn enemy encounters across the interconnected level
   spawnWorldEncounters();
 
-  // Wire score & boss callbacks
+  // Wire score, kill XP, pickups & boss callbacks
   enemies.onScore = addScore;
-  enemies.onBossHealthChange = (alive, pct) => {
+  enemies.onKill = (enemy) => {
+    const xp = (enemy.xpValue !== undefined) ? enemy.xpValue : (enemy.scoreValue ? Math.round(enemy.scoreValue * 0.4) : 40);
+    if (xp > 0) player.addXP(xp);
+    if (pickups) {
+      pickups.dropFromEnemy(enemy.mesh.position, enemy.enemyType);
+    }
+    // Key drop logic
+    if (enemy.dropKey) {
+      STATE.keys += 1;
+      player.keys = (player.keys || 0) + 1;
+      hud.updateKeys(STATE.keys);
+      hud.showKeyPickupBanner();
+    }
+  };
+  enemies.onBossHealthChange = (alive, pct, bossObj) => {
     const bossBar = document.getElementById('boss-bar');
-    if (alive && STATE.bossTriggered) {
-      bossBar.classList.remove('hidden');
-      document.getElementById('boss-fill').style.width = (pct * 100) + '%';
+    const bossName = document.getElementById('boss-name');
+    const bossFill = document.getElementById('boss-fill');
+
+    const px = (player && player.isThirdPerson && player.worldPos) ? player.worldPos.x : camera.position.x;
+    const pz = (player && player.isThirdPerson && player.worldPos) ? player.worldPos.z : camera.position.z;
+    const isSecretLair = (px <= -75 && pz >= 35 && pz <= 85);
+    const isCathedral = (pz >= 326);
+
+    if (isSecretLair && map.secretBossMinotaur && !map.secretBossMinotaur.dead) {
+      if (bossBar) bossBar.classList.remove('hidden');
+      if (bossName) bossName.textContent = 'ASTERION, GUARDIAN OF THE LABYRINTH';
+      const mPct = Math.max(0, map.secretBossMinotaur.health / map.secretBossMinotaur.maxHealth);
+      if (bossFill) bossFill.style.width = (mPct * 100) + '%';
+    } else if (alive && STATE.bossTriggered && isCathedral) {
+      if (bossBar) bossBar.classList.remove('hidden');
+      if (bossName) bossName.textContent = 'THE WIZARD KING · DEATH KNIGHT';
+      if (bossFill) bossFill.style.width = (pct * 100) + '%';
     } else {
-      bossBar.classList.add('hidden');
-      if (STATE.bossTriggered && !alive && !STATE.bossDefeated) {
+      if (bossBar) bossBar.classList.add('hidden');
+      if (STATE.bossTriggered && !alive && !STATE.bossDefeated && isCathedral) {
         onBossDefeated();
       }
     }
@@ -320,80 +459,281 @@ function startGame(charType, fromSave = false, savedData = null) {
   // Apply player controls settings
   player.mouseSensitivity = (currentSettings.sensitivity / 100) * 0.002;
   player.invertY = !!currentSettings.invertY;
+
+  // Bind Minotaur Stalker AI
+  minotaurStalker.setPlayer(player, camera);
+
+  // Real-time Souls respawn and grind loop
+  player.onRest = () => {
+    saveCurrentGame();
+    spawnWorldEncounters();
+    minotaurStalker.escapeMinotaur();
+  };
 }
 
 function spawnWorldEncounters() {
   enemies.clear();
 
-  // Area 2: Hall of the Damned (Z: 24..38)
+  // ── Floor 1: Crypt of the Damned (Y = 0, Z: 0..120) ── [Packs spread through the maze, clear entrance]
+  // Solo Scout / Sentry (Z = 26) - matches Test index 0
   enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2.5, 0, 26), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2.5, 0, 34), player, camera);
 
-  // Area 4: Sunken Vault (X: -26..-12, Z: 54..70)
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-24, 0, 60), player, camera);
-  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-16, 0, 68), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-20, 0, 56), player, camera);
+  // Pack 1: Secret Relic Chamber Guardians (West Alcove, X: -14, Z: 36)
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-13, 0, 35), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-15, 0, 39), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-12, 0, 43), player, camera);
 
-  // Area 6: High Ramparts (Stone Golem Elite guarding shortcut lever)
-  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 0, 106), player, camera);
+  // Pack 2: East Corridor Ambush (X: 12..25, Z: 38..52)
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(16, 0, 40), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(22, 0, 46), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(18, 0, 50), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(20, 1.5, 42), player, camera);
 
-  // Area 7: Blood Cloister (Bats & Grunt leading to boss)
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(2, 1.2, 134), player, camera);
-  enemies.spawnEnemy(DeathBat, new THREE.Vector3(8, 1.2, 142), player, camera);
-  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(5, 0, 148), player, camera);
+  // Pack 3: Catacomb Central Swarm (Z: 58..75)
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-4, 1.5, 60), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(4, 1.5, 66), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(0, 0, 68), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-8, 0, 72), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 0, 74), player, camera);
 
-  // Area 8: Boss Arena (Death Knight)
-  enemies.spawnEnemy(DeathKnight, new THREE.Vector3(5, 0, 185), player, camera);
+  // Pack 4: West Wing Patrol (X: -26..-12, Z: 80..96)
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-20, 0, 82), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-16, 0, 90), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-22, 0, 88), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-18, 1.5, 94), player, camera);
+
+  // Pack 5: East Wing Patrol (X: 12..28, Z: 80..96)
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(18, 0, 84), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(24, 0, 92), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(20, 0, 88), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(22, 0, 96), player, camera);
+
+  // Pack 6: Grand Staircase Vanguard (Floor 2 Portal Guards, Z: 104..116)
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 0, 108), player, camera); // Colossal staircase guardian
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-5, 0, 104), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(5, 0, 104), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-7, 0, 114), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(7, 0, 114), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 0, 116), player, camera);
+
+  // ── Floor 2: Sunken Aqueducts (Y = 4, Z: 138..186) ── [~16 Enemies]
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(4, 5.2, 144), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-4, 5.2, 150), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 5.2, 168), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(2, 5.2, 180), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-3, 4, 156), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(3, 4, 160), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-5, 4, 174), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(0, 4, 146), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 4, 162), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 4, 182), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-5, 4, 148), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(5, 4, 152), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 4, 178), player, camera); // Matches Test 9 (golem near Z=178)
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-4, 4, 180), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-8, 4, 146), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(8, 4, 184), player, camera);
+
+  // ── Floor 3: Smoldering Forges (Y = 8, Z: 202..248) ── [~24 Enemies]
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 8, 206), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 8, 210), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 214), player, camera);
+  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(0, 8, 222), player, camera);    // MINI-BOSS: Lava Forge Guardian
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-5, 8, 230), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 8, 222), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-4, 8, 240), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(4, 8, 244), player, camera);
+  // Crucible foundry horde
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 8, 204), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 8, 204), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-8, 8, 208), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(8, 8, 212), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(-5, 9.2, 216), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(5, 9.2, 218), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 226), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-9, 8, 220), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(9, 8, 224), player, camera);
+  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(-6, 8, 228), player, camera);   // MINI-BOSS: Lava Golem
+  enemies.spawnEnemy(LavaGolem, new THREE.Vector3(6, 8, 232), player, camera);    // MINI-BOSS: Lava Golem
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 8, 236), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 8, 236), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-8, 8, 242), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(8, 8, 246), player, camera);
+  enemies.spawnEnemy(DeathBat, new THREE.Vector3(0, 9.2, 246), player, camera);
+  // Elite sentinels (Floor 3)
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-4, 8, 212), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(4, 8, 238), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-9, 8, 244), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(9, 8, 206), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 8, 248), player, camera);
+
+  // ── Floor 4: Gale Spire (Y = 12, Z: 264..310) ── [~28 Enemies]
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-5, 13.8, 268), player, camera); // NEW: Storm Harpy
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(5, 13.8, 274), player, camera);  // NEW: Storm Harpy
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-4, 12, 280), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(4, 12, 286), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 12, 292), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(0, 13.8, 298), player, camera);  // NEW: Storm Harpy
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-6, 12, 304), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 12, 306), player, camera);
+  // High Sanctum tempest horde
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-2, 13.8, 266), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(2, 13.8, 270), player, camera);  // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-7, 13.8, 276), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(7, 13.8, 278), player, camera);  // NEW
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-6, 12, 272), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(6, 12, 272), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-2, 12, 282), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(2, 12, 284), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-8, 12, 288), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(8, 12, 290), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 12, 296), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 12, 296), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-5, 12, 300), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 12, 300), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-4, 13.8, 308), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(4, 13.8, 308), player, camera);  // NEW
+  // Elite sentinels (Floor 4)
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-5, 12, 292), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(5, 12, 302), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(0, 12, 267), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-9, 12, 310), player, camera);
+
+  // ── Floor 5: Throne of the Wizard King (Y = 16, Z: 326..372) ── [~30 Enemies]
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-5, 16, 332), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(5, 16, 332), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-6, 16, 342), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(6, 16, 342), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(0, 17.8, 347), player, camera);  // NEW: Storm Harpy guard
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(0, 16, 352), player, camera);
+  enemies.spawnEnemy(DeathKnight, new THREE.Vector3(0, 16, 362), player, camera);   // Wizard King / Death Knight Boss
+  // Royal guard vanguard
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-10, 16, 330), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(10, 16, 330), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(-3, 16, 334), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(3, 16, 334), player, camera);
+  enemies.spawnEnemy(OrcGrunt, new THREE.Vector3(0, 16, 337), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-12, 16, 338), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(12, 16, 338), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(-3, 16, 344), player, camera);
+  enemies.spawnEnemy(SkeletonArcher, new THREE.Vector3(3, 16, 344), player, camera);
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(-7, 17.8, 340), player, camera); // NEW
+  enemies.spawnEnemy(StormHarpy, new THREE.Vector3(7, 17.8, 340), player, camera);  // NEW
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(-5, 16, 336), player, camera);  // NEW: Dark Acolyte
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(5, 16, 346), player, camera);   // NEW: Dark Acolyte
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(-8, 16, 354), player, camera);  // NEW: Dark Acolyte
+  enemies.spawnEnemy(DarkAcolyte, new THREE.Vector3(8, 16, 350), player, camera);   // NEW: Dark Acolyte
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-10, 16, 348), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(10, 16, 348), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(-5, 16, 358), player, camera);
+  enemies.spawnEnemy(StoneGolem, new THREE.Vector3(5, 16, 358), player, camera);
+  // Elite royal guards (Floor 5)
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-12, 16, 330), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(12, 16, 336), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(-4, 16, 342), player, camera);
+  enemies.spawnEnemy(ChampionOrc, new THREE.Vector3(4, 16, 352), player, camera);
 
   const countEl = document.getElementById('enemy-count');
   if (countEl) countEl.textContent = enemies.getAll().length;
 }
+
 
 // ─────────────────────────────────────────────────────────────
 // COMBAT & LEVEL EVENTS
 // ─────────────────────────────────────────────────────────────
 function checkLevelTriggers() {
   if (!player) return;
-  const pz = camera.position.z;
-  const px = camera.position.x;
+  const pz = (player && player.isThirdPerson && player.worldPos) ? player.worldPos.z : camera.position.z;
+  const px = (player && player.isThirdPerson && player.worldPos) ? player.worldPos.x : camera.position.x;
+  const py = (player && player.isThirdPerson) ? player.currentGroundY + 1.7 : camera.position.y;
 
-  // Boss Arena trigger (Z >= 158)
-  if (!STATE.bossTriggered && pz >= 158 && px >= -8 && px <= 18) {
+    // Smooth transition for lighting & fog between beach (Z <= 0) and dungeon (Z >= 15)
+  const t = Math.max(0, Math.min(1, pz / 15.0)); // 0 = Beach, 1 = Dungeon
+  
+  const cBeachBg = new THREE.Color(0x5da0d8);
+  const cDungBg = new THREE.Color(0x0a0609);
+  scene.background.copy(cBeachBg).lerp(cDungBg, t);
+  
+  const cBeachFog = new THREE.Color(0x8cb8d8);
+  const cDungFog = new THREE.Color(0x080608);
+  scene.fog.color.copy(cBeachFog).lerp(cDungFog, t);
+  
+  scene.fog.near = 40 + (5 - 40) * t;
+  scene.fog.far = 220 + (45 - 220) * t;
+  
+  sunLight.intensity = 1.3 - 1.3 * t;
+  hemiLight.intensity = 0.6 - 0.6 * t;
+
+  // Boss Arena trigger: Cathedral entrance at Z >= 326 (Cathedral at Y >= 14.5)
+  const isCathedralTrigger = (pz >= 326 && py >= 14.5);
+  if (!STATE.bossTriggered && isCathedralTrigger) {
     STATE.bossTriggered = true;
-    map.sealBossArena();
+    map.sealBossArena(pz, py);
     player.setWalls(map.walls); // Update walls with fog gate
     enemies.setWalls(map.walls);
     player.weapons.inject(enemies, particles, map.walls);
     audio.setMusicState('boss');
     audio.playSFX('bossRoar', 1.2);
-    document.getElementById('boss-bar').classList.remove('hidden');
+    const bossBar = document.getElementById('boss-bar');
+    if (bossBar) bossBar.classList.remove('hidden');
+    const bossName = document.getElementById('boss-name');
+    if (bossName) bossName.textContent = 'THE WIZARD KING · DEATH KNIGHT';
   }
 
   // Update room label in HUD based on spatial location
-  let areaName = 'CRYPT ENTRANCE';
-  let roomNum = 1;
-  if (pz < 18) { areaName = 'CRYPT ENTRANCE'; roomNum = 1; }
-  else if (pz < 44) { areaName = 'HALL OF DAMNED'; roomNum = 2; }
-  else if (pz < 68 && px >= -10) { areaName = 'CATACOMB JUNCTION'; roomNum = 3; }
-  else if (px < -10 && pz < 76) { areaName = 'SUNKEN VAULT'; roomNum = 4; }
-  else if (px < -6 && pz >= 76) { areaName = 'SHRINE OF ASH'; roomNum = 5; }
-  else if (pz >= 70 && pz < 125) { areaName = 'HIGH RAMPARTS'; roomNum = 6; }
-  else if (pz < 156) { areaName = 'BLOOD CLOISTER'; roomNum = 7; }
-  else { areaName = 'THRONE OF DEATH'; roomNum = 8; }
+  let areaName = 'THE SHORELINE';
+  let currentFloor = 0;
+  if (px <= -75 && pz >= 35 && pz <= 85) {
+    areaName = 'SECRET LAIR: THE LABYRINTHIAN HEART';
+    currentFloor = 1;
+  } else if (pz < 0) {
+    areaName = 'THE SHORELINE';
+    currentFloor = 0;
+  } else if (pz < 138) {
+    areaName = 'FLOOR 1: CRYPT OF THE DAMNED';
+    currentFloor = 1;
+  } else if (pz < 202) {
+    areaName = 'FLOOR 2: SUNKEN AQUEDUCTS';
+    currentFloor = 2;
+  } else if (pz < 264) {
+    areaName = 'FLOOR 3: SMOLDERING FORGES';
+    currentFloor = 3;
+  } else if (pz < 326) {
+    areaName = 'FLOOR 4: GALE SPIRE';
+    currentFloor = 4;
+  } else {
+    areaName = 'FLOOR 5: THRONE OF WIZARD KING';
+    currentFloor = 5;
+  }
 
   const infoEl = document.getElementById('room-info');
-  if (infoEl) infoEl.textContent = `${areaName} · SECTOR ${roomNum}/8`;
+  if (infoEl) infoEl.textContent = `${areaName} · ELEVATION Y=${Math.round(py)}`;
+
+  // Fire floor-entry banner on first crossing per run
+  if (currentFloor !== STATE.lastFloor && currentFloor > 0) {
+    STATE.lastFloor = currentFloor;
+    if (currentFloor > 1) {
+      hud.showFloorBanner(currentFloor, areaName);
+    }
+  }
 
   // Interaction prompt check
   let nearInteractable = false;
   let promptLabel = 'INTERACT';
   for (const item of map.interactables) {
-    if (item.active && camera.position.distanceTo(item.position) <= (item.radius || 2.5)) {
-      nearInteractable = true;
-      if (item === map.interactables[0]) promptLabel = 'OPEN CHEST [E]';
-      else if (item === map.interactables[1]) promptLabel = 'REST AT SHRINE [E]';
-      else if (item === map.interactables[2]) promptLabel = 'PULL LEVER [E]';
-      break;
+    if (item.active) {
+      const dx = px - item.position.x;
+      const dz = pz - item.position.z;
+      const dy = Math.abs(py - item.position.y);
+      if (Math.hypot(dx, dz) <= (item.radius || 2.5) && dy <= 5.0) {
+        nearInteractable = true;
+        if (item.prompt) promptLabel = item.prompt;
+        else if (item === map.interactables[0]) promptLabel = 'OPEN RELIC CHEST [E]';
+        else if (item.position.z > 200) promptLabel = 'REST AT HIGH SANCTUM [E]';
+        else if (item.position.x < -10) promptLabel = 'REST AT SHRINE OF ASH [E]';
+        else promptLabel = 'PULL SHORTCUT LEVER [E]';
+        break;
+      }
     }
   }
   if (nearInteractable) hud.showInteractPrompt(promptLabel);
@@ -401,35 +741,40 @@ function checkLevelTriggers() {
 }
 
 function onBossDefeated() {
+  if (STATE.bossDefeated) return;
   STATE.bossDefeated = true;
+  if (player) player._iframes = 999;
   addScore(5000);
   audio.playSFX('roomClear');
   audio.setMusicState('explore');
 
-  setTimeout(() => {
-    STATE.phase = 'victory';
-    document.exitPointerLock();
-    save.clear();
-    document.getElementById('vic-score-val').textContent = STATE.score;
-    document.getElementById('victory-screen').classList.remove('hidden');
-  }, 2200);
+  STATE.phase = 'victory';
+  try { document.exitPointerLock(); } catch (_) {}
+  try { save.clear(); } catch (_) {}
+  const scoreVal = document.getElementById('vic-score-val');
+  if (scoreVal) scoreVal.textContent = STATE.score;
+  const vicScreen = document.getElementById('victory-screen');
+  if (vicScreen) vicScreen.classList.remove('hidden');
 }
 
 function onPlayerDead() {
-  if (STATE.phase === 'dead') return;
+  if (STATE.phase === 'dead' || STATE.bossDefeated) return;
   STATE.phase = 'dead';
-  document.exitPointerLock();
+  minotaurStalker.clear();
+  try { document.exitPointerLock(); } catch (_) {}
 
-  setTimeout(() => {
-    document.getElementById('go-score-val').textContent = STATE.score;
-    document.getElementById('go-room-val').textContent = 'Shrine of Ash';
-    document.getElementById('game-over').classList.remove('hidden');
-  }, 1200);
+  const scoreVal = document.getElementById('go-score-val');
+  if (scoreVal) scoreVal.textContent = STATE.score;
+  const roomVal = document.getElementById('go-room-val');
+  if (roomVal) roomVal.textContent = 'Shrine of Ash';
+  const goScreen = document.getElementById('game-over');
+  if (goScreen) goScreen.classList.remove('hidden');
 }
 
 function respawnPlayer() {
   document.getElementById('game-over').classList.add('hidden');
   STATE.phase = 'playing';
+  minotaurStalker.clear();
   player.respawn();
   // Respawn non-boss enemies in open sectors
   spawnWorldEncounters();
@@ -489,8 +834,10 @@ document.addEventListener('pointerlockchange', () => {
   if (isLocked) {
     ctp?.classList.add('hidden');
   } else if (STATE.phase === 'playing') {
-    ctp?.classList.remove('hidden');
-    input.clearAll();
+    if (!input.isGamepadActive) {
+      ctp?.classList.remove('hidden');
+      input.clearAll();
+    }
   }
 });
 
@@ -533,7 +880,49 @@ window.addEventListener('keydown', (e) => {
       togglePause();
     }
   }
+  // Tab or I key toggles the character stat panel
+  if (e.code === 'Tab' || e.code === 'KeyI') {
+    if (STATE.phase === 'playing' || STATE.phase === 'paused') {
+      e.preventDefault();
+      toggleStatPanel();
+    }
+  }
 });
+
+function toggleStatPanel() {
+  const panel = document.getElementById('stat-panel');
+  if (!panel) return;
+  const isHidden = panel.classList.contains('hidden');
+  if (isHidden) {
+    // Populate stats from player
+    if (player) {
+      const classNames = { warrior: 'Warrior', elf: 'Elf', wizard: 'Wizard', valkyrie: 'Valkyrie' };
+      document.getElementById('sp-class').textContent = classNames[player.charType] || player.charType;
+      document.getElementById('sp-level').textContent = player.level || 1;
+      document.getElementById('sp-hp').textContent = `${Math.ceil(player.health)} / ${player.maxHealth}`;
+      document.getElementById('sp-stamina').textContent = `${Math.ceil(player.stamina)} / ${player.maxStamina}`;
+      document.getElementById('sp-mana').textContent = `${Math.ceil(player.mana)} / ${player.maxMana}`;
+      document.getElementById('sp-damage').textContent = `+${Math.round(((player.damageMultiplier || 1.0) - 1.0) * 100)}%`;
+      document.getElementById('sp-xp').textContent = `${player.xp || 0} / ${player.xpToNextLevel}`;
+      document.getElementById('sp-keys').textContent = STATE.keys || 0;
+      document.getElementById('sp-score').textContent = STATE.score || 0;
+    }
+    panel.classList.remove('hidden');
+    if (STATE.phase === 'playing') {
+      STATE.phase = 'paused';
+      if (document.pointerLockElement) try { document.exitPointerLock(); } catch (_) {}
+      input.clearAll();
+    }
+  } else {
+    panel.classList.add('hidden');
+    if (STATE.phase === 'paused') {
+      STATE.phase = 'playing';
+      input.clearAll();
+      requestGamePointerLock();
+    }
+  }
+}
+
 
 // ─────────────────────────────────────────────────────────────
 // UI BUTTONS
@@ -552,37 +941,13 @@ document.getElementById('pause-menu')?.addEventListener('click', (e) => {
   }
 });
 
-document.getElementById('btn-save').addEventListener('click', () => {
-  if (player) {
-    const pz = camera.position.z;
-    const px = camera.position.x;
-    let roomNum = 1;
-    if (pz < 18) roomNum = 1;
-    else if (pz < 44) roomNum = 2;
-    else if (pz < 68 && px >= -10) roomNum = 3;
-    else if (px < -10 && pz < 76) roomNum = 4;
-    else if (px < -6 && pz >= 76) roomNum = 5;
-    else if (pz >= 70 && pz < 125) roomNum = 6;
-    else if (pz < 156) roomNum = 7;
-    else roomNum = 8;
-
-    save.save({
-      character: STATE.character,
-      health: player.health,
-      stamina: player.stamina,
-      mana: player.mana,
-      checkpointPos: player.checkpointPos,
-      score: STATE.score,
-      room: roomNum,
-    });
-    const status = document.getElementById('save-status');
-    status.textContent = '✓ Progress Saved at Checkpoint';
-    setTimeout(() => { status.textContent = ''; }, 2000);
-  }
+document.getElementById('btn-save')?.addEventListener('click', () => {
+  saveCurrentGame();
 });
 
 document.getElementById('btn-quit').addEventListener('click', () => {
   STATE.phase = 'menu';
+  minotaurStalker.clear();
   document.getElementById('pause-menu').classList.add('hidden');
   document.getElementById('game-container').classList.add('hidden');
   document.getElementById('game-over').classList.add('hidden');
@@ -591,6 +956,7 @@ document.getElementById('btn-quit').addEventListener('click', () => {
   map.clear();
   enemies.clear();
   particles.clear();
+  pickups.clear();
   if (player && typeof player.destroy === 'function') {
     player.destroy();
   }
@@ -627,17 +993,39 @@ function gameLoop(now) {
 
   const rawDt = (now - lastTime) / 1000;
   lastTime = now;
-  const dt = Math.min(rawDt, 0.1); // Clamp extreme tab-switch deltas
+  const isHeadless = typeof navigator !== 'undefined' && navigator.userAgent.includes('HeadlessChrome');
+  const dt = isHeadless ? Math.min(rawDt, 0.1) : Math.min(rawDt, 0.033); // Clamp extreme tab-switch deltas
   accumulator += dt;
 
   STATE.frameCount++;
   let didUpdate = false;
 
+  // Handle gamepad pause (button 9)
+  if (input.pause && (STATE.phase === 'playing' || STATE.phase === 'paused')) {
+    togglePause();
+  }
+
   if (STATE.phase === 'playing' && player) {
+    // Water animation
+    if (map.waterMeshes && map.waterMeshes.length > 0) {
+      const time = performance.now() * 0.001;
+      for (const wMesh of map.waterMeshes) {
+        const pos = wMesh.geometry.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const x = pos.getX(i);
+          const y = pos.getY(i);
+          pos.setZ(i, Math.sin(x * 0.2 + time) * 0.3 + Math.cos(y * 0.2 + time) * 0.3);
+        }
+        pos.needsUpdate = true;
+      }
+    }
     // Run fixed updates
     while (accumulator >= FIXED_DT) {
       player.update(FIXED_DT);
       enemies.update(FIXED_DT, camera.position);
+      minotaurStalker.update(FIXED_DT);
+      if (spriteTestRoom) spriteTestRoom.update(FIXED_DT);
+      pickups.update(FIXED_DT, camera.position, player, addScore);
       particles.update(FIXED_DT);
       checkLevelTriggers();
       didUpdate = true;
@@ -652,6 +1040,9 @@ function gameLoop(now) {
     hud.update(player);
     hud.drawMinimap(map, enemies, camera.position, player.getForwardDir());
   } else {
+    if (STATE.phase === 'menu') {
+      menu.update(input);
+    }
     accumulator = 0;
     didUpdate = true;
   }
@@ -673,15 +1064,38 @@ window.GAME = {
   get player() { return player; },
   get map()    { return map; },
   get enemies(){ return enemies; },
+  get minotaurStalker(){ return minotaurStalker; },
   get audio()  { return audio; },
   get hud()    { return hud; },
+  get pickups(){ return pickups; },
+  get spriteTestRoom(){ return spriteTestRoom; },
+  enterSpriteTestRoom: () => {
+    if (spriteTestRoom && player) spriteTestRoom.teleportPlayerToRoom(player);
+  },
+  exitSpriteTestRoom: () => {
+    if (spriteTestRoom && player) spriteTestRoom.teleportPlayerFromRoom(player);
+  },
+  toggleThirdPerson: () => {
+    if (player && typeof player.toggleThirdPerson === 'function') {
+      player.toggleThirdPerson();
+    }
+  },
   startGame: (charType = 'warrior') => {
     menu.onStartGame(charType);
   },
   setPosition: (x, y, z) => {
     if (player) {
-      camera.position.set(x, y, z);
-      camera.updateMatrixWorld();
+      if (typeof player.teleport === 'function') {
+        player.teleport(x, y, z);
+      } else {
+        const groundY = player.getGroundY(x, z);
+        player.currentGroundY = groundY > 0 ? groundY : Math.max(0, y - 1.7);
+        if (!player.worldPos) player.worldPos = new THREE.Vector3();
+        player.worldPos.set(x, player.currentGroundY, z);
+        camera.position.set(x, player.currentGroundY + 1.7, z);
+        camera.updateMatrixWorld();
+      }
+      checkLevelTriggers();
     }
   },
   lookAt: (x, z) => {
@@ -690,7 +1104,10 @@ window.GAME = {
     }
   },
   triggerDamage: (amount, sourcePos = null) => {
-    if (player) player.takeDamage(amount, sourcePos);
+    if (player) {
+      player._iframes = 0;
+      player.takeDamage(amount, sourcePos);
+    }
   },
   setBlocking: (active = true) => {
     if (player && typeof player.setBlocking === 'function') {
@@ -730,6 +1147,7 @@ window.GAME = {
     return save.load();
   },
   save,
+  menu,
   get settings() { return currentSettings; },
   setSettings: (s) => {
     Object.assign(currentSettings, s);

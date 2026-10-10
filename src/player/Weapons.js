@@ -6,11 +6,11 @@
 import { spawnDamageNumber } from '../combat/HitDetection.js';
 
 const WEAPON_DEFS = {
-  sword:  { damage: 32, heavyDamage: 55, range: 2.8,  cooldown: 0.45, staminaCost: 16, type: 'melee',    manaCost: 0 },
-  spear:  { damage: 26, heavyDamage: 46, range: 3.6,  cooldown: 0.42, staminaCost: 14, type: 'melee',    manaCost: 0 },
-  bow:    { damage: 24, heavyDamage: 40, range: 45,   cooldown: 0.75, staminaCost: 12, type: 'projectile',manaCost: 0 },
-  staff:  { damage: 45, heavyDamage: 75, range: 35,   cooldown: 1.10, staminaCost: 18, type: 'magic',    manaCost: 15 },
-  shield: { damage: 18, heavyDamage: 30, range: 2.0,  cooldown: 0.35, staminaCost: 10, type: 'melee',    manaCost: 0 },
+  sword:  { damage: 26, heavyDamage: 44, range: 2.8,  cooldown: 0.45, staminaCost: 16, type: 'melee',    manaCost: 0 },
+  spear:  { damage: 22, heavyDamage: 38, range: 3.6,  cooldown: 0.42, staminaCost: 14, type: 'melee',    manaCost: 0 },
+  bow:    { damage: 12, heavyDamage: 20, range: 45,   cooldown: 0.75, staminaCost: 12, type: 'projectile',manaCost: 0 },
+  staff:  { damage: 22, heavyDamage: 36, range: 35,   cooldown: 1.10, staminaCost: 18, type: 'magic',    manaCost: 15 },
+  shield: { damage: 14, heavyDamage: 24, range: 2.0,  cooldown: 0.35, staminaCost: 10, type: 'melee',    manaCost: 0 },
 };
 
 const SWING_DURATION = 0.28;
@@ -29,6 +29,8 @@ export class Weapons {
     this.projectiles = [];
     this.enemies = null;
     this.particles = null;
+    this.onMeleeHit = null;
+    this.onRangedHit = null;
 
     this._cooldown = 0;
     this._swingT = 0;
@@ -39,6 +41,27 @@ export class Weapons {
 
     this._weaponMesh = this._buildWeaponMesh(this.currentName);
     camera.add(this._weaponMesh);
+
+    // Slash Arc effect attached to camera for active attack visualization
+    const slashGeo = new THREE.RingGeometry(0.28, 0.52, 24, 1, 0, Math.PI * 0.75);
+    const slashMat = new THREE.MeshBasicMaterial({
+      color: 0xccf0ff,
+      transparent: true,
+      opacity: 0,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+    this._slashArcMesh = new THREE.Mesh(slashGeo, slashMat);
+    this._slashArcMesh.position.set(0.12, -0.06, -0.42);
+    this._slashArcMesh.rotation.set(-0.2, 0.35, -0.3);
+    this._slashArcMesh.visible = false;
+    camera.add(this._slashArcMesh);
+
+    // Viewmodel local light so weapons are clearly visible in any lighting
+    this._viewmodelLight = new THREE.PointLight(0xffeedd, 0.9, 2.5);
+    this._viewmodelLight.position.set(0.25, 0.1, -0.25);
+    camera.add(this._viewmodelLight);
 
     this._onKeyDown = (e) => {
       if (e.code === 'Digit1') this._switchTo(0);
@@ -93,9 +116,10 @@ export class Weapons {
     if (idx >= this.available.length || idx === this.currentIdx) return;
     this.currentIdx = idx;
 
-    // Cleanly cancel any in-flight swing animation
+    // Cleanly cancel any in-flight swing animation and ready new weapon
     this._swinging = false;
     this._swingT = 0;
+    this._cooldown = 0;
     this._hitEnemiesThisSwing.clear();
 
     if (this._weaponMesh) {
@@ -117,58 +141,66 @@ export class Weapons {
 
     switch (name) {
       case 'sword': {
-        // Blade
-        const bladeGeo = new THREE.BoxGeometry(0.04, 0.52, 0.02);
-        const bladeMat = new THREE.MeshStandardMaterial({ color: 0xddeeff, metalness: 0.9, roughness: 0.15 });
+        // Double-edged steel blade
+        const bladeGeo = new THREE.BoxGeometry(0.045, 0.54, 0.02);
+        const bladeMat = new THREE.MeshStandardMaterial({ color: 0xe8f0f8, metalness: 0.92, roughness: 0.15 });
         const blade = new THREE.Mesh(bladeGeo, bladeMat);
-        blade.position.y = 0.12;
+        blade.position.y = 0.13;
         group.add(blade);
-        // Crossguard
-        const guardGeo = new THREE.BoxGeometry(0.16, 0.03, 0.04);
+
+        // Golden crossguard
+        const guardGeo = new THREE.BoxGeometry(0.18, 0.035, 0.045);
         const guardMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.85, roughness: 0.25 });
         const guard = new THREE.Mesh(guardGeo, guardMat);
         guard.position.y = -0.12;
         group.add(guard);
-        // Hilt
-        const gripGeo = new THREE.BoxGeometry(0.035, 0.16, 0.035);
-        const gripMat = new THREE.MeshStandardMaterial({ color: 0x3d2010 });
+
+        // Leather wrapped grip
+        const gripGeo = new THREE.CylinderGeometry(0.02, 0.022, 0.16, 8);
+        const gripMat = new THREE.MeshStandardMaterial({ color: 0x3d2010, roughness: 0.7 });
         const grip = new THREE.Mesh(gripGeo, gripMat);
         grip.position.y = -0.21;
         group.add(grip);
+
+        // Golden pommel
+        const pommelGeo = new THREE.SphereGeometry(0.032, 8, 8);
+        const pommel = new THREE.Mesh(pommelGeo, guardMat);
+        pommel.position.y = -0.30;
+        group.add(pommel);
         break;
       }
       case 'spear': {
-        // Long spear shaft
-        const shaftGeo = new THREE.CylinderGeometry(0.016, 0.016, 0.75, 6);
+        // Long polished spear shaft
+        const shaftGeo = new THREE.CylinderGeometry(0.016, 0.016, 0.85, 8);
         const shaftMat = new THREE.MeshStandardMaterial({ color: 0x5a3d28, roughness: 0.7 });
         const shaft = new THREE.Mesh(shaftGeo, shaftMat);
-        shaft.position.y = -0.05;
+        shaft.position.y = -0.08;
         group.add(shaft);
 
-        // Golden collar
-        const collarGeo = new THREE.CylinderGeometry(0.024, 0.02, 0.04, 6);
-        const collarMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.8, roughness: 0.2 });
+        // Golden wing collar
+        const collarGeo = new THREE.BoxGeometry(0.12, 0.03, 0.035);
+        const collarMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.85, roughness: 0.2 });
         const collar = new THREE.Mesh(collarGeo, collarMat);
         collar.position.y = 0.32;
         group.add(collar);
 
-        // Steel spearhead
-        const headGeo = new THREE.ConeGeometry(0.045, 0.25, 4);
-        const headMat = new THREE.MeshStandardMaterial({ color: 0xe0e8f0, metalness: 0.92, roughness: 0.15 });
+        // Steel diamond spearhead
+        const headGeo = new THREE.ConeGeometry(0.045, 0.28, 4);
+        const headMat = new THREE.MeshStandardMaterial({ color: 0xf0f8ff, metalness: 0.94, roughness: 0.12 });
         const head = new THREE.Mesh(headGeo, headMat);
-        head.position.y = 0.45;
+        head.position.y = 0.46;
         group.add(head);
         break;
       }
       case 'shield': {
-        // Kite shield plate
-        const plateGeo = new THREE.BoxGeometry(0.28, 0.38, 0.03);
+        // Kite shield curved plate
+        const plateGeo = new THREE.BoxGeometry(0.30, 0.40, 0.03);
         const plateMat = new THREE.MeshStandardMaterial({ color: 0x2b3a4a, metalness: 0.5, roughness: 0.4 });
         const plate = new THREE.Mesh(plateGeo, plateMat);
         group.add(plate);
 
         // Golden rim/boss
-        const bossGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.04, 8);
+        const bossGeo = new THREE.CylinderGeometry(0.055, 0.055, 0.04, 8);
         const bossMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.85, roughness: 0.2 });
         const boss = new THREE.Mesh(bossGeo, bossMat);
         boss.rotation.x = Math.PI / 2;
@@ -177,28 +209,91 @@ export class Weapons {
         break;
       }
       case 'bow': {
-        const bowGeo = new THREE.TorusGeometry(0.22, 0.015, 6, 20, Math.PI);
-        const bowMat = new THREE.MeshStandardMaterial({ color: 0x6b3e18, metalness: 0.1, roughness: 0.8 });
-        const bow = new THREE.Mesh(bowGeo, bowMat);
-        bow.rotation.z = Math.PI / 2;
-        group.add(bow);
+        // Elf recurve bow with golden tipped limbs, bowstring, and notched arrow
+        const bowGroup = new THREE.Group();
+
+        // Upper limb
+        const upperGeo = new THREE.CylinderGeometry(0.012, 0.018, 0.32, 6);
+        const woodMat = new THREE.MeshStandardMaterial({ color: 0x7c471c, roughness: 0.65 });
+        const upperLimb = new THREE.Mesh(upperGeo, woodMat);
+        upperLimb.position.set(-0.06, 0.14, 0);
+        upperLimb.rotation.z = -0.4;
+        bowGroup.add(upperLimb);
+
+        // Lower limb
+        const lowerGeo = new THREE.CylinderGeometry(0.018, 0.012, 0.32, 6);
+        const lowerLimb = new THREE.Mesh(lowerGeo, woodMat);
+        lowerLimb.position.set(-0.06, -0.14, 0);
+        lowerLimb.rotation.z = 0.4;
+        bowGroup.add(lowerLimb);
+
+        // Grip handle
+        const handleGeo = new THREE.BoxGeometry(0.035, 0.12, 0.035);
+        const handleMat = new THREE.MeshStandardMaterial({ color: 0x3d2010 });
+        const handle = new THREE.Mesh(handleGeo, handleMat);
+        bowGroup.add(handle);
+
+        // Bowstring
+        const stringGeo = new THREE.CylinderGeometry(0.003, 0.003, 0.58, 4);
+        const stringMat = new THREE.MeshBasicMaterial({ color: 0xeeeeee });
+        const bowstring = new THREE.Mesh(stringGeo, stringMat);
+        bowstring.position.set(0.02, 0, 0);
+        bowGroup.add(bowstring);
+
+        // Notched Arrow
+        const arrowShaft = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.006, 0.006, 0.50, 6),
+          new THREE.MeshStandardMaterial({ color: 0xc89855, roughness: 0.7 })
+        );
+        arrowShaft.rotation.x = Math.PI / 2;
+        arrowShaft.position.set(0, 0, -0.16);
+        bowGroup.add(arrowShaft);
+
+        const arrowHead = new THREE.Mesh(
+          new THREE.ConeGeometry(0.02, 0.06, 4),
+          new THREE.MeshStandardMaterial({ color: 0xddeeff, metalness: 0.9 })
+        );
+        arrowHead.rotation.x = -Math.PI / 2;
+        arrowHead.position.set(0, 0, -0.42);
+        bowGroup.add(arrowHead);
+
+        bowGroup.rotation.y = -0.3;
+        bowGroup.rotation.z = 0.15;
+        group.add(bowGroup);
         break;
       }
       case 'staff': {
-        const staffGeo = new THREE.CylinderGeometry(0.02, 0.025, 0.65, 6);
-        const staffMat = new THREE.MeshStandardMaterial({ color: 0x221133, metalness: 0.1, roughness: 0.7 });
+        // Wizard Arcane Staff with glowing crystal orb
+        const staffGeo = new THREE.CylinderGeometry(0.018, 0.024, 0.72, 8);
+        const staffMat = new THREE.MeshStandardMaterial({ color: 0x241434, roughness: 0.65 });
         const staff = new THREE.Mesh(staffGeo, staffMat);
-        staff.rotation.x = 0.25;
+        staff.rotation.x = 0.22;
         group.add(staff);
 
-        const orbGeo = new THREE.SphereGeometry(0.06, 8, 8);
+        // Gold collar prongs
+        const collarGeo = new THREE.CylinderGeometry(0.035, 0.025, 0.06, 6);
+        const goldMat = new THREE.MeshStandardMaterial({ color: 0xdaa520, metalness: 0.85, roughness: 0.2 });
+        const collar = new THREE.Mesh(collarGeo, goldMat);
+        collar.position.set(0, 0.35, -0.08);
+        group.add(collar);
+
+        // Glowing crystal orb
+        const orbGeo = new THREE.SphereGeometry(0.07, 12, 12);
         const orbMat = new THREE.MeshStandardMaterial({
-          color: 0x4466ff, emissive: 0x2233cc, emissiveIntensity: 1.0,
-          transparent: true, opacity: 0.9,
+          color: 0x66bbff,
+          emissive: 0x2288ff,
+          emissiveIntensity: 1.4,
+          transparent: true,
+          opacity: 0.92,
         });
         const orb = new THREE.Mesh(orbGeo, orbMat);
-        orb.position.y = 0.35;
+        orb.position.set(0, 0.42, -0.09);
         group.add(orb);
+
+        // Local staff light
+        const staffLight = new THREE.PointLight(0x44aaff, 1.2, 3);
+        staffLight.position.set(0, 0.42, -0.09);
+        group.add(staffLight);
         break;
       }
       default: {
@@ -227,6 +322,7 @@ export class Weapons {
       if (this._swingT >= 1.0) {
         this._swingT = 0;
         this._swinging = false;
+        if (this._slashArcMesh) this._slashArcMesh.visible = false;
         this._weaponMesh.rotation.x = 0;
         this._weaponMesh.rotation.y = 0;
         this._weaponMesh.position.copy(this._getDefaultMeshPos());
@@ -237,10 +333,17 @@ export class Weapons {
         // Phase 3: Recovery (0.6 - 1.0)
         if (t < 0.3) {
           const windup = t / 0.3;
+          if (this._slashArcMesh) this._slashArcMesh.visible = false;
           this._weaponMesh.rotation.x = windup * (this._isHeavy ? 0.6 : 0.4);
           this._weaponMesh.position.z = -0.45 + windup * (this._isHeavy ? 0.12 : 0.08);
         } else if (t < 0.6) {
           const strike = (t - 0.3) / 0.3;
+          if (this._slashArcMesh) {
+            this._slashArcMesh.visible = true;
+            this._slashArcMesh.material.opacity = Math.sin(strike * Math.PI) * (this._isHeavy ? 0.95 : 0.75);
+            this._slashArcMesh.material.color.setHex(this._isHeavy ? 0xffaa22 : (this.current.type === 'magic' ? 0x66aaff : 0xccf0ff));
+            this._slashArcMesh.rotation.z = -0.6 + strike * 1.5;
+          }
           this._weaponMesh.rotation.x = 0.4 - strike * (this._isHeavy ? 2.0 : 1.6);
           this._weaponMesh.rotation.y = -strike * (this._isHeavy ? 0.7 : 0.5);
           this._weaponMesh.position.z = -0.37 - strike * (this._isHeavy ? 0.22 : 0.15);
@@ -249,6 +352,7 @@ export class Weapons {
             this._performMeleeHit();
           }
         } else {
+          if (this._slashArcMesh) this._slashArcMesh.visible = false;
           const recover = (t - 0.6) / 0.4;
           this._weaponMesh.rotation.x = -1.2 + recover * 1.2;
           this._weaponMesh.rotation.y = -0.5 + recover * 0.5;
@@ -274,12 +378,26 @@ export class Weapons {
       }
     }
 
+    // Weapon Cycling (Gamepad D-Pad)
+    if (this.input.cyclePrev) {
+      const idx = (this.currentIdx - 1 + this.available.length) % this.available.length;
+      this._switchTo(idx);
+    } else if (this.input.cycleNext) {
+      const idx = (this.currentIdx + 1) % this.available.length;
+      this._switchTo(idx);
+    }
+
     // Attack Trigger (Left Mouse = Light Attack, R = Heavy Attack)
     // Only attack when not blocking, not stunned, not in cooldown
     if (this.input.mouseJustDown(0)) {
       this.triggerAttack(false);
     } else if (this.input.heavyAttack) {
       this.triggerAttack(true);
+    } else if (this.input.quickRanged) {
+      // Quick Ranged Fire (R1) - Switch to slot 3 (or last slot) and attack
+      const targetIdx = this.available.length > 2 ? 2 : this.available.length - 1;
+      if (this.currentIdx !== targetIdx) this._switchTo(targetIdx);
+      if (this.current.type !== 'melee') this.triggerAttack(false);
     }
 
     // Update projectiles
@@ -327,7 +445,8 @@ export class Weapons {
     this._currentAttackId++;
     this._hitEnemiesThisSwing.clear();
 
-    const dmg = this._isHeavy ? weapon.heavyDamage : weapon.damage;
+    const mult = this.player ? (this.player.damageMultiplier || 1.0) : 1.0;
+    const dmg = Math.round((this._isHeavy ? weapon.heavyDamage : weapon.damage) * mult);
     if (weapon.type === 'melee') {
       this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordSwing');
     } else if (weapon.type === 'projectile') {
@@ -343,13 +462,21 @@ export class Weapons {
     if (!this.enemies) return;
 
     const weapon = this.current;
-    const damage = this._isHeavy ? weapon.heavyDamage : weapon.damage;
-    const playerPos = this.camera.position;
-    const forward = new THREE.Vector3();
-    this.camera.getWorldDirection(forward);
+    const mult = this.player ? (this.player.damageMultiplier || 1.0) : 1.0;
+    const damage = Math.round((this._isHeavy ? weapon.heavyDamage : weapon.damage) * mult);
+    const playerPos = (this.player && typeof this.player.getBodyPosition === 'function')
+      ? this.player.getBodyPosition()
+      : this.camera.position;
+    const forward = this.player ? this.player.getForwardDir() : new THREE.Vector3();
+    if (!this.player) this.camera.getWorldDirection(forward);
 
     for (const enemy of this.enemies.getAll()) {
       if (enemy.dead || this._hitEnemiesThisSwing.has(enemy)) continue;
+
+      // Vertical elevation separation check (prevents hitting enemies through floors/ceilings)
+      const enemyFeetY = enemy.mesh.position.y;
+      const playerFeetY = playerPos.y - 1.7;
+      if (Math.abs(enemyFeetY - playerFeetY) > 2.2) continue;
 
       const toEnemy = new THREE.Vector3().subVectors(enemy.mesh.position, playerPos);
       toEnemy.y = 0; // horizontal plane
@@ -361,7 +488,9 @@ export class Weapons {
         // Forward arc (cos >= 0.45, ~63 degrees)
         if (dot >= 0.45) {
           this._hitEnemiesThisSwing.add(enemy);
+          if (this.onMeleeHit) this.onMeleeHit(enemy);
           enemy.takeDamage(damage, this._isHeavy);
+          if (this.input.playRumble) this.input.playRumble(this._isHeavy ? 'heavy' : 'hit');
           this.audio.playSFX(this._isHeavy ? 'heavySwing' : 'swordHit');
           if (this.particles) {
             const hitPoint = enemy.mesh.position.clone().add(new THREE.Vector3(0, 1.2, 0));
@@ -375,9 +504,13 @@ export class Weapons {
   }
 
   _spawnProjectile(type, damage, maxRange, speed, color) {
+    const origin = (this.player && typeof this.player.getBodyPosition === 'function')
+      ? this.player.getBodyPosition()
+      : this.camera.position;
     const proj = new Projectile(
       this.scene, this.camera, type, damage, maxRange, speed, color,
-      this.enemies, this.particles, this.audio, this.walls
+      this.enemies, this.particles, this.audio, this.walls, (hitEnemy) => { if (this.onRangedHit) this.onRangedHit(hitEnemy); },
+      origin
     );
     this.projectiles.push(proj);
   }
@@ -400,7 +533,8 @@ export class Weapons {
 }
 
 class Projectile {
-  constructor(scene, camera, type, damage, maxRange, speed, color, enemies, particles, audio, walls = []) {
+  constructor(scene, camera, type, damage, maxRange, speed, color, enemies, particles, audio, walls = [], onHitEnemy = null, spawnOrigin = null) {
+    this.onHitEnemy = onHitEnemy;
     this.scene    = scene;
     this.camera   = camera;
     this.damage   = damage;
@@ -428,7 +562,8 @@ class Projectile {
       emissiveIntensity: type === 'fireball' ? 1.6 : 0.6,
     });
     this.mesh = new THREE.Mesh(geo, mat);
-    this.mesh.position.copy(camera.position).addScaledVector(this.direction, 0.5);
+    const origin = spawnOrigin || camera.position;
+    this.mesh.position.copy(origin).addScaledVector(this.direction, 0.5);
 
     if (type === 'arrow') {
       this.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), this.direction);
@@ -487,6 +622,7 @@ class Projectile {
       if (hits.length > 0) {
         const enemy = this.enemies.getEnemyByObject(hits[0].object);
         if (enemy && !enemy.dead) {
+          if (this.onHitEnemy) this.onHitEnemy(enemy);
           enemy.takeDamage(this.damage);
           this.audio.playSFX(this.damage > 30 ? 'fireballExplode' : 'arrowHit');
           if (this.particles) this.particles.spawnHit(hits[0].point, 'blood');

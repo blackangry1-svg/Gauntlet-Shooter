@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-10",
+  "owner": "Codex",
+  "status": "ACTIVE_CODEX",
+  "canonical_game": "godot/project.godot",
+  "legacy_browser": "repository root",
+  "repository": "blackangry1-svg/Gauntlet-Shooter",
+  "branch": "codex/godot-takeover",
+  "base_branch": "main",
+  "local_history_preserved": "b19de8ea5552ee7378f24c01ad2070544bfcc0e8",
+  "remote_main_at_capture": "28de50b1f283cc5046ff4b2f616fb70f17af3767",
+  "backup": ".codex-local\\backups\\Gauntlet_Before_Codex_2026-10-10.zip",
+  "backup_sha256": "21c9419d031202e202acc5acc8772d7bd2904e09b76d1882e4e51a643a358197",
+  "source_files_preserved": 425,
+  "selected_artwork_hashes_verified": 35,
+  "runtime": {
+    "engine": "4.7.2.stable.official.ed1daf0bf",
+    "import": "PASS",
+    "assertions_passed": 94,
+    "assertions_total": 94,
+    "main_scene_boot": "PASS_120_ITERATIONS",
+    "errors": 0,
+    "warnings": 0
+  },
+  "implementation_backlog": [
+    "Reviewed source extraction, alpha cleanup and animation wiring",
+    "Five proposed elemental labyrinth stages",
+    "Rendered and physical-controller acceptance"
+  ],
+  "next_milestone": "Blueprint and implement one Earth labyrinth vertical slice",
+  "handoff": "CODEX_HANDOFF.md",
+  "asset_catalog": "godot/ASSET_CATALOG_V1.json"
+}

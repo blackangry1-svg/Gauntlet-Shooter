@@ -21,7 +21,8 @@
     <div id="char-select">
       <h2>CHOOSE YOUR WARRIOR</h2>
       <div id="char-grid">
-        <div class="char-card" data-char="warrior">
+        <div class="char-card selected" data-char="warrior">
+          <canvas class="char-sprite-canvas" width="170" height="170" data-char="warrior"></canvas>
           <div class="char-icon">🛡️</div>
           <div class="char-name">WARRIOR</div>
           <div class="char-desc">Sword &amp; Shield<br>High HP · Melee</div>
@@ -32,6 +33,7 @@
           </div>
         </div>
         <div class="char-card" data-char="elf">
+          <canvas class="char-sprite-canvas" width="170" height="170" data-char="elf"></canvas>
           <div class="char-icon">🏹</div>
           <div class="char-name">ELF</div>
           <div class="char-desc">Magic Bow<br>Fast · Ranged</div>
@@ -42,6 +44,7 @@
           </div>
         </div>
         <div class="char-card" data-char="wizard">
+          <canvas class="char-sprite-canvas" width="170" height="170" data-char="wizard"></canvas>
           <div class="char-icon">🔮</div>
           <div class="char-name">WIZARD</div>
           <div class="char-desc">Fire Staff<br>Magic · AoE</div>
@@ -52,6 +55,7 @@
           </div>
         </div>
         <div class="char-card" data-char="valkyrie">
+          <canvas class="char-sprite-canvas" width="170" height="170" data-char="valkyrie"></canvas>
           <div class="char-icon">⚡</div>
           <div class="char-name">VALKYRIE</div>
           <div class="char-desc">Holy Spear<br>Balanced · Parry</div>
@@ -65,22 +69,41 @@
     </div>
 
     <div id="menu-buttons">
-      <button id="btn-new-game" class="menu-btn primary" disabled>⚔ NEW GAME</button>
+      <button id="btn-new-game" class="menu-btn primary">⚔ NEW GAME</button>
       <button id="btn-continue" class="menu-btn">📜 CONTINUE</button>
       <button id="btn-controls" class="menu-btn">🎮 CONTROLS</button>
     </div>
 
     <div id="controls-panel" class="hidden">
-      <h3>CONTROLS</h3>
+      <h3>🎮 CONTROLS & CONTROLLER SUPPORT</h3>
+      <div style="margin-bottom:12px;color:#ffaa44;font-size:0.95em;font-weight:bold;">🎮 PS4 DUALSHOCK 4 (1ST PRIORITY NATIVE SUPPORT)</div>
       <div class="control-grid">
-        <span>WASD / Arrow Keys</span><span>Move</span>
+        <span>Left Analog Stick</span><span>Move Forward / Backward / Strafe</span>
+        <span>Right Analog Stick</span><span>Smooth Camera Look (Cubic Response)</span>
+        <span>R2 / □ Square</span><span>Light Attack / Shoot</span>
+        <span>L2 / △ Triangle</span><span>Heavy Strike / Power Slash</span>
+        <span>L1 / Left Bumper</span><span>Guard / Shield Block</span>
+        <span>✕ Cross</span><span>Dodge Roll / Sprint / Menu Confirm</span>
+        <span>◯ Circle</span><span>Gather Driftwood / Interact / Cancel</span>
+        <span>R1 / Right Bumper</span><span>Quick Ranged Attack</span>
+        <span>L3 (Stick Click)</span><span>Sprint Toggle</span>
+        <span>D-Pad Left / Right</span><span>Cycle Weapons (Sword, Shield, Bow, Staff)</span>
+        <span>D-Pad Up</span><span>Drink Soul Flask (Heal)</span>
+        <span>Options / Touchpad</span><span>Pause Game</span>
+        <span>DualShock Rumble</span><span>Full Haptic Feedback on Impacts</span>
+      </div>
+      <div style="margin:14px 0 8px;color:#aaa;font-size:0.95em;font-weight:bold;">⌨️ KEYBOARD & MOUSE (2ND PRIORITY)</div>
+      <div class="control-grid">
+        <span>W A S D</span><span>Move</span>
         <span>Mouse</span><span>Look</span>
-        <span>Left Click</span><span>Attack / Shoot</span>
-        <span>Right Click</span><span>Block / Aim</span>
-        <span>R</span><span>Reload / Special</span>
-        <span>1-4</span><span>Switch Weapon</span>
+        <span>Left Click</span><span>Light Attack</span>
+        <span>Right Click</span><span>Block</span>
+        <span>R</span><span>Heavy Strike</span>
+        <span>Space</span><span>Dodge Roll</span>
+        <span>E / F</span><span>Interact / Gather Driftwood</span>
+        <span>Q</span><span>Drink Soul Flask</span>
+        <span>1 - 3</span><span>Select Weapon</span>
         <span>ESC</span><span>Pause</span>
-        <span>F</span><span>Interact</span>
       </div>
       <button class="menu-btn" onclick="document.getElementById('controls-panel').classList.add('hidden')">CLOSE</button>
     </div>
@@ -124,6 +147,13 @@
             <div id="mana-bar" class="bar-fill blue"></div>
           </div>
           <span id="mana-text" class="bar-text">80</span>
+        </div>
+        <div class="hud-bar-row">
+          <span class="bar-icon">⭐</span>
+          <div class="bar-track">
+            <div id="xp-bar" class="bar-fill gold"></div>
+          </div>
+          <span id="xp-text" class="bar-text">0/100 XP</span>
         </div>
         <div class="hud-flask-row">
           <span class="bar-icon">🧪</span>
@@ -197,6 +227,13 @@
     <div class="banner-sub">Flasks and Health Restored · Progress Saved</div>
   </div>
 
+  <!-- Level Up Banner -->
+  <div id="levelup-banner" class="hidden">
+    <img class="banner-crest" src="/assets/ui/level_up_crest.png" alt="Level Up Crest">
+    <div class="banner-text">LEVEL UP!</div>
+    <div id="levelup-sub" class="banner-sub">Attributes &amp; Power Enhanced</div>
+  </div>
+
   <!-- Interaction Prompt -->
   <div id="interact-prompt" class="hidden">
     <span class="prompt-badge">[E]</span> <span id="interact-text">REST AT SHRINE</span>
@@ -204,12 +241,58 @@
 
   <!-- Boss health bar -->
   <div id="boss-bar" class="hidden">
-    <div class="boss-name">⚡ DEATH KNIGHT ⚡</div>
+    <div id="boss-name" class="boss-name">⚡ DEATH KNIGHT ⚡</div>
     <div class="boss-track">
       <div id="boss-fill"></div>
     </div>
   </div>
+
+  <!-- Key Counter (HUD top-right corner) -->
+  <div id="key-hud" style="
+    position:absolute;top:14px;right:180px;
+    display:flex;align-items:center;gap:6px;
+    font-family:'MedievalSharp',serif;color:#f0c040;
+    font-size:0.88em;text-shadow:0 0 6px #000;
+    pointer-events:none;
+  ">
+    <img src="/assets/ui/key_icon.jpg" alt="Key" style="width:22px;height:22px;border-radius:3px;opacity:0.9;">
+    <span>×</span><span id="key-count">0</span>
+  </div>
 </div>
+
+<!-- ===== FLOOR ENTRY BANNER ===== -->
+<div id="floor-banner" class="hidden" style="
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;z-index:800;
+  background:rgba(0,0,0,0.55);
+  animation:fadeInOut 3.8s ease;
+">
+  <div id="floor-banner-text" style="
+    font-family:'MedievalSharp',serif;
+    font-size:3.2em;color:#c8a84b;
+    text-shadow:0 0 30px #c8a84b,0 0 60px #8a5a00,2px 2px 6px #000;
+    letter-spacing:0.14em;text-transform:uppercase;
+    animation:bannerPulse 3.8s ease;
+  ">FLOOR 2: SUNKEN AQUEDUCTS</div>
+  <div id="floor-banner-sub" style="
+    font-family:'MedievalSharp',serif;
+    font-size:1.15em;color:#a08860;margin-top:10px;
+    text-shadow:0 0 12px #000;letter-spacing:0.2em;
+  ">— Ascend and Survive —</div>
+</div>
+
+<!-- ===== KEY PICKUP BANNER ===== -->
+<div id="key-banner" class="hidden" style="
+  position:fixed;bottom:220px;left:50%;transform:translateX(-50%);
+  font-family:'MedievalSharp',serif;font-size:1.4em;
+  color:#f0d060;text-shadow:0 0 20px #c8a84b,2px 2px 4px #000;
+  letter-spacing:0.12em;pointer-events:none;z-index:820;
+  background:rgba(0,0,0,0.65);
+  padding:8px 28px;border:1px solid rgba(200,168,75,0.5);
+  border-radius:4px;
+">🗝 DUNGEON KEY FOUND!</div>
+
 
 <!-- ===== PAUSE MENU ===== -->
 <div id="pause-menu" class="hidden">
@@ -252,12 +335,63 @@
           <span>R</span><span>Heavy Attack</span>
           <span>E / F</span><span>Interact</span>
           <span>1 - 3</span><span>Weapon</span>
-          <span>ESC</span><span>Pause / Resume</span>
+      <span>ESC</span><span>Pause / Resume</span>
+          <span>Tab / I</span><span>Character Stats</span>
         </div>
       </details>
     </div>
   </div>
 </div>
+
+<!-- ===== STAT PANEL (Tab / I) ===== -->
+<div id="stat-panel" class="hidden" style="
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.82);
+  display:flex;align-items:center;justify-content:center;
+  z-index:900;
+  font-family:'MedievalSharp',serif;
+">
+  <div style="
+    background:linear-gradient(160deg,#1a1208,#0d0a04);
+    border:2px solid #c8a84b;border-radius:8px;
+    padding:32px 42px;min-width:420px;max-width:520px;
+    color:#e8d090;box-shadow:0 0 60px rgba(200,150,20,0.25);
+  ">
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="font-size:1.7em;color:#c8a84b;letter-spacing:0.12em;text-transform:uppercase;">CHARACTER</div>
+      <div style="font-size:2.2em;color:#ffd060;margin-top:4px;" id="sp-class">WARRIOR</div>
+      <div style="font-size:1.0em;color:#a08840;margin-top:2px;">LEVEL <span id="sp-level">1</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;">
+      <div style="color:#a08840;">❤ HP</div>
+      <div id="sp-hp" style="color:#ff5555;text-align:right;">160 / 160</div>
+
+      <div style="color:#a08840;">⚡ Stamina</div>
+      <div id="sp-stamina" style="color:#44cc44;text-align:right;">110 / 110</div>
+
+      <div style="color:#a08840;">✦ Mana</div>
+      <div id="sp-mana" style="color:#5599ff;text-align:right;">50 / 50</div>
+
+      <div style="color:#a08840;">⚔ Damage Bonus</div>
+      <div id="sp-damage" style="color:#ffaa22;text-align:right;">+0%</div>
+
+      <div style="color:#a08840;">✦ Experience</div>
+      <div id="sp-xp" style="color:#cc88ff;text-align:right;">0 / 100</div>
+
+      <div style="color:#a08840;">🗝 Keys Held</div>
+      <div id="sp-keys" style="color:#f0d060;text-align:right;">0</div>
+
+      <div style="color:#a08840;">⭐ Score</div>
+      <div id="sp-score" style="color:#f0c840;text-align:right;">0</div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;color:#705030;font-size:0.78em;letter-spacing:0.12em;">
+      [ TAB or I ] CLOSE STATS
+    </div>
+  </div>
+</div>
+
 
 <!-- ===== GAME OVER ===== -->
 <div id="game-over" class="hidden">

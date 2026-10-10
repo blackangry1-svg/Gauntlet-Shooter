@@ -92,5 +92,7 @@
     "Bounded actors and projectiles, shared cached navigation, batched geometry",
     "Relic tiers improve dive speed, fire protection, dodge economy and magical map sight"
   ],
-  "original_godot_files_hash_verified": 105
+  "original_godot_files_hash_verified": 105,
+  "pull_request_number": 2,
+  "pull_request_url": "https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/2"
 }

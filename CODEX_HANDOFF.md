@@ -5,6 +5,7 @@ Date: 2026-10-10. Owner: Codex. Native overhaul implemented and validated.
 Work in this gauntlet_l checkout; the active game is godot/project.godot.
 GitHub repository: blackangry1-svg/Gauntlet-Shooter.
 Development branch: codex/elemental-overhaul; base: codex/godot-takeover.
+Draft review: GitHub PR #2, blackangry1-svg/Gauntlet-Shooter; migration is PR #1.
 The migration draft remains separate; do not merge or overwrite main without a user request.
 Original sibling Godot/browser folders, root browser history and old saves remain baselines.
 

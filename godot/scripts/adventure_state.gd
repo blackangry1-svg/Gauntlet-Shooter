@@ -6,7 +6,11 @@ signal floor_changed(index: int)
 signal message(text: String)
 
 const AudioSynthScript = preload("res:/" + "/scripts/audio_synth.gd")
-const SCHEMA_VERSION: int = 1
+const SCHEMA_VERSION: int = 2
+const MAX_HERO_LEVEL: int = 30
+const ATTRIBUTES: Array[String] = ["strength", "dexterity", "focus"]
+const WEAPON_REQUIREMENTS: Dictionary = {"driftwood": {}, "sword": {"strength": 6}, "bow": {"dexterity": 6}, "staff": {"focus": 6}, "spear": {"strength": 7, "dexterity": 6}}
+const BOSS_XP: Array[int] = [120, 180, 240, 300, 360]
 const WEAPONS: Array[String] = ["driftwood", "sword", "bow", "staff", "spear"]
 const ITEM_IDS: Array[String] = ["driftwood", "sword", "bow", "staff", "spear", "buckler", "tide_charm", "ember_sigil", "gale_mantle", "aether_sight", "sun_seal", "moon_seal", "tower_heart"]
 const UPGRADEABLE: Array[String] = ["driftwood", "sword", "bow", "staff", "spear", "buckler", "tide_charm", "ember_sigil", "gale_mantle", "aether_sight"]
@@ -27,6 +31,10 @@ var equipped_weapon: String = "driftwood"
 var arrows: int = 0
 var staff_charges: int = 0
 var souls: int = 0
+var hero_level: int = 1
+var experience: int = 0
+var hero_attributes: Dictionary = {"strength": 5, "dexterity": 5, "focus": 5}
+var _legacy_attunement: Dictionary = {}
 var save_path: String = "user:/" + "/adventure_v1.json"
 var auto_save_enabled: bool = true
 var _items: Dictionary = {"driftwood": true}
@@ -51,6 +59,10 @@ func new_game() -> void:
 	arrows = 0
 	staff_charges = 0
 	souls = 0
+	hero_level = 1
+	experience = 0
+	hero_attributes = {"strength": 5, "dexterity": 5, "focus": 5}
+	_legacy_attunement = {}
 	_items = {"driftwood": true}
 	_levels = {"driftwood": 1}
 	_floors = [{}, {}, {}, {}, {}]
@@ -75,7 +87,7 @@ func acquire_item(id: String) -> void:
 	message.emit("Acquired " + str(weapon_def(id).get("name", id.replace("_", " ").capitalize())))
 
 func equip_weapon(id: String) -> bool:
-	if not id in WEAPONS or not has_item(id):
+	if not can_equip(id):
 		return false
 	if equipped_weapon != id:
 		equipped_weapon = id
@@ -89,7 +101,7 @@ func cycle_weapon(direction: int) -> void:
 	var step: int = 1 if direction > 0 else -1
 	for offset: int in range(1, WEAPONS.size() + 1):
 		var index: int = posmod(start + offset * step, WEAPONS.size())
-		if has_item(WEAPONS[index]):
+		if can_equip(WEAPONS[index]):
 			equip_weapon(WEAPONS[index])
 			return
 
@@ -147,11 +159,78 @@ func upgrade_tool(id: String) -> bool:
 	message.emit(id.replace("_", " ").capitalize() + " upgraded to " + str(tool_level(id)))
 	return true
 
+func attribute_value(id: String) -> int:
+	return int(hero_attributes.get(id, 0))
+
+func level_up_cost() -> int:
+	if hero_level >= MAX_HERO_LEVEL:
+		return 0
+	var n: int = hero_level - 1
+	return 80 + 45 * n + 15 * n * n
+
+func can_level_up() -> bool:
+	return hero_level < MAX_HERO_LEVEL and experience >= level_up_cost()
+
+func level_up(attribute: String) -> bool:
+	if not attribute in ATTRIBUTES or not can_level_up():
+		return false
+	experience -= level_up_cost()
+	hero_level += 1
+	hero_attributes[attribute] = attribute_value(attribute) + 1
+	_changed(true)
+	return true
+
+func weapon_requirements(id: String) -> Dictionary:
+	return WEAPON_REQUIREMENTS.get(id, {}).duplicate(true)
+
+func can_equip(id: String) -> bool:
+	if not id in WEAPONS or not has_item(id):
+		return false
+	if bool(_legacy_attunement.get(id, false)):
+		return true
+	for attribute: String in weapon_requirements(id):
+		if attribute_value(attribute) < int(WEAPON_REQUIREMENTS[id][attribute]):
+			return false
+	return true
+
+func get_combat_rating() -> int:
+	return hero_level + clampi(tool_level(equipped_weapon) - 1, 0, 2)
+
+func get_character_stats() -> Dictionary:
+	return {"hero_level": hero_level, "experience": experience, "attributes": hero_attributes.duplicate(true), "max_hp": 120.0 + 4.0 * (hero_level - 1) + 2.0 * (attribute_value("strength") - 5), "max_stamina": 100.0 + 2.0 * (hero_level - 1) + 2.0 * (attribute_value("dexterity") - 5), "combat_rating": get_combat_rating()}
+
+func award_combat_reward(embers: int, xp: int, ammo_rewards: Dictionary = {}) -> bool:
+	if embers < 0 or xp < 0:
+		return false
+	var previous_arrows: int = arrows
+	var previous_charges: int = staff_charges
+	if has_item("bow"):
+		arrows = mini(MAX_ARROWS, arrows + maxi(0, int(ammo_rewards.get("bow", 0))))
+	if has_item("staff"):
+		staff_charges = mini(MAX_CHARGES, staff_charges + maxi(0, int(ammo_rewards.get("staff", 0))))
+	var ammo_changed: bool = previous_arrows != arrows or previous_charges != staff_charges
+	if embers == 0 and xp == 0 and not ammo_changed:
+		return false
+	souls = mini(1000000000, souls + embers)
+	experience = mini(1000000000, experience + xp)
+	_changed(ammo_changed)
+	return true
+
+func _attribute_damage_multiplier(id: String) -> float:
+	var governing: float = float(attribute_value("strength"))
+	if id == "bow":
+		governing = float(attribute_value("dexterity"))
+	elif id == "staff":
+		governing = float(attribute_value("focus"))
+	elif id == "spear":
+		governing = 0.5 * (attribute_value("strength") + attribute_value("dexterity"))
+	return 1.0 + 0.035 * maxf(0.0, governing - 5.0)
+
 func weapon_def(id: String) -> Dictionary:
 	if not WEAPON_DATA.has(id):
 		return {}
 	var definition: Dictionary = WEAPON_DATA[id].duplicate(true)
-	var multiplier: float = 1.0 + 0.25 * maxi(0, tool_level(id) - 1)
+	var multiplier: float = (1.0 + 0.25 * maxi(0, tool_level(id) - 1)) * _attribute_damage_multiplier(id)
 	definition["damage"] = float(definition["damage"]) * multiplier
 	definition["heavy_damage"] = float(definition["heavy_damage"]) * multiplier
 	definition["level"] = tool_level(id)
@@ -207,18 +286,19 @@ func defeat_boss(floor: int) -> void:
 	for id: String in rewards[floor]:
 		acquire_item(id)
 	auto_save_enabled = resume_autosave
-	souls += 80 + floor * 30
+	souls = mini(1000000000, souls + 80 + floor * 30)
+	experience = mini(1000000000, experience + BOSS_XP[floor])
 	_changed(true)
 	message.emit("Guardian defeated. The tower remembers your victory.")
 
 func export_snapshot() -> Dictionary:
-	return {"schema_version": SCHEMA_VERSION, "current_floor": current_floor, "checkpoint_floor": checkpoint_floor, "checkpoint_cell": [checkpoint_cell.x, checkpoint_cell.y], "equipped_weapon": equipped_weapon, "arrows": arrows, "staff_charges": staff_charges, "souls": souls, "items": _items.duplicate(true), "levels": _levels.duplicate(true), "floors": _floors.duplicate(true)}
+	return {"schema_version": SCHEMA_VERSION, "current_floor": current_floor, "checkpoint_floor": checkpoint_floor, "checkpoint_cell": [checkpoint_cell.x, checkpoint_cell.y], "equipped_weapon": equipped_weapon, "arrows": arrows, "staff_charges": staff_charges, "souls": souls, "hero_level": hero_level, "experience": experience, "hero_attributes": hero_attributes.duplicate(true), "legacy_attunement": _legacy_attunement.duplicate(true), "items": _items.duplicate(true), "levels": _levels.duplicate(true), "floors": _floors.duplicate(true)}
 
 func _valid_integer(value: Variant, low: int, high: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == float(int(value)) and int(value) >= low and int(value) <= high
 
 func _normalize_snapshot(data: Dictionary) -> Dictionary:
-	if not _valid_integer(data.get("schema_version"), SCHEMA_VERSION, SCHEMA_VERSION):
+	if not _valid_integer(data.get("schema_version"), 1, SCHEMA_VERSION):
 		return {}
 	for field: String in ["current_floor", "checkpoint_floor"]:
 		if not _valid_integer(data.get(field), 0, 4):
@@ -258,7 +338,51 @@ func _normalize_snapshot(data: Dictionary) -> Dictionary:
 			return {}
 	if (int(data["arrows"]) > 0 and not bool(items.get("bow", false))) or (int(data["staff_charges"]) > 0 and not bool(items.get("staff", false))):
 		return {}
-	return data.duplicate(true)
+	var normalized: Dictionary = data.duplicate(true)
+	normalized["schema_version"] = SCHEMA_VERSION
+	for field: String in ["current_floor", "checkpoint_floor", "arrows", "staff_charges", "souls"]:
+		normalized[field] = int(data[field])
+	normalized["checkpoint_cell"] = [int(cell[0]), int(cell[1])]
+	normalized["levels"] = {}
+	for id: String in levels:
+		normalized["levels"][id] = int(levels[id])
+	if int(data["schema_version"]) == 1:
+		normalized["hero_level"] = 1
+		normalized["experience"] = 0
+		normalized["hero_attributes"] = {"strength": 5, "dexterity": 5, "focus": 5}
+		var attunement: Dictionary = {}
+		for id: String in WEAPONS:
+			if bool(items.get(id, false)):
+				attunement[id] = true
+		normalized["legacy_attunement"] = attunement
+	else:
+		if not _valid_integer(data.get("hero_level"), 1, MAX_HERO_LEVEL) or not _valid_integer(data.get("experience"), 0, 1000000000):
+			return {}
+		if not data.get("hero_attributes") is Dictionary or not data.get("legacy_attunement") is Dictionary:
+			return {}
+		normalized["hero_level"] = int(data["hero_level"])
+		normalized["experience"] = int(data["experience"])
+		normalized["hero_attributes"] = {}
+		var attributes: Dictionary = data["hero_attributes"]
+		if attributes.size() != ATTRIBUTES.size():
+			return {}
+		var points: int = 0
+		for attribute: String in ATTRIBUTES:
+			if not _valid_integer(attributes.get(attribute), 5, 5 + MAX_HERO_LEVEL - 1):
+				return {}
+			points += int(attributes[attribute]) - 5
+			normalized["hero_attributes"][attribute] = int(attributes[attribute])
+		if points != int(data["hero_level"]) - 1:
+			return {}
+		var attunement: Dictionary = data["legacy_attunement"]
+		for id: Variant in attunement:
+			if not id is String or not id in WEAPONS or not bool(items.get(id, false)) or not attunement[id] is bool or not attunement[id]:
+				return {}
+		if not bool(attunement.get(weapon, false)):
+			for attribute: String in WEAPON_REQUIREMENTS[weapon]:
+				if int(attributes[attribute]) < int(WEAPON_REQUIREMENTS[weapon][attribute]):
+					return {}
+	return normalized
 
 func restore_snapshot(data: Dictionary) -> bool:
 	var valid: Dictionary = _normalize_snapshot(data)
@@ -272,6 +396,10 @@ func restore_snapshot(data: Dictionary) -> bool:
 	arrows = int(valid["arrows"])
 	staff_charges = int(valid["staff_charges"])
 	souls = int(valid["souls"])
+	hero_level = int(valid["hero_level"])
+	experience = int(valid["experience"])
+	hero_attributes = valid["hero_attributes"].duplicate(true)
+	_legacy_attunement = valid["legacy_attunement"].duplicate(true)
 	_items = valid["items"].duplicate(true)
 	_levels = valid["levels"].duplicate(true)
 	_floors = valid["floors"].duplicate(true)
@@ -286,7 +414,7 @@ func _decode_save(path: String) -> Dictionary:
 	if decoder.parse(FileAccess.get_file_as_string(path)) != OK:
 		return {}
 	var parsed: Variant = decoder.data
-	if not parsed is Dictionary or not _valid_integer(parsed.get("schema"), SCHEMA_VERSION, SCHEMA_VERSION) or not parsed.get("payload") is String:
+	if not parsed is Dictionary or not _valid_integer(parsed.get("schema"), 1, SCHEMA_VERSION) or not parsed.get("payload") is String:
 		return {}
 	var payload: String = parsed["payload"]
 	if payload.sha256_text() != str(parsed.get("sha256", "")):
@@ -294,7 +422,7 @@ func _decode_save(path: String) -> Dictionary:
 	if decoder.parse(payload) != OK:
 		return {}
 	var data: Variant = decoder.data
-	if not data is Dictionary:
+	if not data is Dictionary or data.get("schema_version") != parsed["schema"]:
 		return {}
 	return _normalize_snapshot(data)
 

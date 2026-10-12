@@ -82,6 +82,11 @@ func _test_main_transitions() -> void:
 	shared.save_path = ProjectSettings.globalize_path("res:/" + "/../.codex-local/validation/adventure-contracts/main-transitions.json")
 	shared.new_game()
 	shared.defeat_boss(0)
+	shared.award_combat_reward(0, 1100)
+	shared.level_up("strength")
+	shared.level_up("strength")
+	shared.level_up("dexterity")
+	shared.level_up("focus")
 	shared.change_floor(1)
 	var game: Node3D = MainScript.new()
 	root.add_child(game)
@@ -91,13 +96,14 @@ func _test_main_transitions() -> void:
 	await physics_frame
 	_check("real main HUD identifies Water", game.hud.title.text.begins_with("2 / 5"))
 	game.world.get_feature("checkpoint").interact(game.player)
+	game.hud._close_refuge()
 	var checkpoint_position: Vector3 = game.world.cell_to_world(shared.checkpoint_cell) + Vector3(0, 0.08, 0)
 	game.world.get_feature("dive_station").interact(game.player)
 	_check("main scene enters real underwater environment", game.player.is_diving and game.player.camera.environment != null and game.player.global_position.y < -2.0)
 	game.player.take_damage(10000.0, game.player.global_position + Vector3.RIGHT)
 	await create_timer(1.45).timeout
 	_freeze_main(game)
-	_check("same-floor underwater death restores dry full-health player", not game.player._dead and not game.player.is_diving and game.player.hp == 120.0 and game.player.camera.environment == null)
+	_check("same-floor underwater death restores dry full-health player", not game.player._dead and not game.player.is_diving and game.player.hp == game.player.max_hp and game.player.camera.environment == null)
 	_check("same-floor death returns to actual checkpoint", game.world.current_floor == 1 and game.player.global_position.distance_to(checkpoint_position) < 0.01 and shared.has_item("tide_charm"))
 	shared.set_checkpoint(0, Vector2i(1, 1))
 	shared.set_flag(1, "key_collected")
@@ -165,6 +171,20 @@ func _test_main_transitions() -> void:
 	_freeze_main(game)
 	_check("floor travel clears underwater environment and pending combat", shared.current_floor == 0 and game.world.current_floor == 0 and game.player.camera.environment == null and not game.player.is_diving and game.player._pending_attack.is_empty() and not game.player.is_attacking and game.player.velocity == Vector3.ZERO)
 	_check("floor travel updates HUD while preserving health and stamina", game.hud.title.text.begins_with("1 / 5") and game.player.hp == 73.0 and game.player.stamina == stamina_after_attack)
+
+	var refuge_input_before: int = Input.mouse_mode
+	shared.new_game()
+	shared.acquire_item("sword")
+	shared.award_combat_reward(0, 80)
+	game.player.hp = 51.0
+	game.player.stamina = 37.0
+	game.world.get_feature("checkpoint").interact(game.player)
+	_check("actual checkpoint opens paused refuge with level choice", paused and game.hud.refuge.visible and game.hud.refuge_summary.text.contains("LEVEL 1") and not game.hud.refuge_buttons["strength"].disabled and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE)
+	game.hud.refuge_buttons["strength"].pressed.emit()
+	_check("actual refuge strength button spends80XP and heals upgraded capacity", shared.hero_level == 2 and shared.experience == 0 and shared.attribute_value("strength") == 6 and game.player.max_hp == 126.0 and game.player.hp == 126.0 and game.player.max_stamina == 102.0 and game.player.stamina == 102.0 and game.hud.refuge_summary.text.contains("LEVEL 2") and game.hud.refuge_buttons["strength"].disabled)
+	_check("refuge unlock is reflected by real weapon equip contract", shared.equip_weapon("sword") and shared.equipped_weapon == "sword")
+	game.hud._close_refuge()
+	_check("refuge return resumes game and restores observed mouse mode", not paused and not game.hud.refuge.visible and Input.mouse_mode == refuge_input_before)
 	current_scene = null
 	game.queue_free()
 	await physics_frame
@@ -220,6 +240,11 @@ func _run() -> void:
 	_check("Earth victory grants actual next-floor tools", state.has_item("bow") and state.has_item("tide_charm"))
 	_feature("guardian_exit").interact(actor)
 	_check("guardian exit requests unlocked Water travel", travels == [1])
+	state.award_combat_reward(0, 1100)
+	state.level_up("strength")
+	state.level_up("strength")
+	state.level_up("dexterity")
+	state.level_up("focus")
 	state.equip_weapon("sword")
 	_feature("merchant").interact(actor)
 	var level_before: int = state.tool_level("sword")
@@ -229,7 +254,7 @@ func _run() -> void:
 	_check("freed smith upgrades earned weapon using boss currency", state.has_flag(0, "merchant_free") and state.tool_level("sword") == level_before + 1 and state.souls < currency_before and actor.hp == 61.0)
 	state.arrows = 0
 	_feature("checkpoint").interact(actor)
-	_check("actual checkpoint heals and restocks owned bow", actor.hp == 120.0 and state.arrows >= 10 and state.checkpoint_floor == 0)
+	_check("actual checkpoint heals and restocks owned bow", actor.hp == actor.max_hp and state.arrows >= 10 and state.checkpoint_floor == 0)
 
 	await _load(1)
 	var original_environment: Environment = actor.camera.environment

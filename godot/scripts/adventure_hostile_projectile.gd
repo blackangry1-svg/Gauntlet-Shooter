@@ -26,11 +26,17 @@ func _ready() -> void:
 	add_child(visual)
 
 func _physics_process(delta: float) -> void:
+	if is_instance_valid(director) and director.is_player_protected():
+		queue_free()
+		return
 	_age += delta
 	if _age >= 3.2:
 		queue_free()
 		return
 	var destination: Vector3 = global_position + direction * speed * delta
+	if is_instance_valid(director) and director.is_position_protected(destination):
+		queue_free()
+		return
 	var query = PhysicsRayQueryParameters3D.create(global_position, destination, 5)
 	if is_instance_valid(source) and source is CollisionObject3D:
 		query.exclude = [source.get_rid()]

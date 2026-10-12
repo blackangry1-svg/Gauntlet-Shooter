@@ -1,0 +1,435 @@
+{
+  "schema": 1,
+  "date": "2026-10-12",
+  "release": "earth-width-trial-v1",
+  "branch": "codex/earth-width-trial",
+  "base_branch": "codex/elemental-overhaul",
+  "baseline_commit": "8a48bc56f1becc5e0c55c25f967ee172bf34faf3",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "scope": "Earth width and grouped combat trial; later floors retain geometry/population. Hero progression is shared across campaign.",
+  "geometry": {
+    "earth_cell_m": 9,
+    "earth_wall_height_m": 5.4,
+    "other_cell_m": 3,
+    "other_wall_height_m": 3.2,
+    "physical_gate_tracks_m": [
+      -4.1,
+      0,
+      4.1
+    ],
+    "capsule_route_legs": 268,
+    "authored_maze_sha256": "5d0b5a2e480dcddd286c6c18d44589c8c4cdddb9629b8e6e537ee8e26eca8095",
+    "future_large_rooms": "Pending user width playtest"
+  },
+  "headless": {
+    "passed": 707,
+    "total": 707,
+    "suites": {
+      "legacy": 94,
+      "state": 93,
+      "world": 177,
+      "combat": 88,
+      "campaign": 85,
+      "progression": 63,
+      "earth_physics": 107
+    },
+    "errors": 0,
+    "warnings": [
+      {
+        "check": "test_suite",
+        "warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+        ]
+      }
+    ],
+    "baseline_validator": "tools/codex/check_godot.py ran via isolated save wrapper: import,94 regressions,120-iteration boot pass",
+    "detailed_logs": ".codex-local/earth_width_trial/integrated"
+  },
+  "rendered": {
+    "hardware": "Intel Core i5-1035G1 / Intel UHD Graphics",
+    "driver": "OpenGL3.3 Compatibility, Intel31.0.101.2141",
+    "other_godot_editor_active": true,
+    "checks": {
+      "render_stress_balanced": {
+        "checks": 19,
+        "errors": [],
+        "warnings": []
+      },
+      "render_stress_low": {
+        "checks": 20,
+        "errors": [],
+        "warnings": []
+      },
+      "render_all_floors": {
+        "checks": 33,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    "balanced_load": {
+      "earth_width_trial": true,
+      "failures": 0,
+      "floors": [
+        {
+          "active_actors": 10,
+          "floor": 0,
+          "frame_ms_median": 17.196,
+          "frame_ms_p95": 19.407,
+          "max_draw_calls": 59,
+          "max_hostile_projectiles": 12,
+          "max_nodes": 733,
+          "max_projectiles": 12,
+          "max_regular_active": 10,
+          "physics_ms_p95": 5.458,
+          "process_ms_p95": 21.126,
+          "scripted_projectile_load": true,
+          "simulation": {
+            "ai_max_usec": 1522,
+            "ai_ticks": 69,
+            "ai_usec": 802,
+            "awake_budget": 10,
+            "bosses": 1,
+            "cap_denied": 15,
+            "earth_trial": true,
+            "fleeing": 7,
+            "flow_build_max_usec": 1476,
+            "flow_build_usec": 1476,
+            "flow_builds": 4,
+            "groups_active": 4,
+            "hostile_projectiles": 12,
+            "path_cells": 458,
+            "projectiles": 12,
+            "pursuing": 0,
+            "regular_active": 10,
+            "regular_peak": 10,
+            "regular_total": 25,
+            "separation_pairs": 45
+          }
+        }
+      ],
+      "frame_cap": 60,
+      "low_power": false,
+      "note": "Scripted local rendering and bounded combat sample; physical user input not certified.",
+      "render_driver": "gl_compatibility",
+      "render_scale": 0.75,
+      "schema": 1,
+      "sky_background_mode": 2,
+      "sky_material": "ProceduralSkyMaterial",
+      "window": "(1280, 720)"
+    },
+    "low_power_load": {
+      "earth_width_trial": true,
+      "failures": 0,
+      "floors": [
+        {
+          "active_actors": 8,
+          "floor": 0,
+          "frame_ms_median": 22.2,
+          "frame_ms_p95": 23.764,
+          "max_draw_calls": 59,
+          "max_hostile_projectiles": 12,
+          "max_nodes": 733,
+          "max_projectiles": 12,
+          "max_regular_active": 8,
+          "physics_ms_p95": 2.058,
+          "process_ms_p95": 18.311,
+          "scripted_projectile_load": true,
+          "simulation": {
+            "ai_max_usec": 1795,
+            "ai_ticks": 87,
+            "ai_usec": 466,
+            "awake_budget": 8,
+            "bosses": 1,
+            "cap_denied": 17,
+            "earth_trial": true,
+            "fleeing": 5,
+            "flow_build_max_usec": 3927,
+            "flow_build_usec": 3927,
+            "flow_builds": 4,
+            "groups_active": 3,
+            "hostile_projectiles": 12,
+            "path_cells": 458,
+            "projectiles": 12,
+            "pursuing": 0,
+            "regular_active": 8,
+            "regular_peak": 8,
+            "regular_total": 25,
+            "separation_pairs": 28
+          }
+        }
+      ],
+      "frame_cap": 45,
+      "low_power": true,
+      "note": "Scripted local rendering and bounded combat sample; physical user input not certified.",
+      "render_driver": "gl_compatibility",
+      "render_scale": 0.600000023841858,
+      "schema": 1,
+      "sky_background_mode": 2,
+      "sky_material": "ProceduralSkyMaterial",
+      "window": "(1280, 720)"
+    },
+    "all_floors": {
+      "earth_width_trial": false,
+      "failures": 0,
+      "floors": [
+        {
+          "active_actors": 10,
+          "floor": 0,
+          "frame_ms_median": 17.171,
+          "frame_ms_p95": 20.235,
+          "max_draw_calls": 47,
+          "max_hostile_projectiles": 0,
+          "max_nodes": 709,
+          "max_projectiles": 0,
+          "max_regular_active": 10,
+          "physics_ms_p95": 5.204,
+          "process_ms_p95": 33.758,
+          "scripted_projectile_load": false,
+          "simulation": {
+            "ai_max_usec": 3018,
+            "ai_ticks": 69,
+            "ai_usec": 1096,
+            "awake_budget": 10,
+            "bosses": 1,
+            "cap_denied": 15,
+            "earth_trial": true,
+            "fleeing": 7,
+            "flow_build_max_usec": 5139,
+            "flow_build_usec": 5139,
+            "flow_builds": 5,
+            "groups_active": 4,
+            "hostile_projectiles": 0,
+            "path_cells": 458,
+            "projectiles": 0,
+            "pursuing": 0,
+            "regular_active": 10,
+            "regular_peak": 10,
+            "regular_total": 25,
+            "separation_pairs": 45
+          }
+        },
+        {
+          "active_actors": 8,
+          "floor": 1,
+          "frame_ms_median": 17.226,
+          "frame_ms_p95": 18.53,
+          "max_draw_calls": 43,
+          "max_hostile_projectiles": 3,
+          "max_nodes": 535,
+          "max_projectiles": 3,
+          "max_regular_active": 8,
+          "physics_ms_p95": 2.364,
+          "process_ms_p95": 23.737,
+          "scripted_projectile_load": false,
+          "simulation": {
+            "ai_max_usec": 3018,
+            "ai_ticks": 137,
+            "ai_usec": 1096,
+            "awake_budget": 8,
+            "bosses": 1,
+            "cap_denied": 15,
+            "earth_trial": false,
+            "fleeing": 0,
+            "flow_build_max_usec": 5139,
+            "flow_build_usec": 1041,
+            "flow_builds": 8,
+            "groups_active": 1,
+            "hostile_projectiles": 0,
+            "path_cells": 192,
+            "projectiles": 0,
+            "pursuing": 0,
+            "regular_active": 8,
+            "regular_peak": 0,
+            "regular_total": 8,
+            "separation_pairs": 45
+          }
+        },
+        {
+          "active_actors": 8,
+          "floor": 2,
+          "frame_ms_median": 17.288,
+          "frame_ms_p95": 18.055,
+          "max_draw_calls": 99,
+          "max_hostile_projectiles": 3,
+          "max_nodes": 537,
+          "max_projectiles": 3,
+          "max_regular_active": 8,
+          "physics_ms_p95": 1.287,
+          "process_ms_p95": 19.704,
+          "scripted_projectile_load": false,
+          "simulation": {
+            "ai_max_usec": 3018,
+            "ai_ticks": 204,
+            "ai_usec": 1096,
+            "awake_budget": 8,
+            "bosses": 1,
+            "cap_denied": 15,
+            "earth_trial": false,
+            "fleeing": 0,
+            "flow_build_max_usec": 5139,
+            "flow_build_usec": 1545,
+            "flow_builds": 11,
+            "groups_active": 1,
+            "hostile_projectiles": 1,
+            "path_cells": 457,
+            "projectiles": 1,
+            "pursuing": 0,
+            "regular_active": 8,
+            "regular_peak": 0,
+            "regular_total": 8,
+            "separation_pairs": 45
+          }
+        },
+        {
+          "active_actors": 8,
+          "floor": 3,
+          "frame_ms_median": 17.173,
+          "frame_ms_p95": 18.026,
+          "max_draw_calls": 57,
+          "max_hostile_projectiles": 3,
+          "max_nodes": 466,
+          "max_projectiles": 3,
+          "max_regular_active": 8,
+          "physics_ms_p95": 2.275,
+          "process_ms_p95": 20.494,
+          "scripted_projectile_load": false,
+          "simulation": {
+            "ai_max_usec": 3018,
+            "ai_ticks": 270,
+            "ai_usec": 1096,
+            "awake_budget": 8,
+            "bosses": 1,
+            "cap_denied": 15,
+            "earth_trial": false,
+            "fleeing": 0,
+            "flow_build_max_usec": 5139,
+            "flow_build_usec": 714,
+            "flow_builds": 13,
+            "groups_active": 1,
+            "hostile_projectiles": 0,
+            "path_cells": 170,
+            "projectiles": 0,
+            "pursuing": 0,
+            "regular_active": 8,
+            "regular_peak": 0,
+            "regular_total": 8,
+            "separation_pairs": 45
+          }
+        },
+        {
+          "active_actors": 8,
+          "floor": 4,
+          "frame_ms_median": 17.15,
+          "frame_ms_p95": 18.436,
+          "max_draw_calls": 54,
+          "max_hostile_projectiles": 5,
+          "max_nodes": 521,
+          "max_projectiles": 5,
+          "max_regular_active": 8,
+          "physics_ms_p95": 2.125,
+          "process_ms_p95": 22.13,
+          "scripted_projectile_load": false,
+          "simulation": {
+            "ai_max_usec": 3018,
+            "ai_ticks": 336,
+            "ai_usec": 1096,
+            "awake_budget": 8,
+            "bosses": 1,
+            "cap_denied": 15,
+            "earth_trial": false,
+            "fleeing": 0,
+            "flow_build_max_usec": 5139,
+            "flow_build_usec": 1245,
+            "flow_builds": 15,
+            "groups_active": 1,
+            "hostile_projectiles": 0,
+            "path_cells": 214,
+            "projectiles": 0,
+            "pursuing": 0,
+            "regular_active": 8,
+            "regular_peak": 0,
+            "regular_total": 8,
+            "separation_pairs": 45
+          }
+        }
+      ],
+      "frame_cap": 60,
+      "low_power": false,
+      "note": "Scripted local rendering and bounded combat sample; physical user input not certified.",
+      "render_driver": "gl_compatibility",
+      "render_scale": 0.75,
+      "schema": 1,
+      "sky_background_mode": 1,
+      "sky_material": "ProceduralSkyMaterial",
+      "window": "(1280, 720)"
+    },
+    "note": "Scripted actor/projectile workloads and rendering on local hardware. Timing samples are not guaranteed frame rates or physical-input certification."
+  },
+  "progression": {
+    "schema": 2,
+    "schema1_load": "Preserves all progress and explicit owned weapon attunements; no write on load",
+    "level_cap": 30,
+    "attributes": [
+      "strength",
+      "dexterity",
+      "focus"
+    ],
+    "xp_currency": "Separate from Embers",
+    "loot_save": "Combined XP/Embers/ammunition writes exactly once; duplicate defeats persist nothing",
+    "fresh_player": "Loaded leveled hero begins at full capacity; ongoing sync cannot heal"
+  },
+  "preservation": {
+    "browser": 130,
+    "original_godot": 105,
+    "failures": [],
+    "external_saves": [
+      {
+        "name": "adventure_v1.json",
+        "sha256": "a39af9d8082e7f9117e3f2edc0e3fd4b49aab2613e27a389a93582513351270b",
+        "unchanged": true
+      },
+      {
+        "name": "adventure_v1.json.bak",
+        "sha256": "1b5e1d070db544cfc7f360e435cefa515402c326b86e18d332001767303e0841",
+        "unchanged": true
+      }
+    ],
+    "backup": ".codex-local/backups/Earth_Trial_Before_2026-10-12_095854.zip",
+    "backup_sha256": "45365d6b3f1347f5a2fd6c62344dc1eb0d7f91ae372f14e75284c25471c02252",
+    "assets": "No art extraction or replacement in trial",
+    "maze": "Original authored JSON byte-identical"
+  },
+  "launchers": {
+    "trial": "PlayEarthTrial.cmd",
+    "trial_save": "user:/earth_width_trial_v1.json",
+    "regular": "PlayAdventure.cmd",
+    "playtest": "EARTH_WIDTH_PLAYTEST.md"
+  },
+  "source_sha256": {
+    "godot/project.godot": "2138313b3e6410c2ef602d8e0abe915a00d0eaa92d0414a750f285a9af0b8b5c",
+    "godot/scripts/adventure_state.gd": "9f81c9632b1c41fe32e3c654f9e84d1de21f130da66d876b309d3f28822e4d29",
+    "godot/scripts/adventure_player.gd": "51b31155541c3a501b4493c8ed11c3fd1129a17e6a0c1e41badc3e6535e7bbb6",
+    "godot/scripts/adventure_main.gd": "c2c2983e46b1fd4b5fe635f6011c85dc635f038f3d266d1a25c2846de10fcca4",
+    "godot/scripts/adventure_hud.gd": "444cba0be53b0ce6263daea596918e336d7b8c96123692a74b17715ba33094b7",
+    "godot/scripts/adventure_world.gd": "99d8734f48d6aa2d2a5db0238c6846be17a23710a8e9981d9e43cabbedb19e3a",
+    "godot/scripts/adventure_feature.gd": "cf19c837f45102b0f03b56d99ec9c9f3f2c6d3fab4f6fcad561146cd6f132259",
+    "godot/scripts/adventure_director.gd": "671cf80422ffc1693c8f55906bcbefd6a556b7066ec4e22adc0a0139a76b60cf",
+    "godot/scripts/adventure_enemy.gd": "bc45e2106acbc64debc4e3d7322f782fdd5d1d912ecd1e5dcb5b807643eee443",
+    "godot/scripts/adventure_hostile_projectile.gd": "af462758859c4a772a658c5697592c40ae1522277419e02ecdfd6c289d3571b7",
+    "godot/scripts/adventure_boss.gd": "c03f3d383c62f6e39040ef2e7b2f490f9a75990b68497ffaada22a438d6fff8a",
+    "godot/scripts/adventure_maze.gd": "b6f80028c9e625f2b3bdc0c17601adb89ca762848925dbbc1b129533b763620e",
+    "godot/ELEMENTAL_LABYRINTHS_V1.json": "5d0b5a2e480dcddd286c6c18d44589c8c4cdddb9629b8e6e537ee8e26eca8095"
+  },
+  "acceptance_pending": [
+    "Human first-floor passage comfort and combat feel",
+    "Physical keyboard/controller play and long-session balance",
+    "Large chambers, lakes and parkour design after successful width trial"
+  ],
+  "implementation_commit": "4830ab600a7fd74d9971e260264e37702576aacb",
+  "pull_request": {
+    "number": 3,
+    "url": "https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/3",
+    "draft": true,
+    "base": "codex/elemental-overhaul"
+  }
+}

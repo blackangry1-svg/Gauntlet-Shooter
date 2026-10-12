@@ -8,6 +8,7 @@ const EnemyScript = preload("res:/" + "/scripts/adventure_enemy.gd")
 const BossScript = preload("res:/" + "/scripts/adventure_boss.gd")
 const ShotScript = preload("res:/" + "/scripts/adventure_hostile_projectile.gd")
 const MAX_REGULAR: int = 8
+const MAX_EARTH_POPULATION: int = 25
 const CARDINALS: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 const MAX_PROJECTILES: int = 24
 const MAX_HOSTILE: int = 12
@@ -22,6 +23,16 @@ var enemies: Array = []
 var boss: Node
 var current_floor: int = 0
 var stress_awake: bool = false
+var earth_awake_budget: int = 10
+var _earth_trial: bool = false
+var _refuge_active: bool = false
+var _ai_usec: int = 0
+var _ai_max_usec: int = 0
+var _separation_pairs: int = 0
+var _cap_denied: int = 0
+var _regular_peak: int = 0
+var _rewarded_actors: Dictionary = {}
+var _flow_goal_cell: Vector2i = Vector2i(-999, -999)
 var _think_timer: float = 0.0
 var _flow_age: float = 1.0
 var _flow: Dictionary = {}
@@ -42,6 +53,23 @@ func configure(adventure_state: Node, adventure_world: Node, adventure_player: N
 	world = adventure_world
 	player = adventure_player
 
+func set_quality_budget(value: int) -> void:
+	earth_awake_budget = [8, 10, 12][clampi(value, 0, 2)] if value <= 2 else (8 if value <= 8 else (10 if value <= 10 else 12))
+	if _earth_trial and is_inside_tree():
+		_update_earth_encounters()
+
+func earth_trial_active() -> bool:
+	return _earth_trial
+
+func is_position_protected(position_value: Vector3) -> bool:
+	return _earth_trial and world.has_method("is_safe_refuge") and world.is_safe_refuge(position_value)
+
+func is_player_protected() -> bool:
+	return is_instance_valid(player) and is_position_protected(player.global_position)
+
+func hero_combat_rating() -> int:
+	return int(state.get_combat_rating()) if state.has_method("get_combat_rating") else 1
+
 func load_floor(index: int) -> void:
 	for child in get_children():
 		child.queue_free()
@@ -50,6 +78,10 @@ func load_floor(index: int) -> void:
 	enemies.clear()
 	boss = null
 	current_floor = clampi(index, 0, 4)
+	_earth_trial = current_floor == 0 and world.has_method("get_floor_metrics") and float(world.get_floor_metrics(0).get("cell_size", 3.0)) >= 8.0
+	_refuge_active = false
+	_regular_peak = 0
+	_rewarded_actors.clear()
 	_flow.clear()
 	_target_cell = Vector2i(-999, -999)
 	_flow_age = 1.0
@@ -57,17 +89,25 @@ func load_floor(index: int) -> void:
 	_think_timer = 0.0
 	var spec: Dictionary = world.get_floor_spec(current_floor)
 	var spawns: Array = spec.get("enemy_spawns", [])
-	for i in range(mini(MAX_REGULAR, spawns.size())):
+	for i in range(mini(MAX_EARTH_POPULATION if _earth_trial else MAX_REGULAR, spawns.size())):
 		var entry: Variant = spawns[i]
 		var data: Dictionary = entry if entry is Dictionary else {"position": entry}
 		var id: String = str(data.get("id", "barrow_knight"))
 		var actor = EnemyScript.new()
 		var profile: Dictionary = profile_for(id, current_floor)
+		if _earth_trial:
+			profile["group_id"] = int(data.get("group_id", floori(float(i) / 3.0)))
+			profile["combat_level"] = int(data.get("combat_level", 1))
+			profile["lane_offset"] = data.get("lane_offset", Vector3.ZERO)
+			profile["lane_index"] = i % 3 - 1
+			profile["xp"] = 24
 		if bool(data.get("hidden", false)):
 			profile["hidden"] = true
 			profile["unlock_flag"] = str(data.get("unlock_flag", "hidden_guardian_awake"))
 			profile["hp"] = float(profile["hp"]) * 2.3
 			profile["souls"] = 75
+			profile["group_id"] = -1
+			profile["xp"] = 72
 		actor.configure(self, profile, current_floor)
 		actor.position = data.get("position", Vector3.ZERO)
 		add_child(actor)
@@ -98,6 +138,12 @@ func _physics_process(delta: float) -> void:
 	var revision: int = int(snapshot.get("revision", -1))
 	if player_cell != _target_cell or (not snapshot.is_empty() and revision != _flow_revision) or (snapshot.is_empty() and _flow_age >= 0.5):
 		_build_flow(player_cell, snapshot)
+	if _earth_trial:
+		var ai_started: int = Time.get_ticks_usec()
+		_update_earth_encounters()
+		_ai_usec = Time.get_ticks_usec() - ai_started
+		_ai_max_usec = maxi(_ai_max_usec, _ai_usec)
+		return
 	var active_count: int = 0
 	for actor in enemies:
 		if not is_instance_valid(actor) or actor.hp <= 0.0:
@@ -128,10 +174,11 @@ func _build_flow(target: Vector2i, supplied_snapshot: Dictionary = {}) -> void:
 	_target_cell = target
 	_flow_age = 0.0
 	_flow.clear()
-	if _nav_is_walkable(target):
-		var queue: Array[Vector2i] = [target]
+	_flow_goal_cell = _resolve_flow_goal(target) if _earth_trial else target
+	if _nav_is_walkable(_flow_goal_cell):
+		var queue: Array[Vector2i] = [_flow_goal_cell]
 		var head: int = 0
-		_flow[target] = 0
+		_flow[_flow_goal_cell] = 0
 		while head < queue.size():
 			var cell: Vector2i = queue[head]
 			head += 1
@@ -154,7 +201,7 @@ func _nav_is_walkable(cell: Vector2i) -> bool:
 		return false
 	return str(_nav_grid[cell.y]).unicode_at(cell.x) != 35 and not _nav_blocked.has(cell)
 
-func navigation_target(position_value: Vector3) -> Vector3:
+func navigation_target(position_value: Vector3, actor: Node = null) -> Vector3:
 	var cell: Vector2i = world.world_to_cell(position_value)
 	if not _flow.has(cell):
 		return position_value
@@ -166,6 +213,15 @@ func navigation_target(position_value: Vector3) -> Vector3:
 			best = candidate
 			value = int(_flow[candidate])
 	var target: Vector3 = world.cell_to_world(best)
+	if _earth_trial and is_instance_valid(actor):
+		if best == cell:
+			if has_cover_clear(position_value, player.global_position):
+				target = player.global_position
+		else:
+			var center: Vector3 = world.cell_to_world(cell)
+			var heading: Vector3 = (target - center).normalized()
+			var side: Vector3 = Vector3(-heading.z, 0, heading.x)
+			target = center + heading * 4.95 + side * float(actor.profile.get("lane_index", 0)) * 1.25
 	target.y = position_value.y
 	return target
 
@@ -192,6 +248,8 @@ func has_cover_clear(from_position: Vector3, to_position: Vector3) -> bool:
 	return get_world_3d().direct_space_state.intersect_ray(query).is_empty()
 
 func fire_projectile(source: Node, direction: Vector3, damage: float, speed: float, color: Color) -> bool:
+	if is_player_protected():
+		return false
 	if projectile_count() >= MAX_PROJECTILES or get_tree().get_nodes_in_group("adventure_hostile_projectile").size() >= MAX_HOSTILE:
 		return false
 	var start: Vector3 = source.global_position + Vector3.UP * 1.25
@@ -211,19 +269,38 @@ func fire_projectile(source: Node, direction: Vector3, damage: float, speed: flo
 	return true
 
 func _on_defeated(actor: Node) -> void:
+	var identity: int = actor.get_instance_id()
+	if _rewarded_actors.has(identity):
+		return
+	_rewarded_actors[identity] = true
 	if actor.is_boss:
 		if not state.has_flag(current_floor, "boss_defeated"):
 			state.defeat_boss(current_floor)
 			message.emit("%s defeated. A new relic answers your oath." % BOSS_NAMES[current_floor])
 		boss_status.emit("", 0.0, 0.0)
 	else:
-		state.souls += int(actor.profile.get("souls", 12))
+		var embers: int = int(actor.profile.get("souls", 12))
+		var xp: int = int(actor.profile.get("xp", 24 + current_floor * 4))
+		var ammo_rewards: Dictionary = {}
 		if state.has_item("bow"):
-			state.add_ammo("bow", 1)
+			ammo_rewards["bow"] = 1
 		if str(actor.profile.get("pattern", "")) == "ranged" and state.has_item("staff"):
-			state.add_ammo("staff", 1)
-		state.inventory_changed.emit()
-		state.save_game()
+			ammo_rewards["staff"] = 1
+		if state.has_method("award_combat_reward"):
+			state.award_combat_reward(embers, xp, ammo_rewards)
+		else:
+			var save_setting: Variant = state.get("auto_save_enabled")
+			var persist: bool = bool(save_setting) if save_setting != null else true
+			if save_setting != null:
+				state.set("auto_save_enabled", false)
+			state.souls += embers
+			for weapon in ammo_rewards:
+				state.add_ammo(weapon, int(ammo_rewards[weapon]))
+			if save_setting != null:
+				state.set("auto_save_enabled", persist)
+			state.inventory_changed.emit()
+			if persist:
+				state.save_game()
 
 func active_enemy_count() -> int:
 	var count: int = 0
@@ -236,7 +313,157 @@ func projectile_count() -> int:
 	return get_tree().get_nodes_in_group("adventure_projectile").size() if is_inside_tree() else 0
 
 func performance_counts() -> Dictionary:
-	return {"regular_active": active_enemy_count(), "regular_total": enemies.size(), "bosses": 1 if is_instance_valid(boss) and boss.hp > 0.0 else 0, "projectiles": projectile_count(), "hostile_projectiles": get_tree().get_nodes_in_group("adventure_hostile_projectile").size(), "path_cells": _flow.size(), "ai_ticks": _ai_ticks, "flow_builds": _flow_build_count, "flow_build_usec": _flow_build_usec, "flow_build_max_usec": _flow_build_max_usec}
+	var pursuing: int = 0
+	var fleeing: int = 0
+	var groups: Dictionary = {}
+	for actor in enemies:
+		if is_instance_valid(actor) and actor.awake and actor.hp > 0.0:
+			pursuing += 1 if actor.pursuing else 0
+			fleeing += 1 if actor.fleeing else 0
+			groups[int(actor.profile.get("group_id", -1))] = true
+	return {"regular_peak": _regular_peak, "earth_trial": _earth_trial, "awake_budget": earth_awake_budget if _earth_trial else MAX_REGULAR, "pursuing": pursuing, "fleeing": fleeing, "groups_active": groups.size(), "cap_denied": _cap_denied, "ai_usec": _ai_usec, "ai_max_usec": _ai_max_usec, "separation_pairs": _separation_pairs, "regular_active": active_enemy_count(), "regular_total": enemies.size(), "bosses": 1 if is_instance_valid(boss) and boss.hp > 0.0 else 0, "projectiles": projectile_count(), "hostile_projectiles": get_tree().get_nodes_in_group("adventure_hostile_projectile").size(), "path_cells": _flow.size(), "ai_ticks": _ai_ticks, "flow_builds": _flow_build_count, "flow_build_usec": _flow_build_usec, "flow_build_max_usec": _flow_build_max_usec}
+
+
+func _resolve_flow_goal(target: Vector2i) -> Vector2i:
+	if _nav_is_walkable(target):
+		return target
+	var best: Vector2i = Vector2i(-999, -999)
+	var nearest: float = INF
+	for direction in CARDINALS:
+		var candidate: Vector2i = target + direction
+		if not _nav_is_walkable(candidate):
+			continue
+		var point: Vector3 = world.cell_to_world(candidate)
+		var distance: float = point.distance_squared_to(player.global_position)
+		if distance < nearest and has_cover_clear(player.global_position, point):
+			best = candidate
+			nearest = distance
+	return best
+
+func _within_hearing(first: Vector2i, second: Vector2i) -> bool:
+	var delta: Vector2i = second - first
+	var length: int = absi(delta.x) + absi(delta.y)
+	if length > 2 or not _nav_is_walkable(first) or not _nav_is_walkable(second):
+		return false
+	if length <= 1:
+		return true
+	if delta.x == 0 or delta.y == 0:
+		return _nav_is_walkable(first + Vector2i(signi(delta.x), signi(delta.y)))
+	return _nav_is_walkable(first + Vector2i(delta.x, 0)) or _nav_is_walkable(first + Vector2i(0, delta.y))
+
+func alert_from_damage(actor: Node) -> void:
+	if not _earth_trial or not is_instance_valid(actor) or is_player_protected():
+		return
+	actor.alerted = true
+	actor.pursuing = actor.is_boss or int(actor.profile.get("combat_level", 1)) > hero_combat_rating()
+	_update_earth_encounters()
+
+func _clear_refuge() -> void:
+	for actor in enemies:
+		if is_instance_valid(actor) and actor.hp > 0.0:
+			actor.clear_hostile_intent()
+			actor.set_awake(false)
+	if is_instance_valid(boss) and boss.hp > 0.0:
+		boss.clear_hostile_intent()
+		boss.set_awake(false)
+	for shot in get_tree().get_nodes_in_group("adventure_hostile_projectile"):
+		shot.queue_free()
+	_separation_pairs = 0
+	_cap_denied = 0
+
+func _update_earth_encounters() -> void:
+	if is_player_protected() and not stress_awake:
+		_refuge_active = true
+		_clear_refuge()
+		return
+	_refuge_active = is_player_protected()
+	var rating: int = hero_combat_rating()
+	var candidates: Array = []
+	var alerts: Array = []
+	for actor in enemies:
+		if not is_instance_valid(actor) or actor.hp <= 0.0:
+			continue
+		var revealed: bool = not bool(actor.profile.get("hidden", false)) or state.has_flag(current_floor, str(actor.profile.get("unlock_flag", "")))
+		actor.set_revealed(revealed)
+		var cell: Vector2i = world.world_to_cell(actor.global_position)
+		var steps: int = int(_flow.get(cell, 99999))
+		if not revealed or steps == 99999:
+			actor.clear_hostile_intent()
+			actor.set_awake(false)
+			continue
+		var level: int = int(actor.profile.get("combat_level", 1))
+		actor.fleeing = rating >= level + 3
+		if actor.fleeing or level <= rating:
+			actor.pursuing = false
+		var acquired: bool = steps <= 2 or (steps <= 4 and has_cover_clear(actor.global_position, player.global_position))
+		if acquired:
+			actor.alerted = true
+			actor.pursuing = level > rating
+		elif not actor.pursuing and steps > 6:
+			actor.alerted = false
+		if actor.alerted:
+			alerts.append(actor)
+	for actor in enemies:
+		if not is_instance_valid(actor) or actor.hp <= 0.0 or not actor._revealed:
+			continue
+		var cell: Vector2i = world.world_to_cell(actor.global_position)
+		if not _flow.has(cell):
+			continue
+		if not actor.alerted:
+			for heard in alerts:
+				var group: int = int(actor.profile.get("group_id", -1))
+				if group >= 0 and group == int(heard.profile.get("group_id", -2)) and _within_hearing(cell, world.world_to_cell(heard.global_position)):
+					actor.alerted = true
+					actor.pursuing = int(actor.profile.get("combat_level", 1)) > rating
+					break
+		if actor.alerted or stress_awake:
+			var priority: int = int(_flow[cell]) - (10000 if actor.pursuing else (100 if actor.awake else 0))
+			candidates.append({"actor": actor, "priority": priority})
+		else:
+			actor.set_awake(false)
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["priority"]) < int(b["priority"]))
+	var active: Array = []
+	for i in range(candidates.size()):
+		var actor: Node = candidates[i]["actor"]
+		actor.set_awake(i < earth_awake_budget)
+		if i < earth_awake_budget:
+			active.append(actor)
+	_cap_denied = maxi(0, candidates.size() - earth_awake_budget)
+	_regular_peak = maxi(_regular_peak, active.size())
+	_apply_separation(active)
+	for actor in active:
+		actor.think(0.1)
+	if is_instance_valid(boss) and boss.hp > 0.0:
+		var boss_cell: Vector2i = world.world_to_cell(boss.global_position)
+		if not _flow.has(boss_cell):
+			boss.clear_hostile_intent()
+		elif int(_flow[boss_cell]) <= 6 or stress_awake:
+			boss.alerted = true
+			boss.pursuing = true
+		boss.set_awake(boss.alerted and _flow.has(boss_cell))
+		boss.think(0.1)
+		boss_status.emit(str(boss.profile.get("name", "Guardian")), boss.hp, boss.max_hp)
+
+func _apply_separation(active: Array) -> void:
+	_separation_pairs = 0
+	for actor in active:
+		actor.separation = Vector3.ZERO
+	for i in range(active.size()):
+		for j in range(i + 1, active.size()):
+			_separation_pairs += 1
+			var first: Node = active[i]
+			var second: Node = active[j]
+			var offset: Vector3 = first.global_position - second.global_position
+			offset.y = 0.0
+			var distance: float = offset.length()
+			if distance >= 1.15:
+				continue
+			var away: Vector3 = offset / distance if distance > 0.01 else Vector3.RIGHT.rotated(Vector3.UP, float(i) * 1.618)
+			var force: Vector3 = away * (1.15 - distance) * 1.5
+			first.separation += force
+			second.separation -= force
+	for actor in active:
+		actor.separation = actor.separation.limit_length(1.5)
 
 func material_for(color: Color, unshaded: bool = false) -> StandardMaterial3D:
 	var key: String = color.to_html() + str(unshaded)

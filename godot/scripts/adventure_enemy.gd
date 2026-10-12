@@ -12,6 +12,11 @@ var phase: Phase = Phase.SLEEP
 var is_boss: bool = false
 var floor_index: int = 0
 var awake: bool = false
+var alerted: bool = false
+var pursuing: bool = false
+var fleeing: bool = false
+var separation: Vector3 = Vector3.ZERO
+var _navigation_revision: int = -1
 var _revealed: bool = true
 var _timer: float = 0.0
 var _cooldown: float = 0.5
@@ -38,7 +43,7 @@ func configure(owner_director: Node, data: Dictionary, stage: int = 0) -> void:
 func _ready() -> void:
 	add_to_group("adventure_enemy")
 	collision_layer = 2
-	collision_mask = 1
+	collision_mask = 3 if director.earth_trial_active() else 1
 	_shape = CollisionShape3D.new()
 	var capsule = CapsuleShape3D.new()
 	capsule.radius = 0.8 if is_boss else float(profile.get("radius", 0.38))
@@ -223,16 +228,46 @@ func set_awake(value: bool) -> void:
 		if _cue:
 			_cue.visible = false
 
+func clear_hostile_intent() -> void:
+	alerted = false
+	pursuing = false
+	fleeing = false
+	separation = Vector3.ZERO
+	_waypoint = Vector3.ZERO
+	_bursts_left = 0
+	_hit = true
+	if phase != Phase.DEAD:
+		phase = Phase.CHASE
+		_cue.visible = false
+		_visual.rotation.x = 0.0
+	velocity.x = 0.0
+	velocity.z = 0.0
+
 func think(_delta: float) -> void:
 	if not awake or phase != Phase.CHASE or not is_instance_valid(director.player):
+		return
+	if director.is_player_protected():
+		clear_hostile_intent()
 		return
 	var player_position: Vector3 = director.player.global_position
 	var distance: float = global_position.distance_to(player_position)
 	var attack_range: float = float(profile.get("range", 2.1))
+	if director.earth_trial_active():
+		if _navigation_revision != director._flow_build_count:
+			_navigation_revision = director._flow_build_count
+			_waypoint = Vector3.ZERO
+		if fleeing:
+			var escape: Vector3 = director.retreat_target(global_position)
+			if director.world.world_to_cell(escape) != director.world.world_to_cell(global_position):
+				_waypoint = escape if distance < maxf(8.0, attack_range + 3.0) else global_position
+				return
+			if distance > attack_range:
+				_waypoint = global_position
+				return
 	if distance <= attack_range and _cooldown <= 0.0 and director.has_cover_clear(global_position, player_position):
 		begin_attack(choose_attack())
 	elif _waypoint == Vector3.ZERO or global_position.distance_to(_waypoint) < 0.26:
-		_waypoint = director.navigation_target(global_position)
+		_waypoint = director.navigation_target(global_position, self)
 
 func choose_attack() -> Dictionary:
 	return {
@@ -247,6 +282,9 @@ func choose_attack() -> Dictionary:
 	}
 
 func begin_attack(attack: Dictionary) -> void:
+	if director.is_player_protected():
+		clear_hostile_intent()
+		return
 	_attack = attack
 	_attack["tell"] = maxf(0.5, float(_attack.get("tell", 0.7)))
 	_aim = director.player.global_position - global_position
@@ -268,6 +306,9 @@ func _physics_process(delta: float) -> void:
 		_visual.scale = _visual.scale.lerp(Vector3.ONE * 0.05, delta * 4.0)
 		if _timer <= 0.0:
 			queue_free()
+		return
+	if director.is_player_protected():
+		clear_hostile_intent()
 		return
 	_clock += delta
 	_cooldown = maxf(0.0, _cooldown - delta)
@@ -293,6 +334,11 @@ func _physics_process(delta: float) -> void:
 			if _timer <= 0.0:
 				phase = Phase.CHASE
 				_visual.rotation.x = 0.0
+	if director.earth_trial_active() and not director.is_position_protected(global_position) and director.is_position_protected(global_position + velocity * delta):
+		velocity.x = 0.0
+		velocity.z = 0.0
+		if phase == Phase.ACTIVE:
+			_timer = 0.0
 	move_and_slide()
 
 func _move_to_waypoint() -> void:
@@ -300,9 +346,11 @@ func _move_to_waypoint() -> void:
 		return
 	var offset: Vector3 = _waypoint - global_position
 	offset.y = 0.0
-	if offset.length() <= 0.16:
+	if offset.length() <= 0.16 and separation.length_squared() < 0.01:
 		return
-	var heading = offset.normalized()
+	var heading: Vector3 = offset.normalized()
+	if director.earth_trial_active():
+		heading = (heading + separation).normalized()
 	var move_speed: float = float(profile.get("speed", 2.3))
 	velocity.x = heading.x * move_speed
 	velocity.z = heading.z * move_speed
@@ -350,7 +398,7 @@ func _process_active(delta: float) -> void:
 			_burst_timer = 0.16
 
 func _try_hit_player(directional: bool, range_override: float = -1.0) -> void:
-	if _hit or not is_instance_valid(director.player):
+	if _hit or not is_instance_valid(director.player) or director.is_player_protected():
 		return
 	var offset: Vector3 = director.player.global_position - global_position
 	offset.y = 0.0
@@ -391,7 +439,10 @@ func take_damage(amount: float, stagger: float = 0.0, source_position: Vector3 =
 		_timer = clampf(stagger * (1.6 if is_boss else 1.0), 0.2, 1.2)
 		_posture = 0.0
 		_cue.visible = false
-	set_awake(true)
+	if director.earth_trial_active():
+		director.alert_from_damage(self)
+	else:
+		set_awake(true)
 
 func die() -> void:
 	if phase == Phase.DEAD:

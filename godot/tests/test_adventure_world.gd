@@ -126,7 +126,7 @@ func _run() -> void:
 		expect(_coverage(source_grid, true), "wall colliders cover exactly solid tiles " + str(index))
 		expect(_coverage(source_grid, false), "floor colliders cover exactly open tiles " + str(index))
 		expect(world.get_child_count() == 1, "one runtime floor " + str(index))
-		expect(spec["enemy_spawns"].size() <= 8, "bounded enemy descriptors " + str(index))
+		expect(spec["enemy_spawns"].size() == 25 if index == 0 else spec["enemy_spawns"].size() <= 8, "bounded enemy descriptors " + str(index))
 		expect(spec["enemy_spawns"] == world.get_floor_spec(index)["enemy_spawns"], "deterministic spawn descriptors " + str(index))
 		for spawn in spec["enemy_spawns"]:
 			expect(Maze.is_open(source_grid, spawn["cell"]), "enemy on corridor floor")

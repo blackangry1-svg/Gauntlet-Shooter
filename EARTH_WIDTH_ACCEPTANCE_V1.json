@@ -424,5 +424,12 @@
     "Human first-floor passage comfort and combat feel",
     "Physical keyboard/controller play and long-session balance",
     "Large chambers, lakes and parkour design after successful width trial"
-  ]
+  ],
+  "implementation_commit": "4830ab600a7fd74d9971e260264e37702576aacb",
+  "pull_request": {
+    "number": 3,
+    "url": "https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/3",
+    "draft": true,
+    "base": "codex/elemental-overhaul"
+  }
 }

@@ -5,6 +5,7 @@ Date: 2026-10-12. Owner: Codex. Earth corridor trial implemented and verified.
 Work in this gauntlet_l checkout; the native game is godot/project.godot.
 Repository: blackangry1-svg/Gauntlet-Shooter.
 Active branch: codex/earth-width-trial; base: codex/elemental-overhaul at8a48bc5.
+Earth trial draft: https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/3; implementation commit4830ab6.
 Prior overhaul draft is PR2; migration draft is PR1. Keep their history and review branches.
 The original sibling Godot project and root browser implementation remain baselines.
 

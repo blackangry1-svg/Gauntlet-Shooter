@@ -154,5 +154,8 @@
     "branch": "codex/elemental-overhaul",
     "acceptance": "OVERHAUL_ACCEPTANCE_V1.json",
     "pull_request": "https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/2"
-  }
+  },
+  "pull_request_number": 3,
+  "pull_request_url": "https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/3",
+  "earth_trial_implementation_commit": "4830ab600a7fd74d9971e260264e37702576aacb"
 }

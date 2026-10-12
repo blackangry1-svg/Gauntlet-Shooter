@@ -41,6 +41,7 @@ func _ready() -> void:
 	world.travel_requested.connect(_travel)
 	world.message.connect(hud.show_message)
 	world.merchant_requested.connect(hud.show_merchant)
+	world.refuge_requested.connect(hud.show_refuge)
 	player.message.connect(hud.show_message)
 	state.message.connect(hud.show_message)
 	director.message.connect(hud.show_message)
@@ -52,6 +53,16 @@ func _setup_environment() -> void:
 	var holder := WorldEnvironment.new()
 	environment = Environment.new()
 	environment.background_mode = Environment.BG_COLOR
+	var sky_material := ProceduralSkyMaterial.new()
+	sky_material.sky_top_color = Color(0.15, 0.3, 0.48)
+	sky_material.sky_horizon_color = Color(0.74, 0.79, 0.72)
+	sky_material.ground_bottom_color = Color(0.08, 0.14, 0.18)
+	sky_material.ground_horizon_color = Color(0.52, 0.63, 0.64)
+	sky_material.sun_angle_max = 12.0
+	var sky := Sky.new()
+	sky.sky_material = sky_material
+	sky.process_mode = Sky.PROCESS_MODE_QUALITY
+	environment.sky = sky
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color(0.62, 0.68, 0.75)
 	environment.ambient_light_energy = 0.8
@@ -94,6 +105,9 @@ func _on_floor_built(index: int) -> void:
 			break
 	var spec: Dictionary = world.get_floor_spec(index)
 	var color: Color = spec.get("color", Color(0.25, 0.35, 0.3))
+	environment.background_mode = Environment.BG_SKY if index == 0 else Environment.BG_COLOR
+	environment.fog_density = 0.0035 if index == 0 else 0.016
+	environment.fog_sky_affect = 0.0 if index == 0 else 1.0
 	environment.background_color = color.darkened(0.55)
 	environment.fog_light_color = color.lightened(0.2)
 	director.load_floor(index)

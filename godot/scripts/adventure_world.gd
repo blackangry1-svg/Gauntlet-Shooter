@@ -5,6 +5,7 @@ signal floor_built(index: int)
 signal travel_requested(index: int)
 signal message(text: String)
 signal merchant_requested
+signal refuge_requested
 
 var Maze = load("res:/" + "/scripts/adventure_maze.gd")
 var Feature = load("res:/" + "/scripts/adventure_feature.gd")
@@ -45,11 +46,13 @@ func _ensure_specs() -> void:
 	if not parsed is Dictionary or not parsed.has("floors"):
 		push_error("Elemental maze specification is missing or invalid.")
 		return
-	for source in parsed["floors"]:
+	for index in range(parsed["floors"].size()):
+		var source: Dictionary = parsed["floors"][index]
 		var spec: Dictionary = source.duplicate(true)
+		spec["metrics"] = get_floor_metrics(index)
 		spec["color"] = Color(str(source.get("color", "#806f4b")))
-		spec["boss_spawn"] = cell_to_world(Maze.point(source["markers"]["boss"])) + Vector3(0, 0.05, 0)
-		spec["entry_spawn"] = cell_to_world(Maze.point(source["markers"]["entry"])) + Vector3(0, 0.08, 0)
+		spec["boss_spawn"] = cell_to_world_for_floor(Maze.point(source["markers"]["boss"]), index) + Vector3(0, 0.05, 0)
+		spec["entry_spawn"] = cell_to_world_for_floor(Maze.point(source["markers"]["entry"]), index) + Vector3(0, 0.08, 0)
 		floor_specs.append(spec)
 
 func get_floor_spec(index: int) -> Dictionary:
@@ -58,6 +61,7 @@ func get_floor_spec(index: int) -> Dictionary:
 		return {}
 	var spec: Dictionary = floor_specs[index].duplicate(true)
 	spec["features"] = _feature_definitions(spec, index)
+	spec["refuge_zones"] = _refuge_zones(spec, index)
 	spec["enemy_spawns"] = _enemy_spawns(spec, index)
 	spec["hidden_spawn"] = spec["enemy_spawns"][-1]["position"] if not spec["enemy_spawns"].is_empty() else spec["boss_spawn"]
 	return spec
@@ -74,6 +78,7 @@ func load_floor(index: int) -> void:
 	bridge_deck = null
 	bridge_visual = null
 	current_floor = index
+	cell_size = float(get_floor_metrics(index)["cell_size"])
 	active_spec = get_floor_spec(index)
 	grid.clear()
 	for row in active_spec["grid"]:
@@ -99,6 +104,38 @@ func load_floor(index: int) -> void:
 		features[str(definition["id"])] = feature
 	refresh_features()
 	floor_built.emit(index)
+
+func get_floor_metrics(index: int) -> Dictionary:
+	return {"cell_size": 9.0 if index == 0 else 3.0, "wall_height": 5.4 if index == 0 else 3.2, "gate_size": Vector3(8.9, 5.4, 0.5) if index == 0 else Vector3(2.9, 2.7, 0.36)}
+
+func cell_to_world_for_floor(cell: Vector2i, index: int) -> Vector3:
+	var width: float = float(get_floor_metrics(index)["cell_size"])
+	return Vector3(float(cell.x - 15) * width, 0.0, float(cell.y - 15) * width)
+
+func _refuge_zones(spec: Dictionary, index: int) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	if index != 0:
+		return result
+	var entry: Vector2i = Maze.point(spec["markers"]["entry"])
+	result.append({"id": "entry", "position": cell_to_world_for_floor(entry, index), "radius": 7.0})
+	for feature in spec["features"]:
+		if feature["kind"] in ["checkpoint", "lift_up", "lift_down"]:
+			var center: Vector3 = cell_to_world_for_floor(feature["cell"], index) if feature["kind"] == "checkpoint" else feature["position"]
+			center.y = 0.0
+			result.append({"id": feature["id"], "position": center, "radius": 7.0 if feature["kind"] == "checkpoint" else 3.0})
+	return result
+
+func is_safe_refuge(position_value: Vector3) -> bool:
+	if current_floor != 0:
+		return false
+	for zone in active_spec.get("refuge_zones", []):
+		var center: Vector3 = zone["position"]
+		if absf(position_value.y - center.y) > 2.5:
+			continue
+		var offset: Vector2 = Vector2(position_value.x - center.x, position_value.z - center.z)
+		if offset.length_squared() <= float(zone["radius"]) * float(zone["radius"]):
+			return true
+	return false
 
 func cell_to_world(cell: Vector2i) -> Vector3:
 	return Vector3(float(cell.x - 15) * cell_size, 0.0, float(cell.y - 15) * cell_size)
@@ -181,6 +218,8 @@ func get_debug_stats() -> Dictionary:
 	result["active_floor"] = current_floor
 	result["floor_children"] = get_child_count()
 	result["features"] = features.size()
+	result["cell_size"] = cell_size
+	result["wall_height"] = get_floor_metrics(current_floor)["wall_height"]
 	return result
 
 func refresh_features() -> void:
@@ -196,8 +235,8 @@ func refresh_features() -> void:
 func notify(text: String) -> void:
 	message.emit(text)
 
-func _definition(id: String, kind: String, cell: Vector2i, label_text: String, color_value: Color, extra: Dictionary = {}) -> Dictionary:
-	var definition: Dictionary = {"id": id, "kind": kind, "cell": cell, "position": cell_to_world(cell) + Vector3(0, 0.55, 0), "label": label_text, "color": color_value, "flag": id}
+func _definition(index: int, id: String, kind: String, cell: Vector2i, label_text: String, color_value: Color, extra: Dictionary = {}) -> Dictionary:
+	var definition: Dictionary = {"id": id, "kind": kind, "cell": cell, "position": cell_to_world_for_floor(cell, index) + Vector3(0, 0.55, 0), "label": label_text, "color": color_value, "flag": id}
 	definition.merge(extra, true)
 	return definition
 
@@ -222,40 +261,43 @@ func _feature_definitions(spec: Dictionary, index: int) -> Array[Dictionary]:
 	reserved[Maze.cell_key(merchant_cell)] = true
 	var loot_cell: Vector2i = Maze.choose_branch(source_grid, entry, blocked, reserved, 2)
 	var door_rotation: float = PI * 0.5 if gate.x % 2 == 0 else 0.0
-	result.append(_definition("checkpoint", "checkpoint", entry, "Shore fire" if index == 0 else "Rest shrine", Color(0.2, 0.8, 0.7), {"position": cell_to_world(entry) + Vector3(0.8, 0.3, -0.5)}))
+	result.append(_definition(index, "checkpoint", "checkpoint", entry, "Shore fire" if index == 0 else "Rest shrine", Color(0.2, 0.8, 0.7), {"position": cell_to_world_for_floor(entry, index) + Vector3(0.8, 0.3, -0.5)}))
 	if index < 4:
-		result.append(_definition("lift_up", "lift_up", entry, "Lift to floor " + str(index + 2), Color(0.65, 0.52, 0.95), {"target_floor": index + 1, "position": cell_to_world(entry) + Vector3(-0.8, 0.55, 0.65)}))
+		result.append(_definition(index, "lift_up", "lift_up", entry, "Lift to floor " + str(index + 2), Color(0.65, 0.52, 0.95), {"target_floor": index + 1, "position": cell_to_world_for_floor(entry, index) + Vector3(-0.8, 0.55, 0.65)}))
 	if index > 0:
-		result.append(_definition("lift_down", "lift_down", entry, "Return to floor " + str(index), Color(0.4, 0.65, 0.9), {"target_floor": index - 1, "position": cell_to_world(entry) + Vector3(0.8, 0.55, 0.65)}))
+		result.append(_definition(index, "lift_down", "lift_down", entry, "Return to floor " + str(index), Color(0.4, 0.65, 0.9), {"target_floor": index - 1, "position": cell_to_world_for_floor(entry, index) + Vector3(0.8, 0.55, 0.65)}))
 	var key_kind: String = "water_key" if index == 1 else "key"
-	var key_position: Vector3 = cell_to_world(key_cell) + (Vector3(-0.25, -2.53, -0.55) if index == 1 else Vector3(0, 0.55, 0))
-	result.append(_definition("floor_key", key_kind, key_cell, str(spec["key"]), Color(1.0, 0.84, 0.15), {"flag": "key_collected", "position": key_position}))
-	result.append(_definition("key_gate", "gate", gate, "Key gate", Color(0.6, 0.4, 0.15), {"flag": "gate_open", "position": cell_to_world(gate) + Vector3(0, 1.35, 0), "rotation_y": door_rotation}))
-	result.append(_definition("shortcut_gate", "shortcut", shortcut, "Return gate", Color(0.32, 0.6, 0.46), {"flag": "shortcut_open", "position": cell_to_world(shortcut) + Vector3(0, 1.35, 0), "rotation_y": PI * 0.5 if shortcut.x % 2 == 0 else 0.0}))
-	result.append(_definition("return_lever", "lever", Maze.point(markers["lever"]), "Return lever", Color(0.5, 0.9, 0.55), {"flag": "shortcut_open"}))
-	result.append(_definition("merchant", "merchant", merchant_cell, "Captive tower smith", Color(0.85, 0.6, 0.32), {"flag": "merchant_free"}))
-	result.append(_definition("supply_cache", "loot", loot_cell, "Hidden supplies", Color(0.9, 0.7, 0.3), {"flag": "supply_cache"}))
+	var key_position: Vector3 = cell_to_world_for_floor(key_cell, index) + (Vector3(-0.25, -2.53, -0.55) if index == 1 else Vector3(0, 0.55, 0))
+	result.append(_definition(index, "floor_key", key_kind, key_cell, str(spec["key"]), Color(1.0, 0.84, 0.15), {"flag": "key_collected", "position": key_position}))
+	result.append(_definition(index, "key_gate", "gate", gate, "Key gate", Color(0.6, 0.4, 0.15), {"flag": "gate_open", "position": cell_to_world_for_floor(gate, index) + Vector3(0, 2.7 if index == 0 else 1.35, 0), "rotation_y": door_rotation}))
+	result.append(_definition(index, "shortcut_gate", "shortcut", shortcut, "Return gate", Color(0.32, 0.6, 0.46), {"flag": "shortcut_open", "position": cell_to_world_for_floor(shortcut, index) + Vector3(0, 2.7 if index == 0 else 1.35, 0), "rotation_y": PI * 0.5 if shortcut.x % 2 == 0 else 0.0}))
+	result.append(_definition(index, "return_lever", "lever", Maze.point(markers["lever"]), "Return lever", Color(0.5, 0.9, 0.55), {"flag": "shortcut_open"}))
+	result.append(_definition(index, "merchant", "merchant", merchant_cell, "Captive tower smith", Color(0.85, 0.6, 0.32), {"flag": "merchant_free"}))
+	result.append(_definition(index, "supply_cache", "loot", loot_cell, "Hidden supplies", Color(0.9, 0.7, 0.3), {"flag": "supply_cache"}))
 	if index == 0:
 		var route: Array[Vector2i] = Maze.path(source_grid, entry, key_cell, blocked)
 		var chest_cell: Vector2i = route[mini(5, route.size() - 1)] if not route.is_empty() else entry
-		result.append(_definition("weapon_chest", "chest", chest_cell, "Sword and buckler", Color(0.7, 0.45, 0.18), {"flag": "weapon_chest", "items": ["sword", "buckler"]}))
-		result.append(_definition("sun_roots", "secret_staff", secret_cell, "Sun-sealed roots", Color(0.5, 0.6, 0.22), {"flag": "sun_secret"}))
+		result.append(_definition(index, "weapon_chest", "chest", chest_cell, "Sword and buckler", Color(0.7, 0.45, 0.18), {"flag": "weapon_chest", "items": ["sword", "buckler"]}))
+		result.append(_definition(index, "sun_roots", "secret_staff", secret_cell, "Sun-sealed roots", Color(0.5, 0.6, 0.22), {"flag": "sun_secret"}))
 	elif index == 1:
 		var accessible: Array[Vector2i] = Maze.neighbors(source_grid, key_cell, blocked)
 		var station: Vector2i = accessible[0] if not accessible.is_empty() else entry
-		result.append(_definition("dive_station", "dive_station", station, "Dive station", Color(0.2, 0.65, 0.95)))
-		result.append(_definition("dive_hatch", "dive_hatch", key_cell, "", Color(0.2, 0.6, 0.9), {"position": cell_to_world(key_cell) + Vector3(0, 1.35, 0), "rotation_y": PI * 0.5 if station.x != key_cell.x else 0.0}))
-		result.append(_definition("return_bubble", "return_bubble", key_cell, "Return bubbles", Color(0.4, 0.9, 1.0), {"position": cell_to_world(key_cell) + Vector3(0.6, -2.28, -0.4)}))
+		result.append(_definition(index, "dive_station", "dive_station", station, "Dive station", Color(0.2, 0.65, 0.95)))
+		result.append(_definition(index, "dive_hatch", "dive_hatch", key_cell, "", Color(0.2, 0.6, 0.9), {"position": cell_to_world_for_floor(key_cell, index) + Vector3(0, 1.35, 0), "rotation_y": PI * 0.5 if station.x != key_cell.x else 0.0}))
+		result.append(_definition(index, "return_bubble", "return_bubble", key_cell, "Return bubbles", Color(0.4, 0.9, 1.0), {"position": cell_to_world_for_floor(key_cell, index) + Vector3(0.6, -2.28, -0.4)}))
 	elif index == 2:
-		result.append(_definition("lava_bridge", "bridge", gate, "Raised lava bridge", Color(0.42, 0.25, 0.1), {"flag": "bridge_lowered", "position": cell_to_world(gate) + Vector3(0, 0.9, 0), "rotation_y": door_rotation}))
-		result.append(_definition("bridge_lever", "bridge_lever", Maze.point(markers["lever"]), "Bow chain ring", Color(1.0, 0.55, 0.15), {"flag": "bridge_lowered", "position": cell_to_world(Maze.point(markers["lever"])) + Vector3(0, 3.55, 0)}))
-		result.append(_definition("moon_grate", "secret_spear", secret_cell, "Moon-sealed grate", Color(0.6, 0.65, 0.8), {"flag": "moon_secret"}))
+		result.append(_definition(index, "lava_bridge", "bridge", gate, "Raised lava bridge", Color(0.42, 0.25, 0.1), {"flag": "bridge_lowered", "position": cell_to_world_for_floor(gate, index) + Vector3(0, 0.9, 0), "rotation_y": door_rotation}))
+		result.append(_definition(index, "bridge_lever", "bridge_lever", Maze.point(markers["lever"]), "Bow chain ring", Color(1.0, 0.55, 0.15), {"flag": "bridge_lowered", "position": cell_to_world_for_floor(Maze.point(markers["lever"]), index) + Vector3(0, 3.55, 0)}))
+		result.append(_definition(index, "moon_grate", "secret_spear", secret_cell, "Moon-sealed grate", Color(0.6, 0.65, 0.8), {"flag": "moon_secret"}))
 	elif index == 3:
-		result.append(_definition("wind_barrier", "wind_gate", gate, "Storm barrier", Color(0.6, 0.8, 0.95), {"flag": "wind_open", "position": cell_to_world(gate) + Vector3(0, 1.35, 0.6), "rotation_y": door_rotation}))
+		result.append(_definition(index, "wind_barrier", "wind_gate", gate, "Storm barrier", Color(0.6, 0.8, 0.95), {"flag": "wind_open", "position": cell_to_world_for_floor(gate, index) + Vector3(0, 1.35, 0.6), "rotation_y": door_rotation}))
 	elif index == 4:
-		result.append(_definition("arcane_barrier", "arcane_gate", gate, "True passage", Color(0.7, 0.4, 0.95), {"flag": "arcane_open", "position": cell_to_world(gate) + Vector3(0, 1.35, 0.6), "rotation_y": door_rotation}))
+		result.append(_definition(index, "arcane_barrier", "arcane_gate", gate, "True passage", Color(0.7, 0.4, 0.95), {"flag": "arcane_open", "position": cell_to_world_for_floor(gate, index) + Vector3(0, 1.35, 0.6), "rotation_y": door_rotation}))
 	if index < 4:
-		result.append(_definition("guardian_exit", "exit", Maze.point(markers["exit"]), "Guardian lift", Color(0.8, 0.7, 1.0), {"target_floor": index + 1}))
+		result.append(_definition(index, "guardian_exit", "exit", Maze.point(markers["exit"]), "Guardian lift", Color(0.8, 0.7, 1.0), {"target_floor": index + 1}))
+	for definition in result:
+		if definition["kind"] in ["gate", "shortcut"]:
+			definition["size"] = get_floor_metrics(index)["gate_size"]
 	return result
 
 func _enemy_spawns(spec: Dictionary, index: int) -> Array[Dictionary]:
@@ -267,6 +309,8 @@ func _enemy_spawns(spec: Dictionary, index: int) -> Array[Dictionary]:
 		reserved[Maze.cell_key(definition["cell"])] = true
 		if definition["kind"] in ["secret_staff", "secret_spear"] or (index not in [0, 2] and definition["kind"] == "loot"):
 			hidden_cell = definition["cell"]
+	if index == 0:
+		return _earth_enemy_spawns(spec, reserved, hidden_cell)
 	var entry: Vector2i = Maze.point(spec["markers"]["entry"])
 	var boss_cell: Vector2i = Maze.point(spec["markers"]["boss"])
 	var candidates: Array[Dictionary] = []
@@ -288,10 +332,25 @@ func _enemy_spawns(spec: Dictionary, index: int) -> Array[Dictionary]:
 			if absi(cell.x - other.x) + absi(cell.y - other.y) < 4:
 				separated = false
 		if separated:
-			result.append({"id": rosters[index][result.size() % rosters[index].size()], "position": cell_to_world(cell) + Vector3(0, 0.05, 0), "cell": cell})
+			result.append({"id": rosters[index][result.size() % rosters[index].size()], "position": cell_to_world_for_floor(cell, index) + Vector3(0, 0.05, 0), "cell": cell})
 		if result.size() == 7:
 			break
-	result.append({"id": hidden_ids[index], "position": cell_to_world(hidden_cell) + Vector3(0, 0.05, 0), "cell": hidden_cell, "hidden": true, "unlock_flag": "hidden_guardian_awake"})
+	result.append({"id": hidden_ids[index], "position": cell_to_world_for_floor(hidden_cell, index) + Vector3(0, 0.05, 0), "cell": hidden_cell, "hidden": true, "unlock_flag": "hidden_guardian_awake"})
+	return result
+
+func _earth_enemy_spawns(spec: Dictionary, reserved: Dictionary, hidden_cell: Vector2i) -> Array[Dictionary]:
+	var cells: Array[Vector2i] = [Vector2i(3, 3), Vector2i(5, 7), Vector2i(11, 11), Vector2i(21, 7), Vector2i(25, 3), Vector2i(25, 15), Vector2i(21, 21), Vector2i(9, 27)]
+	var squads: Array = [["thornbound_revenant", "cave_spider", "cave_spider"], ["thornbound_revenant", "moss_troll", "cave_spider"], ["barrow_knight", "thornbound_revenant", "cave_spider"], ["moss_troll", "thornbound_revenant", "cave_spider"], ["barrow_knight", "moss_troll", "cave_spider"], ["moss_troll", "barrow_knight", "thornbound_revenant"], ["barrow_knight", "thornbound_revenant", "cave_spider"], ["moss_troll", "barrow_knight", "cave_spider"]]
+	var tiers: Array[int] = [1, 1, 2, 2, 2, 3, 3, 3]
+	var lanes: Array[Vector3] = [Vector3(-1.25, 0, -0.75), Vector3(1.25, 0, -0.75), Vector3(0, 0, 1.25)]
+	var result: Array[Dictionary] = []
+	for group in range(cells.size()):
+		var cell: Vector2i = cells[group]
+		if not Maze.is_open(spec["grid"], cell) or reserved.has(Maze.cell_key(cell)):
+			push_error("Earth squad cell conflicts with authored maze features.")
+		for member in range(3):
+			result.append({"id": squads[group][member], "position": cell_to_world_for_floor(cell, 0) + lanes[member] + Vector3(0, 0.05, 0), "cell": cell, "group_id": group, "combat_level": tiers[group], "lane_offset": lanes[member]})
+	result.append({"id": "barrow_knight", "position": cell_to_world_for_floor(hidden_cell, 0) + Vector3(0, 0.05, 0), "cell": hidden_cell, "hidden": true, "unlock_flag": "hidden_guardian_awake", "combat_level": 3})
 	return result
 
 func _material(key: String, color_value: Color, texture_name: String = "") -> StandardMaterial3D:
@@ -302,6 +361,10 @@ func _material(key: String, color_value: Color, texture_name: String = "") -> St
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.roughness = 1.0
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	if key == "wall0":
+		material.uv1_scale = Vector3(3.0, 1.6875, 1.0)
+	elif key == "floor0":
+		material.uv1_scale = Vector3(3.0, 3.0, 1.0)
 	if not texture_name.is_empty():
 		var path: String = "res:/" + "/assets/textures/" + texture_name
 		if ResourceLoader.exists(path):
@@ -355,6 +418,7 @@ func _box_visual(name_value: String, position_value: Vector3, size_value: Vector
 func _build_geometry() -> void:
 	var wall_names: Array[String] = ["wall.jpg", "aqueduct_wall.jpg", "forge_wall.jpg", "gale_wall.jpg", "throne_wall.jpg"]
 	var floor_names: Array[String] = ["floor.jpg", "aqueduct_floor.jpg", "forge_floor.jpg", "gale_floor.jpg", "throne_floor.jpg"]
+	var stage_wall_height: float = float(get_floor_metrics(current_floor)["wall_height"])
 	var wall_material: Material = _material("wall" + str(current_floor), Color.WHITE, wall_names[current_floor])
 	var floor_material: Material = _material("floor" + str(current_floor), Color.WHITE, floor_names[current_floor])
 	var wall_transforms: Array[Transform3D] = []
@@ -369,7 +433,7 @@ func _build_geometry() -> void:
 			var cell: Vector2i = Vector2i(x, z)
 			var origin: Vector3 = cell_to_world(cell)
 			if grid[z].substr(x, 1) == "#":
-				var wall_height: float = 0.65 if current_floor == 0 and x < 5 and z < 5 and (x == 0 or z == 0) else 3.2
+				var wall_height: float = 1.0 if current_floor == 0 and x < 5 and z < 5 and (x == 0 or z == 0) else stage_wall_height
 				wall_transforms.append(Transform3D(Basis.IDENTITY.scaled(Vector3(cell_size, wall_height, cell_size)), origin + Vector3(0, wall_height * 0.5, 0)))
 			elif not omitted.has(Maze.cell_key(cell)):
 				var transform: Transform3D = Transform3D(Basis.IDENTITY.scaled(Vector3(cell_size, 0.12, cell_size)), origin + Vector3(0, -0.06, 0))
@@ -381,11 +445,12 @@ func _build_geometry() -> void:
 	_multimesh("MazeFloor", floor_transforms, floor_material)
 	if not sand_transforms.is_empty():
 		_multimesh("ShoreSand", sand_transforms, _material("sand", Color(0.7, 0.57, 0.35)))
-	var wall_runs: int = _collider_runs(Maze.merged_runs(grid, true), 3.2, 1.6, "MergedWallPhysics")
+	var wall_runs: int = _collider_runs(Maze.merged_runs(grid, true), stage_wall_height, stage_wall_height * 0.5, "MergedWallPhysics")
 	var floor_runs: int = _collider_runs(Maze.merged_runs(grid, false, omitted), 0.12, -0.06, "MergedFloorPhysics")
 	_stats = {"wall_instances": wall_transforms.size(), "floor_instances": floor_transforms.size() + sand_transforms.size(), "wall_collision_runs": wall_runs, "floor_collision_runs": floor_runs, "wall_batches": 1}
 	if current_floor == 0:
-		_box_visual("ShoreSea", Vector3(-65, -0.2, -65), Vector3(62, 0.1, 62), _material("sea", Color(0.13, 0.37, 0.5)))
+		_build_earth_skyline()
+		_box_visual("ShoreSea", Vector3(-195, -0.2, -195), Vector3(186, 0.1, 186), _material("sea", Color(0.13, 0.37, 0.5)))
 		var entry: Vector3 = active_spec["entry_spawn"]
 		for i in range(3):
 			var driftwood: MeshInstance3D = _box_visual("Driftwood" + str(i), entry + Vector3(0.5 + i * 0.2, 0.14, -0.9 + i * 0.3), Vector3(0.9, 0.18, 0.22), _material("driftwood", Color(0.36, 0.24, 0.14)))
@@ -400,6 +465,18 @@ func _build_geometry() -> void:
 		for key in _hazard_cells:
 			var parts: PackedStringArray = str(key).split(":")
 			_box_visual("HotLava", cell_to_world(Vector2i(int(parts[0]), int(parts[1]))) + Vector3(0, 0.03, 0), Vector3(2.9, 0.04, 2.9), _material("lava", Color(0.95, 0.28, 0.04)))
+
+func _build_earth_skyline() -> void:
+	var transforms: Array[Transform3D] = []
+	for i in range(24):
+		var angle: float = TAU * float(i) / 24.0
+		var radius: float = 225.0 + float(i % 4) * 8.0
+		var height: float = 12.0 + float((i * 7) % 31)
+		var size_value: Vector3 = Vector3(7.0 + float(i % 3) * 4.0, height, 9.0)
+		var center: Vector3 = Vector3(cos(angle) * radius, height * 0.5 - 1.0, sin(angle) * radius)
+		transforms.append(Transform3D(Basis.IDENTITY.scaled(size_value), center))
+	_multimesh("EarthDistantSkyline", transforms, _material("earth_skyline", Color(0.1, 0.18, 0.16)))
+	_stats["skyline_instances"] = transforms.size()
 
 func _build_dive_pocket(cell: Vector2i) -> void:
 	var origin: Vector3 = cell_to_world(cell)

@@ -35,6 +35,9 @@ var shop: PanelContainer
 var shop_list: VBoxContainer
 var shop_title: Label
 var save_status: Label
+var refuge: PanelContainer
+var refuge_summary: Label
+var refuge_buttons: Dictionary = {}
 
 func configure(s: Node, w: Node, p: Node, d: Node) -> void:
 	state = s
@@ -42,6 +45,7 @@ func configure(s: Node, w: Node, p: Node, d: Node) -> void:
 	player = p
 	director = d
 	director.boss_status.connect(_boss_status)
+	director.set_quality_budget([8, 10, 12][quality_index])
 	refresh_floor()
 
 func _ready() -> void:
@@ -135,6 +139,18 @@ func _ready() -> void:
 	shop_scroll.add_child(shop_list)
 	_button(shop_column, "Return to the labyrinth", _close_shop)
 	shop.visible = false
+	refuge = _panel(Vector2(-250, -210), Vector2(500, 420))
+	var refuge_column := VBoxContainer.new()
+	refuge.add_child(refuge_column)
+	refuge_summary = Label.new()
+	refuge_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	refuge_summary.custom_minimum_size = Vector2(460, 180)
+	refuge_summary.add_theme_font_size_override("font_size", 19)
+	refuge_column.add_child(refuge_summary)
+	for attribute: String in ["strength", "dexterity", "focus"]:
+		refuge_buttons[attribute] = _button(refuge_column, attribute.capitalize(), _buy_level.bind(attribute))
+	_button(refuge_column, "Return to the labyrinth", _close_refuge)
+	refuge.visible = false
 	damage_flash = ColorRect.new()
 	damage_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	damage_flash.color = Color(0.8, 0.05, 0.03, 0)
@@ -208,6 +224,7 @@ func _input(event: InputEvent) -> void:
 			_toggle_pause()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_TAB:
+			refuge.visible = false
 			shop.visible = false
 			journal.visible = not journal.visible
 			menu.visible = false
@@ -222,11 +239,17 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == JOY_BUTTON_START:
 			_toggle_pause()
 		elif event.button_index == JOY_BUTTON_BACK:
+			refuge.visible = false
+			shop.visible = false
+			menu.visible = false
 			journal.visible = not journal.visible
 			get_tree().paused = journal.visible
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if journal.visible else Input.MOUSE_MODE_CAPTURED
 
 func _toggle_pause() -> void:
+	if refuge.visible:
+		_close_refuge()
+		return
 	if shop.visible:
 		_close_shop()
 		return
@@ -240,6 +263,7 @@ func _cycle_quality() -> void:
 	var scale: float = [0.6, 0.75, 1.0][quality_index]
 	get_viewport().scaling_3d_scale = scale
 	Engine.max_fps = 45 if quality_index == 0 else 60
+	director.set_quality_budget([8, 10, 12][quality_index])
 	quality_button.text = ["Quality: low power (60%, 45 FPS)", "Quality: balanced (75%, 60 FPS)", "Quality: native (100%, 60 FPS)"][quality_index]
 
 func show_message(text: String) -> void:
@@ -279,7 +303,7 @@ func _process(delta: float) -> void:
 		ammo = " • " + str(state.arrows) + " arrows"
 	elif weapon == "staff":
 		ammo = " • " + str(state.staff_charges) + " charges"
-	status.text = str(state.weapon_def(weapon).get("name", weapon.capitalize())) + " • Tier " + str(state.tool_level(weapon)) + ammo + "  |  Flasks " + str(player.flasks) + "  |  Embers " + str(state.souls)
+	status.text = "Lv " + str(state.hero_level) + " • XP " + str(state.experience) + "/" + str(state.level_up_cost()) + "  |  " + str(state.weapon_def(weapon).get("name", weapon.capitalize())) + " • Tier " + str(state.tool_level(weapon)) + ammo + "  |  Flasks " + str(player.flasks) + "  |  Embers " + str(state.souls)
 	objective.text = _objective()
 	prompt.text = str(player.get_interaction_prompt())
 	_update_map()
@@ -287,9 +311,11 @@ func _process(delta: float) -> void:
 	fps_label.visible = show_fps
 	fps_label.text = str(Engine.get_frames_per_second()) + " FPS  •  CPU " + str(snappedf(Performance.get_monitor(Performance.TIME_PROCESS) * 1000, 0.1)) + " ms\n" + str(count) + " active enemies  •  " + str(director.projectile_count()) + " projectiles"
 	if journal.visible:
-		var text := "ARSENAL & RELICS\n\n"
+		var text := "HERO LEVEL " + str(state.hero_level) + "  •  XP " + str(state.experience) + "/" + str(state.level_up_cost()) + "\nSTR " + str(state.attribute_value("strength")) + "  DEX " + str(state.attribute_value("dexterity")) + "  FOCUS " + str(state.attribute_value("focus")) + "\nRest at a refuge to raise one attribute.\n\nARSENAL & RELICS\n\n"
 		for id in ["driftwood", "sword", "bow", "staff", "spear"]:
-			text += (id.capitalize() + " • Tier " + str(state.tool_level(id)) if state.has_item(id) else "Unfound weapon") + "\n"
+			text += (id.capitalize() + " • Tier " + str(state.tool_level(id)) + (" • Ready" if state.can_equip(id) else " • Stat locked") if state.has_item(id) else "Unfound weapon") + "\n"
+			if state.has_item(id):
+				text += _requirement_text(id) + "\n"
 		text += "\nUTILITIES\n"
 		for id in ["buckler", "tide_charm", "ember_sigil", "gale_mantle", "aether_sight", "sun_seal", "moon_seal"]:
 			if state.has_item(id):
@@ -371,6 +397,7 @@ func _save_and_quit() -> void:
 		get_tree().quit()
 
 func show_merchant() -> void:
+	refuge.visible = false
 	menu.visible = false
 	journal.visible = false
 	shop.visible = true
@@ -403,3 +430,37 @@ func _buy_upgrade(id: String) -> void:
 	else:
 		show_message("More Embers are needed, or this tool is fully improved.")
 	_refresh_shop()
+
+func _requirement_text(id: String) -> String:
+	var requirements: Dictionary = state.weapon_requirements(id)
+	var parts: PackedStringArray = []
+	for attribute: String in requirements:
+		parts.append(attribute.capitalize() + " " + str(requirements[attribute]))
+	return "Requires " + ", ".join(parts) if not parts.is_empty() else "No attribute requirement"
+
+func show_refuge() -> void:
+	menu.visible = false
+	shop.visible = false
+	journal.visible = false
+	refuge.visible = true
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_refresh_refuge()
+
+func _close_refuge() -> void:
+	refuge.visible = false
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _refresh_refuge() -> void:
+	refuge_summary.text = "REFUGE • LEVEL " + str(state.hero_level) + "\nXP " + str(state.experience) + " / " + str(state.level_up_cost()) + " to level\nStrength " + str(state.attribute_value("strength")) + " • Dexterity " + str(state.attribute_value("dexterity")) + " • Focus " + str(state.attribute_value("focus")) + "\n\nChoose one attribute per level. Weapons and relics stay with you."
+	for attribute: String in refuge_buttons:
+		var button: Button = refuge_buttons[attribute]
+		button.text = "Raise " + attribute.capitalize() + " to " + str(state.attribute_value(attribute) + 1)
+		button.disabled = not state.can_level_up()
+
+func _buy_level(attribute: String) -> void:
+	if state.level_up(attribute):
+		player.rest_at_checkpoint()
+		show_message("Level " + str(state.hero_level) + " • " + attribute.capitalize() + " increased.")
+	_refresh_refuge()

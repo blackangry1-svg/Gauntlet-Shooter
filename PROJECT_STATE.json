@@ -1,13 +1,13 @@
 {
   "schema_version": 2,
-  "date": "2026-10-10",
+  "date": "2026-10-12",
   "owner": "Codex",
   "status": "ACTIVE_CODEX",
   "canonical_game": "godot/project.godot",
   "legacy_browser": "repository root",
   "repository": "blackangry1-svg/Gauntlet-Shooter",
-  "branch": "codex/elemental-overhaul",
-  "base_branch": "codex/godot-takeover",
+  "branch": "codex/earth-width-trial",
+  "base_branch": "codex/elemental-overhaul",
   "local_history_preserved": "b19de8ea5552ee7378f24c01ad2070544bfcc0e8",
   "remote_main_at_capture": "28de50b1f283cc5046ff4b2f616fb70f17af3767",
   "backup": ".codex-local\\backups\\Gauntlet_Before_Codex_2026-10-10.zip",
@@ -17,57 +17,111 @@
   "runtime": {
     "engine": "4.7.2.stable.official.ed1daf0bf",
     "integrated_validation": "PASS",
-    "integrated_assertions_passed": 508,
-    "supplemental_campaign_assertions_passed": 81,
-    "low_power_render_assertions_passed": 12,
+    "integrated_assertions_passed": 707,
     "errors": 0,
-    "warnings": 0,
+    "warnings": [
+      {
+        "check": "test_suite",
+        "warnings": [
+          "WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+        ]
+      }
+    ],
     "render": "PASS_REAL_OPENGL",
-    "hardware": "Intel Core i5-1035G1 / Intel UHD / about 12 GB RAM",
+    "hardware": "Intel Core i5-1035G1 / Intel UHD Graphics",
     "default_render_scale": 0.75,
     "default_frame_cap": 60,
-    "low_power_preset": "60 percent rendering / 45 FPS",
-    "standard_frame_ms_median_range": [
-      16.685,
-      17.291
-    ],
-    "standard_frame_ms_p95_range": [
-      18.234,
-      26.365
-    ],
-    "low_power_sample": {
-      "active_actors": 8,
+    "awake_regular_budgets": {
+      "earth": {
+        "low": 8,
+        "balanced": 10,
+        "native": 12
+      },
+      "other_floors": 8
+    },
+    "low_power_preset": "60 percent rendering /45FPS /8regular",
+    "balanced_projectile_load_sample": {
+      "active_actors": 10,
       "floor": 0,
-      "frame_ms_median": 22.681,
-      "frame_ms_p95": 37.443,
-      "max_draw_calls": 46,
-      "max_hostile_projectiles": 0,
-      "max_nodes": 488,
-      "physics_ms_p95": 11.671,
-      "process_ms_p95": 54.127,
+      "frame_ms_median": 17.196,
+      "frame_ms_p95": 19.407,
+      "max_draw_calls": 59,
+      "max_hostile_projectiles": 12,
+      "max_nodes": 733,
+      "max_projectiles": 12,
+      "max_regular_active": 10,
+      "physics_ms_p95": 5.458,
+      "process_ms_p95": 21.126,
+      "scripted_projectile_load": true,
       "simulation": {
-        "ai_ticks": 100,
+        "ai_max_usec": 1522,
+        "ai_ticks": 69,
+        "ai_usec": 802,
+        "awake_budget": 10,
         "bosses": 1,
-        "flow_build_max_usec": 3900,
-        "flow_build_usec": 2325,
+        "cap_denied": 15,
+        "earth_trial": true,
+        "fleeing": 7,
+        "flow_build_max_usec": 1476,
+        "flow_build_usec": 1476,
         "flow_builds": 4,
-        "hostile_projectiles": 0,
-        "path_cells": 160,
-        "projectiles": 0,
-        "regular_active": 8,
-        "regular_total": 8
+        "groups_active": 4,
+        "hostile_projectiles": 12,
+        "path_cells": 458,
+        "projectiles": 12,
+        "pursuing": 0,
+        "regular_active": 10,
+        "regular_peak": 10,
+        "regular_total": 25,
+        "separation_pairs": 45
       }
     },
-    "physical_input": "NOT_CERTIFIED",
-    "evidence": "OVERHAUL_ACCEPTANCE_V1.json"
+    "low_power_projectile_load_sample": {
+      "active_actors": 8,
+      "floor": 0,
+      "frame_ms_median": 22.2,
+      "frame_ms_p95": 23.764,
+      "max_draw_calls": 59,
+      "max_hostile_projectiles": 12,
+      "max_nodes": 733,
+      "max_projectiles": 12,
+      "max_regular_active": 8,
+      "physics_ms_p95": 2.058,
+      "process_ms_p95": 18.311,
+      "scripted_projectile_load": true,
+      "simulation": {
+        "ai_max_usec": 1795,
+        "ai_ticks": 87,
+        "ai_usec": 466,
+        "awake_budget": 8,
+        "bosses": 1,
+        "cap_denied": 17,
+        "earth_trial": true,
+        "fleeing": 5,
+        "flow_build_max_usec": 3927,
+        "flow_build_usec": 3927,
+        "flow_builds": 4,
+        "groups_active": 3,
+        "hostile_projectiles": 12,
+        "path_cells": 458,
+        "projectiles": 12,
+        "pursuing": 0,
+        "regular_active": 8,
+        "regular_peak": 8,
+        "regular_total": 25,
+        "separation_pairs": 28
+      }
+    },
+    "physical_input": "USER_PLAYTEST_PENDING",
+    "evidence": "EARTH_WIDTH_ACCEPTANCE_V1.json"
   },
   "implementation_backlog": [
-    "Human frame-time acceptance under the user's normal application load",
-    "Physical controller feel and full-session balance playtest",
-    "Reviewed source artwork extraction and creature animation polish",
-    "Additional story and optional secrets after human campaign feedback"
+    "Human first-floor corridor comfort, group combat and save/reload test",
+    "Large boss/horde chambers, lakes and parkour after width acceptance",
+    "Physical controller feel and long-session balance",
+    "Reviewed creature/source artwork integration and animation polish"
   ],
-  "next_milestone": "Human campaign playtest from fresh shore save; tune combat and polish visuals",
+  "next_milestone": "User Earth width trial; then design larger breakaway chambers, lakes and parkour",
   "handoff": "CODEX_HANDOFF.md",
   "asset_catalog": "godot/ASSET_CATALOG_V1.json",
   "migration_commit": "a6ea40e9dedab32c5e7ce31a8825bddfdbe02a43",
@@ -81,7 +135,7 @@
     "errors": 0,
     "warnings": 0
   },
-  "implemented_milestone": "Five elemental labyrinths and single-hero utility campaign",
+  "implemented_milestone": "First-floor9m corridor and grouped combat trial with hero XP/attribute progression",
   "implemented_features": [
     "Shore driftwood opening; sword and buckler, finite bow/staff ammunition, spear",
     "Five distinct 31x31 labyrinths with keys, gates, shortcuts, bosses and lift revisits",
@@ -90,9 +144,15 @@
     "Captive merchant and upgrades to weapons, shield and traversal utilities",
     "Isolated versioned adventure save with checksum and backup fallback",
     "Bounded actors and projectiles, shared cached navigation, batched geometry",
-    "Relic tiers improve dive speed, fire protection, dodge economy and magical map sight"
+    "Relic tiers improve dive speed, fire protection, dodge economy and magical map sight",
+    "Earth9m/5.4m maze geometry with physical full-width gates and skyline",
+    "Mixed squads, level-aware hunting/retreat and safe refuges with bounded8/10/12activation",
+    "Schema2 XP/stat progression, legacy attunement, atomic kill loot and separate first-floor test save"
   ],
   "original_godot_files_hash_verified": 105,
-  "pull_request_number": 2,
-  "pull_request_url": "https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/2"
+  "previous_release": {
+    "branch": "codex/elemental-overhaul",
+    "acceptance": "OVERHAUL_ACCEPTANCE_V1.json",
+    "pull_request": "https://github.com/blackangry1-svg/Gauntlet-Shooter/pull/2"
+  }
 }

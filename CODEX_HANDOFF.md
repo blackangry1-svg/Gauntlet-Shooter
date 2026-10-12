@@ -1,50 +1,51 @@
 # Codex project handoff
-Date: 2026-10-10. Owner: Codex. Native overhaul implemented and validated.
+Date: 2026-10-12. Owner: Codex. Earth corridor trial implemented and verified.
 
-## Canonical project
-Work in this gauntlet_l checkout; the active game is godot/project.godot.
-GitHub repository: blackangry1-svg/Gauntlet-Shooter.
-Development branch: codex/elemental-overhaul; base: codex/godot-takeover.
-Draft review: GitHub PR #2, blackangry1-svg/Gauntlet-Shooter; migration is PR #1.
-The migration draft remains separate; do not merge or overwrite main without a user request.
-Original sibling Godot/browser folders, root browser history and old saves remain baselines.
+## Canonical project and review
+Work in this gauntlet_l checkout; the native game is godot/project.godot.
+Repository: blackangry1-svg/Gauntlet-Shooter.
+Active branch: codex/earth-width-trial; base: codex/elemental-overhaul at8a48bc5.
+Prior overhaul draft is PR2; migration draft is PR1. Keep their history and review branches.
+The original sibling Godot project and root browser implementation remain baselines.
 
-## Play and verify
-Double-click PlayAdventure.cmd; PlayAdventure.ps1 -Editor opens Godot.
-GODOT_BIN can select another local engine. Verified engine: Godot 4.7.2.
-Run python tools/codex/check_adventure.py --godot <executable> --render.
-Tests use isolated adventure save paths under .codex-local/overhaul.
-Use OVERHAUL_ACCEPTANCE_V1.json for tracked results; detailed logs and PNGs are local.
-Read OVERHAUL_BLUEPRINT_V1.md and ADVENTURE_INTERFACES_V1.md before changing mechanics.
+## Play and current contracts
+Double-click PlayEarthTrial.cmd to begin a separate shore trial save.
+PlayAdventure.cmd continues the regular adventure save; PlayAdventure.ps1 -Editor opens Godot.
+GODOT_BIN can select the engine; verified local engine is4.7.2.
+Read EARTH_WIDTH_PLAYTEST.md for controls, route, refuge, save/reload and performance checks.
+Read EARTH_WIDTH_TRIAL_BLUEPRINT_V1.md before changes; retain OVERHAUL_BLUEPRINT_V1.md and ADVENTURE_INTERFACES_V1.md campaign contracts.
+Use EARTH_WIDTH_ACCEPTANCE_V1.json for current evidence and source fingerprints.
+OVERHAUL_ACCEPTANCE_V1.json describes the preserved prior release.
 
-## Implemented campaign
-One first-person hero starts with driftwood on the Earth shore.
-Sword/buckler chest precedes the Earth guardian; its reward grants bow and Tide Charm.
-Water requires the Tide Charm to dive for a submerged key; its guardian grants staff and Ember Sigil.
-Fire requires a local key and a bow shot at the chain ring to lower the physical lava bridge.
-The Fire guardian grants the spear and Gale Mantle; Air requires crossing its storm ward.
-The Air guardian grants Aether Sight. Revisit Earth with staff for Sun Seal and Fire with spear for Moon Seal.
-Both seals unlock Aether; defeat its guardian for the Tower Heart.
-All five distinct 31x31 mazes have branching corridors, keys, persistent passages, secrets and refuge lifts.
-The captive smith upgrades owned weapons, buckler and traversal utilities with earned Embers.
-Relic tiers improve dive speed, fire protection, dodge stamina cost and magical map reveal radius.
-Checkpoints heal and provide a minimum reserve of finite bow/staff ammunition to prevent softlocks.
-The active four-class system is replaced. Legacy files remain for regression and recovery.
+## Current first-floor trial
+Earth retains its31x31 authored maze, markers, keys, secrets, return shortcut and boss exit.
+Its cell width is9m (previously3m), walls5.4m; both gates and physics span the expanded passages.
+Player/enemy size, reach and saved checkpoint cells retain human scale.
+A cached procedural sky,24 distant batched silhouettes and open skyline accompany the shore.
+Eight mixed squads of3 regular foes plus a hidden guardian populate Earth; boss is additional.
+Reachable paths, wall/door collision, lane offsets and bounded pair separation drive groups.
+Stronger enemies keep hunting until sanctuary or unreachable topology; much weaker foes retreat cautiously.
+Earth entry/checkpoints and refuge lifts suppress hostile damage and clear incoming shots/tells.
+Water, Fire, Air and Aether retain their earlier geometry and encounter populations.
+Large boss chambers, lakes and parkour require the user's successful width test first.
 
-## Save and hardware boundaries
-New saves use adventure_v1.json plus checksum/version validation and a backup; no legacy conversion.
-Only the current floor is built. Regular active actors cap at eight; combined shots cap at 24, hostile shots at 12.
-Enemy AI uses bounded updates and a shared navigation field cached by player cell and topology revision.
-GL Compatibility, 60 FPS cap, 75 percent rendering and shadow-free lighting are defaults.
-The final five-floor Intel UHD sample measured median frames 16.7-17.3 ms and 95th percentiles 18.2-26.4 ms.
-Repeated timing varied under other applications. Low-power mode uses 60 percent rendering with a 45 FPS cap.
-508 integrated assertions passed; post-menu campaign 81/81 and low-power rendered checks 12/12 passed.
-These are bounded scripted samples; locked frame rates, physical controller feel and long-session balance are not certified.
-Creature/viewmodel visuals are inexpensive prototypes with reviewed ready textures; production art is pending.
+## Progression, saves and CPU
+One hero uses XP for refuge levels/Strength/Dexterity/Focus; Embers still buy smith upgrades.
+Weapon stat requirements appear in the journal; driftwood is always usable.
+Schema2 accepts schema1 with permanent attunement for previously owned weapons; load never rewrites the save.
+Current resources stay unchanged during stat/equipment sync; fresh loaded heroes start at full scaled capacities.
+Combined kill XP/currency/ammo persists once. Duplicate defeats do not grant or save again.
+Earth awake caps: low8, balanced10, native12 regular foes; other floors8; one boss additional.
+Combined projectile cap24, hostile12;10Hz AI shares a cached field; one floor, batched geometry, no shadows.
+Default75%/60FPS; low60%/45FPS. Intel UHD scripted10-actor/12-shot sample17.2ms median/19.4ms p95; low8-actor/12-shot sample22.2/23.8ms.
+Timing is a sample, not a locked frame rate; physical feel and long-session balance await the user.
 
-## Preservation and next work
-The original 105 sibling Godot files match their migration capture; preserved artwork was not re-extracted.
-Pre-migration backup: .codex-local/backups/Gauntlet_Before_Codex_2026-10-10.zip.
-MIGRATION_MANIFEST_V1.json retains the earlier 425-file capture and source history.
-Next: fresh-save human campaign playtest, then tune boss tells, combat feel, story and creature animation.
-Preserve the new player's progress when iterating. Never use unrelated Godot MCP projects for this game.
+## Verification and preservation
+Run python tools/codex/check_earth_trial.py --godot <executable> for707 isolated headless assertions.
+Independent Earth physics includes268 capsule route sweeps and full-width closed/open gate tracks.
+Real OpenGL captures cover all5 floors, skyline, grouped corridor, boss, map, settings, merchant and refuge UI; logs/PNGs stay in.codex-local/earth_width_trial.
+The legacy regression script emitted one2-ObjectDB-instance exit warning; current adventure suites and rendered runs had no warnings/errors.
+All130 original browser and105 sibling Godot fingerprint entries match; authored maze JSON and both external adventure saves match their pre-trial hashes.
+Pre-trial source/save backup is recorded in EARTH_WIDTH_ACCEPTANCE_V1.json. Art sources and both shields remain preserved.
+GEN9 tiles remain inaccessible; bounded symbol/semantic inspection supplemented generic sidecars. Ratification is not runtime proof.
+Next: human Earth width/combat/refuge/save test, then blueprint larger chambers and platforming from that feedback.

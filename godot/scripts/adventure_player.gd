@@ -42,6 +42,9 @@ func configure(adventure_state: Node) -> void:
 	state = adventure_state
 	if state != null and not state.inventory_changed.is_connected(_on_inventory_changed):
 		state.inventory_changed.connect(_on_inventory_changed)
+	if state != null and not state.progression_changed.is_connected(sync_character_stats):
+		state.progression_changed.connect(sync_character_stats)
+	sync_character_stats()
 
 func _ready() -> void:
 	add_to_group("adventure_player")
@@ -50,6 +53,9 @@ func _ready() -> void:
 	collision_mask = 3
 	if state == null:
 		configure(get_tree().root.get_node_or_null("Adventure"))
+	sync_character_stats()
+	hp = max_hp
+	stamina = max_stamina
 	_setup_inputs()
 	var collision: CollisionShape3D = CollisionShape3D.new()
 	var capsule: CapsuleShape3D = CapsuleShape3D.new()
@@ -222,6 +228,9 @@ func attempt_attack(heavy: bool = false) -> bool:
 	if state == null or _dead or is_guard_broken or is_dodging or is_blocking or _attack_time > 0.0:
 		return false
 	var weapon: String = state.equipped_weapon
+	if not state.can_equip(weapon):
+		message.emit("This weapon requires greater attributes. Rest at a refuge to level up.")
+		return false
 	var definition: Dictionary = state.weapon_def(weapon)
 	var cost: float = float(definition.get("heavy_stamina" if heavy else "stamina", 12.0))
 	if stamina < cost:
@@ -345,7 +354,23 @@ func take_damage(amount: float, source_position: Vector3 = Vector3.ZERO) -> void
 		_pending_attack = {}
 		died.emit()
 
+func sync_character_stats() -> void:
+	if state == null:
+		return
+	var values: Dictionary = state.get_character_stats()
+	max_hp = float(values["max_hp"])
+	max_stamina = float(values["max_stamina"])
+	hp = minf(hp, max_hp)
+	stamina = minf(stamina, max_stamina)
+	stats_changed.emit()
+
+func rest_at_checkpoint() -> void:
+	heal_to_full()
+	if state != null:
+		state.restock_at_checkpoint()
+
 func heal_to_full() -> void:
+	sync_character_stats()
 	hp = max_hp
 	stamina = max_stamina
 	flasks = 3

@@ -18,6 +18,7 @@ func check(condition: bool, label: String) -> void:
 
 func _run() -> void:
 	low_power = "--adventure-low-power" in OS.get_cmdline_user_args()
+	var trial_mode: bool = "--earth-width-trial" in OS.get_cmdline_user_args()
 	output_dir = ProjectSettings.globalize_path("res:/" + "/../.codex-local/overhaul/render")
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="):
@@ -40,11 +41,21 @@ func _run() -> void:
 	check(game.player.state == state, "single hero shares adventure state")
 	check(not state.has_item("bow") and state.has_item("driftwood"), "shore starts with driftwood only")
 	await _capture("00_shore")
+	if trial_mode:
+		game.player.camera.rotation.x = 0.55
+		await physics_frame
+		await physics_frame
+		await _capture("00_skyline")
+		game.player.camera.rotation.x = 0.0
+	state.award_combat_reward(0, 1100)
+	for attribute: String in ["strength", "strength", "dexterity", "focus"]:
+		check(state.level_up(attribute), "render fixture legitimately earns attribute " + attribute)
+	game.player.sync_character_stats()
 	for item: String in ["sword", "buckler", "bow", "staff", "spear", "tide_charm", "ember_sigil", "gale_mantle", "aether_sight", "sun_seal", "moon_seal"]:
 		state.acquire_item(item)
 	state.add_ammo("bow", 30)
 	state.add_ammo("staff", 12)
-	for index: int in range(1 if low_power else 5):
+	for index: int in range(1 if low_power or trial_mode else 5):
 		state.current_floor = index
 		state.set_flag(index, "hidden_guardian_awake", true)
 		game.world.load_floor(index)
@@ -54,7 +65,21 @@ func _run() -> void:
 		game.player.hp = game.player.max_hp
 		game.hud.refresh_floor()
 		check(game.world.get_map_data().grid.size() == 31, "floor%d contains31-row maze" % index)
-		check(game.director.active_enemy_count() <= 8, "floor%d bounded actor count" % index)
+		check(game.director.active_enemy_count() <= (game.director.earth_awake_budget if index == 0 else 8), "floor%d bounded actor count" % index)
+		if index == 0:
+			var squad_position: Vector3 = spec_squad_position()
+			var squad_cell: Vector2i = game.world.world_to_cell(squad_position)
+			var facing := Vector3.FORWARD
+			for direction: Vector2i in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(0, -1), Vector2i(-1, 0)]:
+				if game.world.is_walkable(squad_cell + direction):
+					facing = Vector3(direction.x, 0, direction.y)
+					break
+			game.player.global_position = squad_position - facing * 3.4 + Vector3(0, 0.1, 0)
+			game.player.velocity = Vector3.ZERO
+			game.player.look_at(Vector3(squad_position.x, game.player.global_position.y, squad_position.z), Vector3.UP)
+			game.player.camera.rotation.x = -0.07
+			await physics_frame
+			await physics_frame
 		await _capture("%02d_corridor" % (index + 1))
 		if index == 1:
 			game.world.get_feature("dive_station").interact(game.player)
@@ -112,7 +137,20 @@ func _run() -> void:
 		await create_timer(0.1).timeout
 		game.player.hp = game.player.max_hp
 		await _capture("%02d_boss" % (index + 1))
+		if index == 0:
+			state.set_flag(0, "gate_open")
+			state.set_flag(0, "shortcut_open")
+			await physics_frame
+			await physics_frame
 		await _sample(index)
+	if trial_mode:
+		state.award_combat_reward(0, 500)
+		game.player.global_position = game.world.get_feature("checkpoint").global_position + Vector3(0, 0.08, 0)
+		game.world.get_feature("checkpoint").interact(game.player)
+		check(game.hud.refuge.visible and paused, "actual checkpoint opens refuge level panel")
+		await _capture("09_refuge")
+		game.hud._close_refuge()
+		check(not paused and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED, "rendered refuge closes and captures mouse")
 	game.hud.show_merchant()
 	await _capture("08_merchant")
 	game.hud._close_shop()
@@ -123,7 +161,7 @@ func _run() -> void:
 	await _capture("07_journal")
 	game.hud.journal.visible = false
 	var file := FileAccess.open(output_dir.path_join("render_performance.json"), FileAccess.WRITE)
-	file.store_string(JSON.stringify({"schema": 1, "render_driver": ProjectSettings.get_setting("rendering/renderer/rendering_method"), "render_scale": root.scaling_3d_scale, "frame_cap": Engine.max_fps, "low_power": low_power, "window": str(root.size), "failures": failures, "floors": reports, "note": "Scripted local rendering and bounded combat sample; physical user input not certified."}, "\t"))
+	file.store_string(JSON.stringify({"schema": 1, "render_driver": ProjectSettings.get_setting("rendering/renderer/rendering_method"), "render_scale": root.scaling_3d_scale, "frame_cap": Engine.max_fps, "low_power": low_power, "earth_width_trial": trial_mode, "sky_background_mode": game.environment.background_mode, "sky_material": str(game.environment.sky.sky_material.get_class()), "window": str(root.size), "failures": failures, "floors": reports, "note": "Scripted local rendering and bounded combat sample; physical user input not certified."}, "\t"))
 	file.close()
 	print("RENDER_REPORT " + output_dir.path_join("render_performance.json"))
 	quit(0 if failures == 0 else 1)
@@ -144,7 +182,13 @@ func _sample(index: int) -> void:
 	var max_draws: int = 0
 	var max_nodes: int = 0
 	var max_shots: int = 0
+	var max_hostile: int = 0
+	var max_regular: int = 0
+	var projectile_stress: bool = "--earth-projectile-stress" in OS.get_cmdline_user_args()
 	for frame: int in range(360):
+		if projectile_stress:
+			for _shot: int in range(12 - get_nodes_in_group("adventure_hostile_projectile").size()):
+				game.director.fire_projectile(game.player, -game.player.global_basis.z, 0.0, 10.0, Color(0.8, 0.4, 0.2))
 		game.player.hp = game.player.max_hp
 		game.player.rotation.y += sin(float(frame) * 0.13) * 0.001
 		if frame % 45 == 0:
@@ -159,11 +203,20 @@ func _sample(index: int) -> void:
 		max_draws = maxi(max_draws, int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)))
 		max_nodes = maxi(max_nodes, int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
 		max_shots = maxi(max_shots, game.director.projectile_count())
+		max_hostile = maxi(max_hostile, get_nodes_in_group("adventure_hostile_projectile").size())
+		max_regular = maxi(max_regular, game.director.active_enemy_count())
 	samples.sort()
 	process_samples.sort()
 	physics_samples.sort()
-	var result: Dictionary = {"floor": index, "frame_ms_median": samples[samples.size()/2], "frame_ms_p95": samples[int(samples.size()*0.95)], "process_ms_p95": process_samples[int(process_samples.size()*0.95)], "physics_ms_p95": physics_samples[int(physics_samples.size()*0.95)], "max_draw_calls": max_draws, "max_nodes": max_nodes, "max_hostile_projectiles": max_shots, "active_actors": game.director.active_enemy_count()}
+	var result: Dictionary = {"floor": index, "frame_ms_median": samples[samples.size()/2], "frame_ms_p95": samples[int(samples.size()*0.95)], "process_ms_p95": process_samples[int(process_samples.size()*0.95)], "physics_ms_p95": physics_samples[int(physics_samples.size()*0.95)], "max_draw_calls": max_draws, "max_nodes": max_nodes, "max_projectiles": max_shots, "max_hostile_projectiles": max_hostile, "max_regular_active": max_regular, "active_actors": game.director.active_enemy_count()}
+	result["scripted_projectile_load"] = projectile_stress
 	result["simulation"] = game.director.performance_counts()
 	game.director.stress_awake = false
 	reports.append(result)
 	print("PERF " + JSON.stringify(result))
+func spec_squad_position() -> Vector3:
+	var spec: Dictionary = game.world.get_floor_spec(0)
+	for spawn: Dictionary in spec.get("enemy_spawns", []):
+		if not spawn.get("requires_flag", "") == "hidden_guardian_awake":
+			return spawn.get("position", game.player.global_position)
+	return game.player.global_position

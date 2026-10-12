@@ -88,12 +88,14 @@ func _test_inventory_and_upgrades() -> void:
 	_check("checkpoint cannot grant ranged equipment or ammunition", not state.has_item("bow") and not state.has_item("staff") and state.arrows == 0 and state.staff_charges == 0)
 	state.acquire_item("sword")
 	state.acquire_item("buckler")
+	state.award_combat_reward(0, 80)
+	state.level_up("strength")
 	_check("earned sword equips without a class", state.equip_weapon("sword") and state.equipped_weapon == "sword")
-	_check("base sword stats are explicit", state.weapon_def("sword")["damage"] == 30.0 and state.weapon_def("sword")["reach"] > state.weapon_def("driftwood")["reach"])
+	_check("base sword stats are explicit", is_equal_approx(state.weapon_def("sword")["damage"], 30.0 * 1.035) and state.weapon_def("sword")["reach"] > state.weapon_def("driftwood")["reach"])
 	_check("upgrade without currency fails without mutation", not state.upgrade_tool("sword") and state.tool_level("sword") == 1)
 	state.souls = 100
 	_check("weapon upgrade spends exact currency", state.upgrade_tool("sword") and state.souls == 75 and state.tool_level("sword") == 2)
-	_check("upgrade materially raises damage", state.weapon_def("sword")["damage"] == 37.5)
+	_check("upgrade materially raises damage", is_equal_approx(state.weapon_def("sword")["damage"], 37.5 * 1.035))
 	_check("second upgrade cost scales", state.upgrade_tool("sword") and state.souls == 25 and state.tool_level("sword") == 3)
 	_check("max tier rejects further upgrade", not state.upgrade_tool("sword") and state.souls == 25)
 	_check("buckler is independently upgradeable", state.upgrade_tool("buckler") and state.tool_level("buckler") == 2 and state.souls == 0)
@@ -160,7 +162,7 @@ func _test_snapshot_and_saves() -> void:
 	state.acquire_item("sword")
 	var baseline: Dictionary = state.export_snapshot()
 	var invalid: Dictionary = baseline.duplicate(true)
-	invalid["schema_version"] = 2
+	invalid["schema_version"] = 99
 	_check("unsupported schema is rejected transactionally", not state.restore_snapshot(invalid) and state.export_snapshot() == baseline)
 	invalid = baseline.duplicate(true)
 	invalid["equipped_weapon"] = "staff"
@@ -254,11 +256,13 @@ func _test_player_combat() -> void:
 	actor.configure(state)
 	stage.add_child(actor)
 	actor.set_physics_process(false)
-	_check("single hero has specified health and stamina", actor.hp == 120.0 and actor.max_hp == 120.0 and actor.stamina == 100.0)
+	_check("single hero has specified health and stamina", actor.hp == actor.max_hp and actor.max_hp == 120.0 and actor.stamina == 100.0)
 	_check("active player has correct collision and lookup group", actor.collision_layer == 4 and actor.collision_mask == 3 and actor.is_in_group("adventure_player"))
 	_check("keyboard and controller adventure actions exist", InputMap.has_action("adventure_light") and InputMap.has_action("adventure_next") and InputMap.has_action("adventure_interact"))
 	actor.hp = 55.0
 	state.acquire_item("sword")
+	state.award_combat_reward(0, 80)
+	state.level_up("strength")
 	state.equip_weapon("sword")
 	_check("equipping gear cannot refill health", actor.hp == 55.0)
 	state.equip_weapon("driftwood")
@@ -272,11 +276,11 @@ func _test_player_combat() -> void:
 	target.position = Vector3(0.0, 0.0, -2.0)
 	await physics_frame
 	await physics_frame
-	_check("attack begins with a windup", actor.attempt_attack(false) and target.hp == 100.0 and actor.stamina == 90.0)
+	_check("attack begins with a windup", actor.attempt_attack(false) and target.hp == 100.0 and actor.stamina == actor.max_stamina - 10.0)
 	actor._advance_combat(0.05)
 	_check("melee cannot hit before windup expires", target.hp == 100.0)
 	actor._advance_combat(0.08)
-	_check("unobstructed melee hits once for specified damage", target.hp == 82.0 and target.hits == 1)
+	_check("unobstructed melee hits once for specified damage", is_equal_approx(target.hp, 100.0 - state.weapon_def("driftwood")["damage"]) and target.hits == 1)
 	_check("attack cooldown prevents repeated immediate attacks", not actor.attempt_attack(false))
 	actor._advance_combat(1.0)
 	target.hp = 100.0
@@ -300,6 +304,8 @@ func _test_player_combat() -> void:
 	feature.queue_free()
 	await physics_frame
 	state.acquire_item("bow")
+	state.award_combat_reward(0, 140)
+	state.level_up("dexterity")
 	state.equip_weapon("bow")
 	state.arrows = 0
 	var stamina_before: float = actor.stamina
@@ -328,33 +334,33 @@ func _test_player_combat() -> void:
 		placeholder.queue_free()
 	await physics_frame
 	actor.heal_to_full()
-	_check("dodge consumes stamina", actor.attempt_dodge() and actor.stamina == 80.0)
+	_check("dodge consumes stamina", actor.attempt_dodge() and actor.stamina == actor.max_stamina - 20.0)
 	actor.take_damage(30.0, Vector3(0.0, 0.0, -1.0))
-	_check("dodge iframe blocks damage", actor.hp == 120.0)
+	_check("dodge iframe blocks damage", actor.hp == actor.max_hp)
 	actor._advance_combat(0.40)
 	actor.take_damage(30.0, Vector3(0.0, 0.0, -1.0))
-	_check("damage resumes when dodge iframe expires", actor.hp == 90.0)
+	_check("damage resumes when dodge iframe expires", actor.hp == actor.max_hp - 30.0)
 	_test_gale_tiers(actor, state)
 	state.acquire_item("buckler")
 	actor.heal_to_full()
 	actor.is_blocking = true
 	actor.take_damage(40.0, Vector3(0.0, 1.0, -1.0))
-	_check("buckler absorbs damage and spends stamina", absf(actor.hp - 106.0) < 0.01 and absf(actor.stamina - 72.0) < 0.01)
+	_check("buckler absorbs damage and spends stamina", absf(actor.hp - (actor.max_hp - 14.0)) < 0.01 and absf(actor.stamina - (actor.max_stamina - 28.0)) < 0.01)
 	state.souls = 25
 	state.upgrade_tool("buckler")
 	actor.heal_to_full()
 	actor.is_blocking = true
 	actor.take_damage(40.0, Vector3(0.0, 1.0, -1.0))
-	_check("buckler upgrade improves actual damage absorption", absf(actor.hp - 110.0) < 0.01)
+	_check("buckler upgrade improves actual damage absorption", absf(actor.hp - (actor.max_hp - 10.0)) < 0.01)
 	actor.heal_to_full()
 	actor.is_blocking = true
 	actor.take_damage(40.0, Vector3(0.0, 1.0, 2.0))
-	_check("guard cannot absorb attacks from behind", actor.hp == 80.0)
+	_check("guard cannot absorb attacks from behind", actor.hp == actor.max_hp - 40.0)
 	actor.heal_to_full()
 	actor.is_blocking = true
 	actor.stamina = 1.0
 	actor.take_damage(40.0, Vector3(0.0, 1.0, -1.0))
-	_check("depleted guard breaks and sustains damage", actor.is_guard_broken and actor.stamina == 0.0 and actor.hp == 80.0 and not actor.attempt_attack(false))
+	_check("depleted guard breaks and sustains damage", actor.is_guard_broken and actor.stamina == 0.0 and actor.hp == actor.max_hp - 40.0 and not actor.attempt_attack(false))
 	actor._advance_combat(1.0)
 	actor.is_blocking = false
 	actor.hp = 50.0
@@ -368,7 +374,7 @@ func _test_player_combat() -> void:
 	actor.take_damage(10.0, Vector3(0.0, 0.0, -1.0))
 	_check("fatal damage enters dead state", actor.hp == 0.0)
 	actor.checkpoint_respawn(Vector3(2.0, 0.0, 2.0))
-	_check("checkpoint recovery restores player without erasing gear", actor.hp == 120.0 and actor.stamina == 100.0 and actor.flasks == 3 and not actor.is_diving and state.has_item("sword") and actor.global_position == Vector3(2.0, 0.0, 2.0))
+	_check("checkpoint recovery restores player without erasing gear", actor.hp == actor.max_hp and actor.stamina == actor.max_stamina and actor.flasks == 3 and not actor.is_diving and state.has_item("sword") and actor.global_position == Vector3(2.0, 0.0, 2.0))
 	actor.global_position = Vector3.ZERO
 	target = Target.new()
 	stage.add_child(target)

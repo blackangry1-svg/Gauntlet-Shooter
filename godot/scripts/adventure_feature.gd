@@ -28,6 +28,7 @@ func configure(owner_world: Node, definition: Dictionary) -> void:
 		size = Vector3(0.3, 0.38, 0.3)
 	elif kind == "return_bubble":
 		size = Vector3(0.42, 0.68, 0.42)
+	size = data.get("size", size)
 	collider = CollisionShape3D.new()
 	var shape: BoxShape3D = BoxShape3D.new()
 	shape.size = size
@@ -142,6 +143,7 @@ func interact(player: Node) -> void:
 				player.heal_to_full()
 			state.save_game()
 			world.notify("Rested. Supplies replenished; checkpoint saved.")
+			world.refuge_requested.emit()
 		"key", "water_key":
 			if kind == "water_key" and (not state.has_item("tide_charm") or player.global_position.y > -1.0):
 				world.notify("The Tide Key lies underwater. Use the dive station.")
